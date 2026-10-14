@@ -755,7 +755,7 @@
 <footer>
     <div class="foot-logo">NOVA</div>
     <div>© 2026 · ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
-    <div class="hint"><kbd>↑↑↓↓←→←→BA</kbd> — секрет</div>
+    <div class="hint"><kbd>↑↑↓↓←→←→</kbd> — секрет</div>
 </footer>
 
 <div class="modal" id="loginModal">
@@ -1201,7 +1201,7 @@ document.getElementById('palette').addEventListener('click', e => {
 
 /* ======================= KONAMI ======================= */
 (function konami() {
-    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight'];
     let idx = 0;
     document.addEventListener('keydown', e => {
         const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
