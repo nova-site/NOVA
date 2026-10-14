@@ -31,7 +31,7 @@
     #preloader.done { opacity: 0; visibility: hidden; }
     .pre-text { font-size: 0.75rem; color: #4a80c0; letter-spacing: 3px; min-height: 20px; text-align: center; }
     .pre-bar { width: 320px; max-width: 70vw; height: 2px; background: rgba(110,196,255,0.15); position: relative; overflow: hidden; }
-    .pre-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4a80c0, #a8e0ff); box-shadow: 0 0 15px #6ec4ff; }
+    .pre-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4a80c0, #a8e0ff); box-shadow: 0 0 15px #6ec4ff; transition: width 0.15s linear; }
     .pre-flash { position: absolute; inset: 0; background: #a8e0ff; opacity: 0; pointer-events: none; }
     .pre-flash.boom { animation: flashBoom 0.5s ease-out; }
     @keyframes flashBoom { 0% { opacity: 0; } 20% { opacity: 0.9; } 100% { opacity: 0; } }
@@ -96,7 +96,7 @@
     @keyframes resonancePulse { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
 
     .console {
-        position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+        position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
         width: 640px; max-width: 90vw;
         background: rgba(0, 5, 15, 0.98); border: 1px solid var(--c2);
         box-shadow: 0 0 40px rgba(110,196,255,0.5);
@@ -150,7 +150,7 @@
         font-size: 0.72rem; letter-spacing: 2px;
     }
     .topbar .logo { font-family: 'Oswald', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--c3); letter-spacing: 7px; text-shadow: 0 0 15px rgba(110, 196, 255, 0.7); transition: all 0.15s; }
-    .topbar .status { display: flex; align-items: center; gap: 24px; color: #4a80c0; }
+    .topbar .status { display: flex; align-items: center; gap: 24px; color: #4a80c0; flex-wrap: wrap; }
     .topbar .live { display: flex; align-items: center; gap: 8px; color: #4ade80; }
     .topbar .live::before { content: ''; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 8px #4ade80; animation: pulseDot 1.5s infinite; }
     @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
@@ -206,53 +206,29 @@
     .data-value a { color: var(--c2); text-decoration: none; transition: all 0.3s; }
     .data-value a:hover { color: #ffffff; text-shadow: 0 0 15px var(--c2); }
 
-    /* ==== НОВОСТИ ==== */
+    .classified {
+        color: #ff6b6b;
+        letter-spacing: 3px;
+        font-size: 0.9rem;
+        text-shadow: 0 0 12px rgba(255,107,107,0.6);
+        animation: classifiedPulse 1.5s infinite;
+    }
+    @keyframes classifiedPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
+
     .news-list { display: flex; flex-direction: column; gap: 16px; }
-    .news-item {
-        background: rgba(3, 8, 15, 0.85);
-        border: 1px solid rgba(110, 196, 255, 0.2);
-        border-left: 3px solid var(--c2);
-        padding: 24px 28px;
-        transition: all 0.35s;
-        position: relative;
-        overflow: hidden;
-    }
-    .news-item:hover {
-        background: rgba(5, 15, 30, 0.9);
-        border-left-color: var(--c3);
-        transform: translateX(6px);
-        box-shadow: 0 10px 30px rgba(110,196,255,0.15);
-    }
-    .news-meta {
-        display: flex; gap: 16px; align-items: center;
-        font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px;
-        text-transform: uppercase; margin-bottom: 10px; flex-wrap: wrap;
-    }
-    .news-tag {
-        padding: 3px 10px; border: 1px solid rgba(110,196,255,0.4);
-        color: var(--c2); background: rgba(110,196,255,0.08);
-    }
-    .news-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.3rem; color: #e6f4ff;
-        letter-spacing: 1px; margin-bottom: 12px;
-    }
+    .news-item { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.2); border-left: 3px solid var(--c2); padding: 24px 28px; transition: all 0.35s; position: relative; overflow: hidden; }
+    .news-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); transform: translateX(6px); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
+    .news-meta { display: flex; gap: 16px; align-items: center; font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; flex-wrap: wrap; }
+    .news-tag { padding: 3px 10px; border: 1px solid rgba(110,196,255,0.4); color: var(--c2); background: rgba(110,196,255,0.08); }
+    .news-title { font-family: 'Oswald', sans-serif; font-size: 1.3rem; color: #e6f4ff; letter-spacing: 1px; margin-bottom: 12px; }
     .news-text { color: #9ec3e6; font-size: 0.92rem; line-height: 1.8; white-space: pre-wrap; }
     .news-empty { text-align: center; padding: 60px 20px; color: #4a80c0; font-size: 0.85rem; letter-spacing: 2px; }
 
-    /* ==== ОТЗЫВЫ ==== */
-    .review-form {
-        background: rgba(3, 8, 15, 0.85);
-        border: 1px solid rgba(110, 196, 255, 0.25);
-        padding: 30px 32px;
-        margin-bottom: 40px;
-        position: relative;
-    }
-    .review-form::before {
-        content: '▌ ОСТАВИТЬ ОТЗЫВ'; display: block;
-        font-size: 0.68rem; color: var(--c2); letter-spacing: 3px;
-        margin-bottom: 20px;
-    }
+    .review-form { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.25); padding: 30px 32px; margin-bottom: 40px; position: relative; }
+    .review-form::before { content: '▌ ОСТАВИТЬ ОТЗЫВ'; display: block; font-size: 0.68rem; color: var(--c2); letter-spacing: 3px; margin-bottom: 20px; }
     .review-field { margin-bottom: 18px; }
     .review-label { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 8px; }
     .review-input, .review-textarea {
@@ -265,33 +241,40 @@
         cursor: text; resize: vertical;
     }
     .review-input:focus, .review-textarea:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
-    .review-textarea { min-height: 120px; font-family: 'JetBrains Mono', monospace; }
-    .rating-stars { display: flex; gap: 8px; }
+    .review-textarea { min-height: 120px; }
+
+    .rating-stars { display: flex; gap: 6px; align-items: center; }
     .rating-star {
-        font-size: 1.8rem; color: #4a80c0;
-        cursor: pointer; transition: all 0.2s;
-        background: none; border: none; padding: 0;
+        font-size: 2rem;
+        color: #2a4568;
+        cursor: pointer;
+        transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
+        background: none;
+        border: none;
+        padding: 0 4px;
+        line-height: 1;
+        font-family: 'Oswald', sans-serif;
+        -webkit-user-select: none;
+        user-select: none;
     }
-    .rating-star:hover, .rating-star.active { color: #ffd700; text-shadow: 0 0 20px #ffd700; transform: scale(1.1); }
-    .review-submit {
-        background: rgba(110,196,255,0.1); border: 1px solid var(--c2);
-        color: var(--c3); padding: 12px 32px; font-family: 'Oswald', sans-serif;
-        font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase;
-        cursor: pointer; transition: all 0.3s;
+    .rating-star:hover {
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700;
+        transform: scale(1.2);
     }
+    .rating-star.active {
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5);
+    }
+
+    .review-submit { background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: 12px 32px; font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
     .review-submit:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); letter-spacing: 5px; }
     .review-submit:disabled { opacity: 0.4; cursor: not-allowed; }
     .review-msg { margin-top: 16px; font-size: 0.85rem; letter-spacing: 1px; min-height: 20px; }
     .review-msg.ok { color: #4ade80; } .review-msg.err { color: #ff6b6b; }
 
     .reviews-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-    .review-card {
-        background: rgba(3, 8, 15, 0.7);
-        border: 1px solid rgba(110, 196, 255, 0.15);
-        border-left: 3px solid var(--c2);
-        padding: 20px 22px;
-        transition: all 0.35s;
-    }
+    .review-card { background: rgba(3, 8, 15, 0.7); border: 1px solid rgba(110, 196, 255, 0.15); border-left: 3px solid var(--c2); padding: 20px 22px; transition: all 0.35s; }
     .review-card:hover { border-left-color: var(--c3); transform: translateY(-3px); }
     .review-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; gap: 12px; }
     .review-author { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #e6f4ff; letter-spacing: 1px; }
@@ -299,7 +282,6 @@
     .review-rating { color: #ffd700; font-size: 0.95rem; letter-spacing: 2px; margin-bottom: 10px; }
     .review-content { color: #9ec3e6; font-size: 0.88rem; line-height: 1.7; white-space: pre-wrap; }
 
-    /* ==== ПРАВИЛА ==== */
     .rules-progress { margin-bottom: 30px; display: flex; align-items: center; gap: 16px; font-size: 0.72rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; }
     .rules-progress-bar { flex: 1; height: 3px; background: rgba(110,196,255,0.1); position: relative; overflow: hidden; }
     .rules-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--c1), var(--c3)); box-shadow: 0 0 10px var(--c2); transition: width 0.5s ease; }
@@ -351,16 +333,45 @@
     .channel-handle { font-size: 0.78rem; color: var(--c2); letter-spacing: 1px; }
 
     .final { text-align: center; padding: 140px 0 100px; position: relative; }
-    .final-text { font-family: 'Oswald', sans-serif; font-size: clamp(2.5rem, 9vw, 7rem); font-weight: 700; letter-spacing: clamp(4px, 1.5vw, 14px); color: transparent; -webkit-text-stroke: 1px rgba(110,196,255,0.4); transition: all 0.6s; cursor: none; line-height: 1.05; margin-bottom: 20px; }
-    .final-text:hover { color: var(--c3); -webkit-text-stroke: 1px var(--c3); text-shadow: 0 0 40px rgba(110,196,255,0.7); }
+    .final-text {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(2.5rem, 9vw, 7rem);
+        font-weight: 700;
+        letter-spacing: clamp(4px, 1.5vw, 14px);
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(110,196,255,0.4);
+        transition: all 0.6s;
+        cursor: none;
+        line-height: 1.05;
+        margin-bottom: 20px;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
+    }
+    .final-text::after {
+        content: '';
+        position: absolute;
+        left: 50%; bottom: -8px;
+        transform: translateX(-50%);
+        width: 0; height: 2px;
+        background: var(--c3);
+        box-shadow: 0 0 20px var(--c2);
+        transition: width 0.5s;
+    }
+    .final-text:hover {
+        color: var(--c3);
+        -webkit-text-stroke: 1px var(--c3);
+        text-shadow: 0 0 40px rgba(110,196,255,0.7);
+    }
+    .final-text:hover::after { width: 80%; }
     .final-sub { font-size: 0.75rem; letter-spacing: 6px; color: #4a80c0; text-transform: uppercase; }
+    .final-hint { font-size: 0.7rem; color: var(--c2); letter-spacing: 3px; margin-top: 16px; opacity: 0.7; }
 
     footer { position: relative; z-index: 10; border-top: 1px solid rgba(110, 196, 255, 0.1); padding: 40px 30px; text-align: center; font-size: 0.7rem; color: #4a80c0; letter-spacing: 3px; }
     footer .foot-logo { font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: var(--c3); letter-spacing: 10px; margin-bottom: 12px; text-shadow: 0 0 15px rgba(110, 196, 255, 0.5); }
     footer .hint { margin-top: 16px; font-size: 0.62rem; color: #4a80c0; opacity: 0.7; }
     footer .hint kbd { background: rgba(110,196,255,0.1); border: 1px solid rgba(110,196,255,0.3); padding: 2px 6px; border-radius: 3px; color: var(--c3); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; }
 
-    /* ==== МОДАЛКА АВТОРИЗАЦИИ ==== */
     .modal {
         position: fixed; inset: 0; background: rgba(0, 5, 15, 0.92);
         backdrop-filter: blur(14px); z-index: 10002;
@@ -401,7 +412,6 @@
     .modal-msg { margin-top: 14px; font-size: 0.82rem; min-height: 18px; letter-spacing: 1px; }
     .modal-msg.ok { color: #4ade80; } .modal-msg.err { color: #ff6b6b; }
 
-    /* ==== АДМИНКА ==== */
     .admin-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; border-bottom: 1px solid rgba(110,196,255,0.15); }
     .admin-tab {
         padding: 12px 20px; background: none; border: none;
@@ -434,8 +444,6 @@
     .admin-btn.approve:hover { background: rgba(74,222,128,0.15); }
     .admin-btn.reject { color: #ff6b6b; border-color: rgba(255,107,107,0.4); }
     .admin-btn.reject:hover { background: rgba(255,107,107,0.15); }
-    .admin-btn.edit { color: var(--c2); border-color: rgba(110,196,255,0.4); }
-    .admin-btn.edit:hover { background: rgba(110,196,255,0.15); }
 
     .admin-review-item {
         background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15);
@@ -538,7 +546,7 @@
         </div>
         <h1 class="hero-title" id="heroTitle" aria-label="NOVA"></h1>
         <p class="hero-sub"><span class="typed" id="typed"></span></p>
-        <a href="#news" class="hero-cta" id="cta"><span>К новостям</span></a>
+        <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="hero-cta" id="cta"><span>Вступить в NOVA</span></a>
         <div class="scroll-marker">SCROLL ↓</div>
     </section>
 
@@ -548,12 +556,12 @@
             <h2 class="block-title">О <span class="accent">сервере</span></h2>
         </div>
         <div class="data-grid">
-            <div class="data-cell"><div class="data-label">Версия клиента</div><div class="data-value">Fabric 26.2/div></div>
+            <div class="data-cell"><div class="data-label">Версия клиента</div><div class="data-value">Fabric 26.2</div></div>
             <div class="data-cell"><div class="data-label">Ядро сервера</div><div class="data-value">Paper</div></div>
             <div class="data-cell"><div class="data-label">Лицензия</div><div class="data-value">Не требуется</div></div>
-            <div class="data-cell"><div class="data-label">Старт сезона</div><div class="data-value">ЗАСЕКРЕЧЕНО</div></div>
-            <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value">ЗАСЕКРЕЧЕНО</div></div>
-            <div class="data-cell"><div class="data-label">Открытие энда</div><div class="data-value">ЗАСЕКРЕЧЕНО</div></div>
+            <div class="data-cell"><div class="data-label">Старт сезона</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
+            <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
+            <div class="data-cell"><div class="data-label">Открытие энда</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
             <div class="data-cell"><div class="data-label">Telegram</div><div class="data-value"><a href="https://t.me/l_NOVA_l" target="_blank">@l_NOVA_l</a></div></div>
             <div class="data-cell"><div class="data-label">YouTube</div><div class="data-value"><a href="https://www.youtube.com/channel/UCJTn2B6Fz9cIlDpKX4vs3sA" target="_blank">NOVA | Канал</a></div></div>
         </div>
@@ -581,13 +589,13 @@
                 <input type="text" class="review-input" id="reviewName" placeholder="Как вас зовут?" maxlength="30">
             </div>
             <div class="review-field">
-                <label class="review-label">Оценка</label>
+                <label class="review-label">Оценка <span id="ratingValue" style="color:#ffd700;margin-left:8px;">—</span></label>
                 <div class="rating-stars" id="ratingStars">
-                    <button class="rating-star" data-value="1">★</button>
-                    <button class="rating-star" data-value="2">★</button>
-                    <button class="rating-star" data-value="3">★</button>
-                    <button class="rating-star" data-value="4">★</button>
-                    <button class="rating-star" data-value="5">★</button>
+                    <button type="button" class="rating-star" data-value="1">★</button>
+                    <button type="button" class="rating-star" data-value="2">★</button>
+                    <button type="button" class="rating-star" data-value="3">★</button>
+                    <button type="button" class="rating-star" data-value="4">★</button>
+                    <button type="button" class="rating-star" data-value="5">★</button>
                 </div>
             </div>
             <div class="review-field">
@@ -744,8 +752,9 @@
     </section>
 
     <section class="final">
-        <h2 class="final-text">ПРИСОЕДИНЯЙСЯ</h2>
+        <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="final-text">ПРИСОЕДИНЯЙСЯ</a>
         <div class="final-sub">Код доступа: NOVA-2026</div>
+        <div class="final-hint">▲ Клик ведёт на Discord-сервер</div>
     </section>
 
 </div>
@@ -756,7 +765,6 @@
     <div class="hint">Нажми <kbd>/</kbd> для консоли · <kbd>↑↑↓↓←→←→BA</kbd> — секрет</div>
 </footer>
 
-<!-- Модалка входа -->
 <div class="modal" id="loginModal">
     <div class="modal-inner">
         <button class="modal-close" onclick="closeLoginModal()">✕</button>
@@ -775,7 +783,6 @@
     </div>
 </div>
 
-<!-- Модалка админ-панели -->
 <div class="modal" id="adminModal">
     <div class="modal-inner modal-wide">
         <button class="modal-close" onclick="closeAdminModal()">✕</button>
@@ -783,12 +790,11 @@
         <div class="modal-sub">Управление NOVA</div>
 
         <div class="admin-tabs">
-            <button class="admin-tab active" onclick="switchAdminTab('news')">Новости</button>
-            <button class="admin-tab" onclick="switchAdminTab('reviews')">Отзывы</button>
-            <button class="admin-tab" onclick="switchAdminTab('account')">Аккаунт</button>
+            <button class="admin-tab active" data-tab="news" onclick="switchAdminTab('news')">Новости</button>
+            <button class="admin-tab" data-tab="reviews" onclick="switchAdminTab('reviews')">Отзывы</button>
+            <button class="admin-tab" data-tab="account" onclick="switchAdminTab('account')">Аккаунт</button>
         </div>
 
-        <!-- Новости -->
         <div class="admin-panel active" id="panel-news">
             <div class="modal-field">
                 <label class="modal-label">Заголовок</label>
@@ -798,7 +804,7 @@
                 <label class="modal-label">Текст</label>
                 <textarea class="modal-input" id="newsContent" placeholder="Содержимое новости..." style="min-height:140px;resize:vertical;font-family:'JetBrains Mono',monospace;padding:12px 16px;" maxlength="5000"></textarea>
             </div>
-            <button class="modal-btn" id="newsPublish" onclick="publishNews()">Опубликовать</button>
+            <button class="modal-btn" onclick="publishNews()">Опубликовать</button>
             <div class="modal-msg" id="newsMsg"></div>
 
             <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(110,196,255,0.15);">
@@ -807,7 +813,6 @@
             </div>
         </div>
 
-        <!-- Отзывы -->
         <div class="admin-panel" id="panel-reviews">
             <div class="modal-label" style="margin-bottom:16px;">Отзывы на модерации</div>
             <div id="adminPendingList"><div class="empty-state">Загрузка...</div></div>
@@ -815,7 +820,6 @@
             <div id="adminApprovedList"><div class="empty-state">Загрузка...</div></div>
         </div>
 
-        <!-- Аккаунт -->
         <div class="admin-panel" id="panel-account">
             <div class="modal-field">
                 <label class="modal-label">Email</label>
@@ -828,6 +832,16 @@
             <button class="modal-btn" onclick="doLogout()" style="border-color:rgba(255,107,107,0.5);color:#ff6b6b;margin-top:20px;">Выйти из аккаунта</button>
         </div>
     </div>
+</div>
+
+<!-- Консоль -->
+<div class="console" id="console">
+    <div class="console-label">▌ Терминал NOVA</div>
+    <div class="console-input-wrap">
+        <span class="console-prompt">❯</span>
+        <input type="text" class="console-input" id="consoleInput" placeholder="введи команду... help для списка" autocomplete="off">
+    </div>
+    <div class="console-output" id="consoleOutput">Готов к вводу. Нажми ESC чтобы закрыть.</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1041,7 +1055,7 @@ function setMsg(el, text, type = '') {
 })();
 
 (function magnetic() {
-    document.querySelectorAll('.filter-btn, .hero-cta, .protocol-head, .channel, .review-submit, .modal-btn').forEach(item => {
+    document.querySelectorAll('.filter-btn, .hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text').forEach(item => {
         item.addEventListener('mousemove', e => {
             const r = item.getBoundingClientRect();
             const x = (e.clientX - r.left - r.width/2) * 0.15;
@@ -1316,13 +1330,30 @@ function startMatrix() {
 })();
 
 /* ======================= ОТЗЫВЫ — звёзды ======================= */
-document.querySelectorAll('.rating-star').forEach(s => {
-    s.addEventListener('click', () => {
-        selectedRating = parseInt(s.dataset.value);
-        document.querySelectorAll('.rating-star').forEach(x => {
-            x.classList.toggle('active', parseInt(x.dataset.value) <= selectedRating);
-        });
-        playBeep(400 + selectedRating * 100);
+document.getElementById('ratingStars').addEventListener('click', e => {
+    const star = e.target.closest('.rating-star');
+    if (!star) return;
+    selectedRating = parseInt(star.dataset.value);
+    document.querySelectorAll('.rating-star').forEach(x => {
+        x.classList.toggle('active', parseInt(x.dataset.value) <= selectedRating);
+    });
+    const labels = ['—', 'Ужасно', 'Плохо', 'Нормально', 'Хорошо', 'Отлично!'];
+    document.getElementById('ratingValue').textContent = labels[selectedRating];
+    playBeep(400 + selectedRating * 100);
+});
+
+document.getElementById('ratingStars').addEventListener('mouseover', e => {
+    const star = e.target.closest('.rating-star');
+    if (!star) return;
+    const val = parseInt(star.dataset.value);
+    document.querySelectorAll('.rating-star').forEach(x => {
+        x.style.color = parseInt(x.dataset.value) <= val ? '#ffd700' : '';
+    });
+});
+document.getElementById('ratingStars').addEventListener('mouseleave', () => {
+    document.querySelectorAll('.rating-star').forEach(x => {
+        x.style.color = '';
+        x.classList.toggle('active', parseInt(x.dataset.value) <= selectedRating);
     });
 });
 
@@ -1339,7 +1370,6 @@ async function submitReview() {
     const links = (text.match(/https?:\/\//g) || []).length;
     if (links > 1) { setMsg(msg, '⛔ Слишком много ссылок', 'err'); return; }
 
-    // антиспам — 1 отзыв в 30 сек
     const last = localStorage.getItem('lastReviewTime');
     const now = Date.now();
     if (last && now - parseInt(last) < 30000) {
@@ -1368,6 +1398,7 @@ async function submitReview() {
     document.getElementById('reviewName').value = '';
     document.getElementById('reviewText').value = '';
     selectedRating = 0;
+    document.getElementById('ratingValue').textContent = '—';
     document.querySelectorAll('.rating-star').forEach(x => x.classList.remove('active'));
     playBeep(900);
 }
@@ -1483,11 +1514,10 @@ function closeAdminModal() { document.getElementById('adminModal').classList.rem
 function switchAdminTab(tab) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-    event.target.classList.add('active');
+    document.querySelector(`.admin-tab[data-tab="${tab}"]`).classList.add('active');
     document.getElementById('panel-' + tab).classList.add('active');
 }
 
-/* ==== АДМИН — Новости ==== */
 async function publishNews() {
     const title = document.getElementById('newsTitle').value.trim();
     const content = document.getElementById('newsContent').value.trim();
@@ -1528,7 +1558,6 @@ async function deleteNews(id) {
     loadAdminNews(); loadNews();
 }
 
-/* ==== АДМИН — Отзывы ==== */
 async function loadAdminReviews() {
     const pending = document.getElementById('adminPendingList');
     const approved = document.getElementById('adminApprovedList');
@@ -1571,7 +1600,7 @@ async function deleteReview(id) {
     loadAdminReviews(); loadReviews();
 }
 
-/* ======================= ЗАКРЫТИЕ МОДАЛОК ПО ФОНУ ======================= */
+/* ======================= ЗАКРЫТИЕ МОДАЛОК ======================= */
 document.getElementById('loginModal').addEventListener('click', e => { if (e.target.id === 'loginModal') closeLoginModal(); });
 document.getElementById('adminModal').addEventListener('click', e => { if (e.target.id === 'adminModal') closeAdminModal(); });
 
