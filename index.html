@@ -18,6 +18,21 @@
     body.inverted { filter: invert(1) hue-rotate(180deg); }
     @media (max-width: 900px) { body { cursor: auto; } }
 
+    /* ===== КУРСОР В ПОЛЯХ ВВОДА И МОДАЛКАХ ===== */
+    input, textarea, select,
+    .modal-input, .review-input, .review-textarea {
+        cursor: text !important;
+    }
+    body.modal-open { cursor: auto !important; }
+    body.modal-open .cursor-dot,
+    body.modal-open .cursor-ring {
+        display: none !important;
+    }
+    button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn,
+    .review-submit, .hero-cta, .palette-dot {
+        cursor: pointer;
+    }
+
     .scroll-progress {
         position: fixed; top: 0; left: 0; height: 2px; width: 0%;
         background: linear-gradient(90deg, var(--c1), var(--c3), var(--c4));
@@ -95,28 +110,8 @@
     .resonance-flash.active { animation: resonancePulse 0.5s ease-out; }
     @keyframes resonancePulse { 0% { opacity: 0; } 30% { opacity: 1; } 100% { opacity: 0; } }
 
-    .console {
-        position: fixed; bottom: -120px; left: 50%; transform: translateX(-50%);
-        width: 640px; max-width: 90vw;
-        background: rgba(0, 5, 15, 0.98); border: 1px solid var(--c2);
-        box-shadow: 0 0 40px rgba(110,196,255,0.5);
-        padding: 16px 20px; z-index: 10003;
-        transition: bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        backdrop-filter: blur(14px);
-    }
-    .console.open { bottom: 30px; }
-    .console-label { font-size: 0.62rem; color: var(--c1); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
-    .console-input-wrap { display: flex; align-items: center; gap: 10px; }
-    .console-prompt { font-size: 1rem; color: var(--c2); font-weight: 700; }
-    .console-input { flex: 1; background: transparent; border: none; outline: none; color: var(--c3); font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; caret-color: var(--c2); cursor: text; }
-    .console-output { font-size: 0.78rem; color: var(--c1); margin-top: 10px; min-height: 18px; letter-spacing: 1px; }
-    .console-output.ok { color: #4ade80; } .console-output.err { color: #ff6b6b; }
-
-    #matrix { position: fixed; inset: 0; pointer-events: none; z-index: 9994; opacity: 0; transition: opacity 0.4s; }
-    #matrix.active { opacity: 0.7; }
-
     .palette { position: fixed; top: 50%; right: 20px; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 902; }
-    .palette-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); cursor: none; transition: all 0.3s; position: relative; }
+    .palette-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); transition: all 0.3s; position: relative; }
     .palette-dot:hover { transform: scale(1.3); border-color: #fff; box-shadow: 0 0 15px currentColor; }
     .palette-dot.active { border-color: #fff; box-shadow: 0 0 20px currentColor; transform: scale(1.15); }
 
@@ -135,7 +130,7 @@
     .sound-btn {
         position: fixed; bottom: 20px; right: 20px; width: 42px; height: 42px;
         border: 1px solid rgba(110,196,255,0.3); background: rgba(0,5,12,0.85);
-        color: var(--c2); border-radius: 50%; font-size: 1rem; cursor: pointer; z-index: 901;
+        color: var(--c2); border-radius: 50%; font-size: 1rem; z-index: 901;
         backdrop-filter: blur(8px); transition: all 0.3s;
     }
     .sound-btn:hover { border-color: var(--c3); color: var(--c3); box-shadow: 0 0 20px rgba(110,196,255,0.5); }
@@ -158,7 +153,7 @@
     .auth-btn {
         background: transparent; border: 1px solid rgba(110,196,255,0.3);
         color: var(--c2); padding: 6px 14px; font-family: 'JetBrains Mono', monospace;
-        font-size: 0.7rem; letter-spacing: 2px; cursor: pointer;
+        font-size: 0.7rem; letter-spacing: 2px;
         transition: all 0.3s; text-transform: uppercase;
     }
     .auth-btn:hover { background: rgba(110,196,255,0.15); border-color: var(--c3); color: #fff; }
@@ -179,7 +174,7 @@
     .hero-sub .typed { color: var(--c3); border-right: 2px solid var(--c2); padding-right: 4px; animation: blink 0.9s step-end infinite; }
     @keyframes blink { 50% { border-color: transparent; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .hero-cta { display: inline-flex; align-items: center; gap: 14px; padding: 16px 32px; border: 1px solid var(--c2); color: var(--c3); font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; background: rgba(110,196,255,0.05); position: relative; overflow: hidden; transition: all 0.3s; opacity: 0; animation: fadeUp 1s ease 2.7s forwards; cursor: none; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 14px; padding: 16px 32px; border: 1px solid var(--c2); color: var(--c3); font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; background: rgba(110,196,255,0.05); position: relative; overflow: hidden; transition: all 0.3s; opacity: 0; animation: fadeUp 1s ease 2.7s forwards; }
     .hero-cta::before { content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(110,196,255,0.4), transparent 70%); pointer-events: none; transform: translate(-50%, -50%); left: var(--mx, 50%); top: var(--my, 50%); opacity: 0; transition: opacity 0.3s; }
     .hero-cta:hover::before { opacity: 1; }
     .hero-cta::after { content: '→'; transition: transform 0.3s; position: relative; z-index: 1; }
@@ -198,7 +193,7 @@
     .block-title .accent { color: var(--c2); }
 
     .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: rgba(110, 196, 255, 0.12); border: 1px solid rgba(110, 196, 255, 0.18); }
-    .data-cell { background: #03080f; padding: 26px 24px; transition: background 0.3s; position: relative; overflow: hidden; cursor: none; }
+    .data-cell { background: #03080f; padding: 26px 24px; transition: background 0.3s; position: relative; overflow: hidden; }
     .data-cell::after { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--c2); transition: height 0.4s; box-shadow: 0 0 15px var(--c2); }
     .data-cell:hover { background: #051222; } .data-cell:hover::after { height: 100%; }
     .data-label { font-size: 0.68rem; letter-spacing: 2.5px; color: #4a80c0; text-transform: uppercase; margin-bottom: 12px; }
@@ -238,7 +233,7 @@
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.9rem; outline: none;
         transition: border 0.3s;
-        cursor: text; resize: vertical;
+        resize: vertical;
     }
     .review-input:focus, .review-textarea:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
     .review-textarea { min-height: 120px; }
@@ -247,7 +242,6 @@
     .rating-star {
         font-size: 2rem;
         color: #2a4568;
-        cursor: pointer;
         transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
         background: none;
         border: none;
@@ -267,9 +261,9 @@
         text-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5);
     }
 
-    .review-submit { background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: 12px 32px; font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+    .review-submit { background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: 12px 32px; font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; transition: all 0.3s; }
     .review-submit:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); letter-spacing: 5px; }
-    .review-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+    .review-submit:disabled { opacity: 0.4; }
     .review-msg { margin-top: 16px; font-size: 0.85rem; letter-spacing: 1px; min-height: 20px; }
     .review-msg.ok { color: #4ade80; } .review-msg.err { color: #ff6b6b; }
 
@@ -297,7 +291,7 @@
     .protocol-scan { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--c2), transparent); opacity: 0; }
     .protocol.open .protocol-scan { animation: scanDown 0.9s ease-out; }
     @keyframes scanDown { 0% { top: 0; opacity: 1; } 100% { top: 100%; opacity: 0; } }
-    .protocol-head { display: flex; align-items: center; gap: 20px; padding: 22px 26px; cursor: none; user-select: none; flex-wrap: wrap; position: relative; }
+    .protocol-head { display: flex; align-items: center; gap: 20px; padding: 22px 26px; user-select: none; flex-wrap: wrap; position: relative; }
     .protocol-code { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; min-width: 55px; }
     .protocol-name { font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 3px; color: #cfe6ff; text-transform: uppercase; flex: 1; transition: color 0.3s; }
     .protocol.open .protocol-name { color: var(--c3); }
@@ -324,7 +318,7 @@
     .code-inline { background: rgba(110,196,255,0.08); border: 1px solid rgba(110,196,255,0.2); padding: 1px 6px; border-radius: 3px; color: var(--c3); font-size: 0.85em; }
 
     .channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: rgba(110, 196, 255, 0.12); border: 1px solid rgba(110, 196, 255, 0.18); }
-    .channel { display: flex; flex-direction: column; gap: 10px; padding: 34px 28px; background: #03080f; text-decoration: none; color: #cfe6ff; transition: all 0.4s; position: relative; overflow: hidden; cursor: none; }
+    .channel { display: flex; flex-direction: column; gap: 10px; padding: 34px 28px; background: #03080f; text-decoration: none; color: #cfe6ff; transition: all 0.4s; position: relative; overflow: hidden; }
     .channel::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(110, 196, 255, 0.12), transparent); transition: left 0.7s; }
     .channel:hover::before { left: 100%; }
     .channel:hover { background: #051222; transform: translateY(-4px); }
@@ -341,7 +335,6 @@
         color: transparent;
         -webkit-text-stroke: 1px rgba(110,196,255,0.4);
         transition: all 0.6s;
-        cursor: none;
         line-height: 1.05;
         margin-bottom: 20px;
         text-decoration: none;
@@ -389,7 +382,7 @@
     .modal-wide { max-width: 900px; max-height: 85vh; overflow-y: auto; }
     .modal-wide::-webkit-scrollbar { width: 6px; }
     .modal-wide::-webkit-scrollbar-thumb { background: rgba(110,196,255,0.4); border-radius: 3px; }
-    .modal-close { position: absolute; top: 18px; right: 22px; font-size: 1.6rem; color: rgba(180,220,255,0.6); cursor: none; transition: all 0.3s; line-height: 1; background: none; border: none; padding: 5px 12px; }
+    .modal-close { position: absolute; top: 18px; right: 22px; font-size: 1.6rem; color: rgba(180,220,255,0.6); transition: all 0.3s; line-height: 1; background: none; border: none; padding: 5px 12px; }
     .modal-close:hover { color: #ff6b6b; transform: rotate(90deg); text-shadow: 0 0 20px #ff6b6b; }
     .modal-title { font-family: 'Oswald', sans-serif; font-size: 1.8rem; color: #e6f4ff; letter-spacing: 4px; margin-bottom: 6px; }
     .modal-sub { font-size: 0.7rem; color: #4a80c0; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; }
@@ -399,14 +392,14 @@
         width: 100%; background: rgba(0,0,0,0.5);
         border: 1px solid rgba(110,196,255,0.25); color: #e6f4ff;
         padding: 12px 16px; font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9rem; outline: none; transition: border 0.3s; cursor: text;
+        font-size: 0.9rem; outline: none; transition: border 0.3s;
     }
     .modal-input:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
     .modal-btn {
         width: 100%; background: rgba(110,196,255,0.1); border: 1px solid var(--c2);
         color: var(--c3); padding: 14px; font-family: 'Oswald', sans-serif;
         font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase;
-        cursor: pointer; transition: all 0.3s; margin-top: 10px;
+        transition: all 0.3s; margin-top: 10px;
     }
     .modal-btn:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); }
     .modal-msg { margin-top: 14px; font-size: 0.82rem; min-height: 18px; letter-spacing: 1px; }
@@ -417,7 +410,7 @@
         padding: 12px 20px; background: none; border: none;
         color: #4a80c0; font-family: 'Oswald', sans-serif;
         font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
-        cursor: pointer; transition: all 0.3s;
+        transition: all 0.3s;
         border-bottom: 2px solid transparent; margin-bottom: -1px;
     }
     .admin-tab:hover { color: var(--c3); }
@@ -436,7 +429,7 @@
     .admin-actions { display: flex; gap: 8px; flex-shrink: 0; }
     .admin-btn {
         padding: 6px 12px; font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem; letter-spacing: 1px; cursor: pointer;
+        font-size: 0.68rem; letter-spacing: 1px;
         background: transparent; border: 1px solid;
         transition: all 0.3s; text-transform: uppercase;
     }
@@ -762,7 +755,7 @@
 <footer>
     <div class="foot-logo">NOVA</div>
     <div>© 2026 · ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
-    <div class="hint"><kbd>↑↑↓↓←→←→</kbd> — секрет</div>
+    <div class="hint"><kbd>↑↑↓↓←→←→BA</kbd> — секрет</div>
 </footer>
 
 <div class="modal" id="loginModal">
@@ -832,16 +825,6 @@
             <button class="modal-btn" onclick="doLogout()" style="border-color:rgba(255,107,107,0.5);color:#ff6b6b;margin-top:20px;">Выйти из аккаунта</button>
         </div>
     </div>
-</div>
-
-<!-- Консоль -->
-<div class="console" id="console">
-    <div class="console-label">▌ Терминал NOVA</div>
-    <div class="console-input-wrap">
-        <span class="console-prompt">❯</span>
-        <input type="text" class="console-input" id="consoleInput" placeholder="введи команду... help для списка" autocomplete="off">
-    </div>
-    <div class="console-output" id="consoleOutput">Готов к вводу. Нажми ESC чтобы закрыть.</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1055,7 +1038,7 @@ function setMsg(el, text, type = '') {
 })();
 
 (function magnetic() {
-    document.querySelectorAll('.filter-btn, .hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text').forEach(item => {
+    document.querySelectorAll('.hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text').forEach(item => {
         item.addEventListener('mousemove', e => {
             const r = item.getBoundingClientRect();
             const x = (e.clientX - r.left - r.width/2) * 0.15;
@@ -1216,87 +1199,9 @@ document.getElementById('palette').addEventListener('click', e => {
     playBeep(700);
 });
 
-/* ======================= КОНСОЛЬ ======================= */
-let consoleOpen = false;
-const consoleEl = document.getElementById('console');
-const consoleInput = document.getElementById('consoleInput');
-const consoleOutput = document.getElementById('consoleOutput');
-
-document.addEventListener('keydown', e => {
-    if (e.key === '/' && !consoleOpen && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
-        e.preventDefault();
-        openConsole();
-    }
-    if (e.key === 'Escape' && consoleOpen) closeConsole();
-});
-function openConsole() {
-    consoleOpen = true;
-    consoleEl.classList.add('open');
-    setTimeout(() => consoleInput.focus(), 400);
-    playBeep(800);
-}
-function closeConsole() {
-    consoleOpen = false;
-    consoleEl.classList.remove('open');
-    consoleInput.value = '';
-    playBeep(300);
-}
-consoleInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { handleCommand(consoleInput.value.trim().toLowerCase()); consoleInput.value = ''; }
-});
-function setConsoleOutput(t, type = '') { consoleOutput.className = 'console-output ' + type; consoleOutput.textContent = t; }
-function handleCommand(cmd) {
-    if (!cmd) { setConsoleOutput('Введи команду. help для списка.'); return; }
-    const args = cmd.split(' '), base = args[0];
-    switch (base) {
-        case 'help': setConsoleOutput('Команды: help, nova, glitch, boom, matrix, invert, theme [цвет], clear, close', 'ok'); break;
-        case 'nova': setConsoleOutput('NOVA SIGNAL v5 · Сезон 01 · 2026', 'ok'); break;
-        case 'glitch':
-            document.body.style.filter = 'hue-rotate(180deg)';
-            setTimeout(() => { document.body.style.filter = ''; }, 500);
-            setConsoleOutput('Применён глитч', 'ok'); playBeep(200); break;
-        case 'boom':
-            for (let i = 0; i < 5; i++) setTimeout(() => spawnBoom(Math.random()*innerWidth, Math.random()*innerHeight), i*100);
-            setConsoleOutput('Взрывы!', 'ok'); break;
-        case 'matrix': startMatrix(); setConsoleOutput('Матрица активирована на 5 секунд', 'ok'); break;
-        case 'invert': document.body.classList.toggle('inverted'); setConsoleOutput('Инверсия: ' + (document.body.classList.contains('inverted')?'вкл':'выкл'), 'ok'); break;
-        case 'theme':
-            const themes = { blue: 0, purple: 1, pink: 2, gold: 3, green: 4, red: 5 };
-            const dots = document.querySelectorAll('.palette-dot');
-            if (args[1] && args[1] in themes) { dots[themes[args[1]]].click(); setConsoleOutput('Тема: ' + args[1], 'ok'); }
-            else setConsoleOutput('Доступно: blue, purple, pink, gold, green, red', 'err');
-            break;
-        case 'clear': setConsoleOutput('Очищено.'); break;
-        case 'close': case 'exit': closeConsole(); break;
-        default: setConsoleOutput(`Команда "${base}" не найдена. help.`, 'err'); playBeep(200);
-    }
-}
-
-/* ======================= МАТРИЦА ======================= */
-function startMatrix() {
-    const canvas = document.getElementById('matrix');
-    canvas.classList.add('active');
-    const ctx = canvas.getContext('2d');
-    canvas.width = innerWidth; canvas.height = innerHeight;
-    const cols = Math.floor(canvas.width / 16);
-    const drops = Array(cols).fill(1);
-    const chars = 'NOVA01アイウエオカキクケコサシスセソタチツテトナニヌネノ';
-    const int = setInterval(() => {
-        ctx.fillStyle = 'rgba(0, 3, 8, 0.08)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#6ec4ff'; ctx.font = '14px monospace';
-        for (let i = 0; i < drops.length; i++) {
-            ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*16, drops[i]*16);
-            if (drops[i]*16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        }
-    }, 40);
-    setTimeout(() => { clearInterval(int); canvas.classList.remove('active'); ctx.clearRect(0,0,canvas.width,canvas.height); }, 5000);
-}
-
 /* ======================= KONAMI ======================= */
 (function konami() {
-    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight'];
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let idx = 0;
     document.addEventListener('keydown', e => {
         const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
@@ -1471,8 +1376,12 @@ function handleAuthClick() {
 function openLoginModal() {
     document.getElementById('loginModal').classList.add('active');
     document.getElementById('loginMsg').textContent = '';
+    document.body.classList.add('modal-open');
 }
-function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); }
+function closeLoginModal() { 
+    document.getElementById('loginModal').classList.remove('active'); 
+    document.body.classList.remove('modal-open');
+}
 
 async function doLogin() {
     const email = document.getElementById('loginEmail').value.trim();
@@ -1503,13 +1412,17 @@ async function doLogout() {
 /* ======================= АДМИН-ПАНЕЛЬ ======================= */
 function openAdminModal() {
     document.getElementById('adminModal').classList.add('active');
+    document.body.classList.add('modal-open');
     document.getElementById('accountEmail').textContent = currentUser.email;
     document.getElementById('accountRole').textContent = currentProfile.role.toUpperCase();
     loadAdminNews();
     loadAdminReviews();
     switchAdminTab('news');
 }
-function closeAdminModal() { document.getElementById('adminModal').classList.remove('active'); }
+function closeAdminModal() { 
+    document.getElementById('adminModal').classList.remove('active'); 
+    document.body.classList.remove('modal-open');
+}
 
 function switchAdminTab(tab) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
