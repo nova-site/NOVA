@@ -23,14 +23,18 @@
     }
     body.inverted { filter: invert(1) hue-rotate(180deg); }
     @media (max-width: 900px) { body { cursor: auto; } }
-    input, textarea, select, .modal-input, .review-input, .review-textarea { cursor: text !important; }
+    input, textarea, select, .modal-input, .review-input, .review-textarea, .upload-input, .player-input { cursor: text !important; }
     body.modal-open { cursor: auto !important; }
     body.modal-open .cursor-dot, body.modal-open .cursor-ring { display: none !important; }
     button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn,
     .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn,
-    .reaction-btn, .gallery-item, .lightbox-close, .upload-drop, .file-btn {
+    .reaction-btn, .gallery-item, .lightbox-close, .upload-drop, .file-btn,
+    .player-card, .filter-chip, .player-link-btn, .link-remove {
         cursor: pointer;
     }
+    .lightbox { cursor: auto; }
+    .lightbox * { cursor: auto; }
+    .lightbox-close { cursor: pointer !important; }
 
     .scroll-progress {
         position: fixed; top: 0; left: 0; height: 2px; width: 0%;
@@ -239,9 +243,7 @@
 
     .reactions { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(110,196,255,0.1); }
     .reaction-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+        display: inline-flex; align-items: center; gap: 6px;
         padding: 6px 12px;
         background: rgba(110,196,255,0.04);
         border: 1px solid rgba(110,196,255,0.15);
@@ -252,17 +254,8 @@
         transition: all 0.25s;
         user-select: none;
     }
-    .reaction-btn:hover {
-        background: rgba(110,196,255,0.12);
-        border-color: var(--c2);
-        transform: translateY(-2px);
-    }
-    .reaction-btn.voted {
-        background: rgba(110,196,255,0.2);
-        border-color: var(--c3);
-        color: #fff;
-        box-shadow: 0 0 15px rgba(110,196,255,0.4);
-    }
+    .reaction-btn:hover { background: rgba(110,196,255,0.12); border-color: var(--c2); transform: translateY(-2px); }
+    .reaction-btn.voted { background: rgba(110,196,255,0.2); border-color: var(--c3); color: #fff; box-shadow: 0 0 15px rgba(110,196,255,0.4); }
     .reaction-btn .emoji { font-size: 1rem; }
     .reaction-btn .count { font-weight: 700; min-width: 14px; text-align: center; }
     .reaction-btn.bump { animation: reactionBump 0.4s ease; }
@@ -303,31 +296,15 @@
         transition: all 0.3s;
         position: relative;
     }
-    .upload-zone.dragover {
-        border-color: var(--c3);
-        background: rgba(110,196,255,0.08);
-        box-shadow: 0 0 40px rgba(110,196,255,0.3);
-    }
+    .upload-zone.dragover { border-color: var(--c3); background: rgba(110,196,255,0.08); box-shadow: 0 0 40px rgba(110,196,255,0.3); }
     .upload-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.7; }
     .upload-title { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); color: #e6f4ff; letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; }
     .upload-hint { font-size: 0.78rem; color: #4a80c0; letter-spacing: 1px; margin-bottom: 20px; }
     .upload-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; max-width: 700px; margin: 0 auto 20px; }
-    .upload-input {
-        width: 100%;
-        background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(110,196,255,0.25);
-        color: #e6f4ff;
-        padding: 10px 14px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.85rem;
-        outline: none;
-        transition: border 0.3s;
-    }
+    .upload-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(110,196,255,0.25); color: #e6f4ff; padding: 10px 14px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; outline: none; transition: border 0.3s; }
     .upload-input:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
     .file-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
+        display: inline-flex; align-items: center; gap: 10px;
         padding: 12px 28px;
         background: rgba(110,196,255,0.1);
         border: 1px solid var(--c2);
@@ -339,123 +316,402 @@
         transition: all 0.3s;
     }
     .file-btn:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); }
-    #fileInput { display: none; }
+    #fileInput, #avatarInput { display: none; }
     .upload-msg { margin-top: 16px; font-size: 0.82rem; min-height: 20px; letter-spacing: 1px; }
     .upload-msg.ok { color: #4ade80; }
     .upload-msg.err { color: #ff6b6b; }
-    .upload-preview {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 16px;
-        justify-content: center;
-    }
-    .upload-preview .preview-item {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid rgba(110,196,255,0.3);
-    }
+    .upload-preview { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; justify-content: center; }
+    .upload-preview .preview-item { position: relative; width: 80px; height: 80px; border-radius: 8px; overflow: hidden; border: 1px solid rgba(110,196,255,0.3); }
     .upload-preview img { width: 100%; height: 100%; object-fit: cover; }
 
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
-        gap: 14px;
-    }
-    .gallery-item {
-        position: relative;
-        aspect-ratio: 4 / 3;
-        overflow: hidden;
-        border-radius: 12px;
-        background: #03080f;
-        border: 1px solid rgba(110,196,255,0.2);
-        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .gallery-item:hover {
-        border-color: var(--c2);
-        transform: translateY(-6px);
-        box-shadow: 0 20px 50px rgba(110,196,255,0.25);
-    }
-    .gallery-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.6s;
-    }
+    .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 14px; }
+    .gallery-item { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 12px; background: #03080f; border: 1px solid rgba(110,196,255,0.2); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .gallery-item:hover { border-color: var(--c2); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(110,196,255,0.25); }
+    .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s; }
     .gallery-item:hover img { transform: scale(1.08); }
-    .gallery-item-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(0,3,8,0.9), transparent 60%);
-        opacity: 0;
-        transition: opacity 0.3s;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        padding: 14px;
-        pointer-events: none;
-    }
+    .gallery-item-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,3,8,0.9), transparent 60%); opacity: 0; transition: opacity 0.3s; display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; pointer-events: none; }
     .gallery-item:hover .gallery-item-overlay { opacity: 1; }
     .gallery-item-title { font-family: 'Oswald', sans-serif; color: #fff; font-size: 0.95rem; letter-spacing: 1px; margin-bottom: 4px; }
     .gallery-item-author { font-size: 0.7rem; color: var(--c2); letter-spacing: 1px; }
-    .gallery-item-status {
-        position: absolute;
-        top: 10px; left: 10px;
-        padding: 3px 8px;
-        background: rgba(255,179,71,0.9);
-        color: #000;
-        font-size: 0.62rem;
-        letter-spacing: 1px;
-        border-radius: 3px;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
 
-    .lightbox {
-        position: fixed; inset: 0;
-        background: rgba(0, 3, 8, 0.97);
-        backdrop-filter: blur(14px);
-        z-index: 20000;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        padding: 30px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
+    .lightbox { position: fixed; inset: 0; background: rgba(0, 3, 8, 0.97); backdrop-filter: blur(14px); z-index: 20000; display: none; justify-content: center; align-items: center; padding: 30px; opacity: 0; transition: opacity 0.3s; }
     .lightbox.active { display: flex; opacity: 1; }
     .lightbox-img { max-width: 100%; max-height: 90vh; object-fit: contain; box-shadow: 0 20px 80px rgba(0,0,0,0.9), 0 0 60px rgba(110,196,255,0.3); }
-    .lightbox-close {
+    .lightbox-close { position: absolute; top: 20px; right: 30px; font-size: 2rem; color: #fff; background: rgba(0,0,0,0.5); border: 1px solid rgba(110,196,255,0.3); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+    .lightbox-close:hover { background: rgba(255,107,107,0.3); border-color: #ff6b6b; color: #ff6b6b; transform: rotate(90deg); }
+    .lightbox-caption { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); padding: 12px 24px; border: 1px solid rgba(110,196,255,0.3); color: #fff; font-family: 'Oswald', sans-serif; letter-spacing: 2px; max-width: 90vw; text-align: center; }
+    .lightbox-caption .author { color: var(--c2); font-size: 0.8rem; margin-top: 4px; letter-spacing: 1px; }
+
+    /* ===== ИГРОКИ ===== */
+    .players-head { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid rgba(110,196,255,0.15); }
+    .players-title { font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); color: #e6f4ff; letter-spacing: clamp(4px, 1.5vw, 10px); text-transform: uppercase; text-shadow: 0 0 30px rgba(110,196,255,0.5); margin-bottom: 12px; }
+    .players-sub { font-size: clamp(0.7rem, 1.3vw, 0.85rem); color: #4a80c0; letter-spacing: 4px; text-transform: uppercase; }
+    .players-count { font-family: 'Oswald', sans-serif; color: var(--c2); letter-spacing: 2px; font-size: 1rem; }
+    .players-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 30px; justify-content: center; }
+    .filter-chip {
+        padding: 8px 16px;
+        background: rgba(3,8,15,0.7);
+        border: 1px solid rgba(110,196,255,0.2);
+        color: #6ec4ff;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+        border-radius: 20px;
+    }
+    .filter-chip:hover { border-color: var(--c3); color: var(--c3); background: rgba(110,196,255,0.08); }
+    .filter-chip.active { background: rgba(110,196,255,0.2); border-color: var(--c3); color: #fff; box-shadow: 0 0 15px rgba(110,196,255,0.4); }
+
+    .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+    .player-card {
+        position: relative;
+        background: rgba(3, 8, 15, 0.9);
+        border: 1px solid rgba(110, 196, 255, 0.2);
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+    }
+    .player-card::before {
+        content: '';
         position: absolute;
-        top: 20px; right: 30px;
-        font-size: 2rem;
-        color: #fff;
-        background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(110,196,255,0.3);
+        top: 0; left: 0; right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--c2), transparent);
+        opacity: 0;
+        transition: opacity 0.4s;
+        z-index: 5;
+    }
+    .player-card:hover::before { opacity: 1; }
+    .player-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(110,196,255,0.5);
+        box-shadow: 0 25px 60px rgba(110,196,255,0.25);
+    }
+    .player-card.role-owner   { border-left: 3px solid #ffd700; }
+    .player-card.role-admin   { border-left: 3px solid #ff6b6b; }
+    .player-card.role-moderator { border-left: 3px solid #ffb347; }
+    .player-card.role-km      { border-left: 3px solid #b46eff; }
+    .player-card.role-mascot  { border-left: 3px solid #00e0c6; }
+    .player-card.role-player  { border-left: 3px solid #6ec4ff; }
+
+    .player-avatar-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background: radial-gradient(circle at 50% 40%, rgba(110,196,255,0.15), rgba(3,8,15,0.95) 70%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .player-avatar-wrap::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(110,196,255,0.08), transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(180,110,255,0.06), transparent 40%);
+        pointer-events: none;
+    }
+    .player-avatar-ring {
+        position: absolute;
+        width: 78%;
+        aspect-ratio: 1 / 1;
         border-radius: 50%;
-        width: 50px; height: 50px;
-        display: flex; align-items: center; justify-content: center;
+        border: 1px dashed rgba(110,196,255,0.3);
+        animation: ringRotate 20s linear infinite;
+        pointer-events: none;
+    }
+    @keyframes ringRotate { to { transform: rotate(360deg); } }
+    .player-avatar {
+        width: 62%;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow:
+            0 0 30px rgba(110,196,255,0.5),
+            inset 0 0 20px rgba(0,0,0,0.4),
+            0 0 0 2px rgba(110,196,255,0.3);
+        position: relative;
+        z-index: 2;
+        transition: transform 0.4s;
+    }
+    .player-card:hover .player-avatar { transform: scale(1.05); }
+    .player-avatar-placeholder {
+        width: 62%;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #a8e0ff, #3a8bd6 50%, #0a2545);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Oswald', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #001020;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 0 30px rgba(110,196,255,0.5);
+    }
+
+    .player-status-dot {
+        position: absolute;
+        bottom: 18%;
+        right: 18%;
+        width: 16px; height: 16px;
+        border-radius: 50%;
+        background: #4ade80;
+        border: 3px solid #03080f;
+        box-shadow: 0 0 15px currentColor;
+        z-index: 3;
+        animation: statusPulse 2s infinite;
+    }
+    @keyframes statusPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.15); }
+    }
+    .player-status-dot.active   { background: #4ade80; color: #4ade80; }
+    .player-status-dot.streaming{ background: #b46eff; color: #b46eff; }
+    .player-status-dot.afk      { background: #ffb347; color: #ffb347; }
+    .player-status-dot.offline  { background: #6a7a8a; color: #6a7a8a; animation: none; }
+    .player-status-dot.vacation { background: #6ec4ff; color: #6ec4ff; }
+
+    .player-body { padding: 18px 18px 22px; }
+    .player-role-badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+        padding: 4px 10px;
+        border: 1px solid;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+    .player-role-badge.role-owner   { color: #ffd700; border-color: rgba(255,215,0,0.5); background: rgba(255,215,0,0.1); }
+    .player-role-badge.role-admin   { color: #ff6b6b; border-color: rgba(255,107,107,0.5); background: rgba(255,107,107,0.1); }
+    .player-role-badge.role-moderator { color: #ffb347; border-color: rgba(255,179,71,0.5); background: rgba(255,179,71,0.1); }
+    .player-role-badge.role-km      { color: #b46eff; border-color: rgba(180,110,255,0.5); background: rgba(180,110,255,0.1); }
+    .player-role-badge.role-mascot  { color: #00e0c6; border-color: rgba(0,224,198,0.5); background: rgba(0,224,198,0.1); }
+    .player-role-badge.role-player  { color: #6ec4ff; border-color: rgba(110,196,255,0.5); background: rgba(110,196,255,0.1); }
+
+    .player-nick {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.2rem;
+        color: #e6f4ff;
+        letter-spacing: 1.5px;
+        margin-bottom: 6px;
+        word-break: break-all;
+    }
+    .player-race {
+        font-size: 0.72rem;
+        color: #4a80c0;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+    .player-access-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.62rem;
+        color: #4a80c0;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+    .player-access-bar {
+        height: 3px;
+        background: rgba(110,196,255,0.1);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    .player-access-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--c1), var(--c3));
+        box-shadow: 0 0 8px var(--c2);
+        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Модалка игрока */
+    .player-dossier-avatar {
+        width: 120px; height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 20px;
+        display: block;
+        border: 2px solid rgba(110,196,255,0.5);
+        box-shadow: 0 0 40px rgba(110,196,255,0.4);
+    }
+    .player-dossier-name {
+        font-family: 'Oswald', sans-serif;
+        font-size: 2rem;
+        color: #e6f4ff;
+        letter-spacing: 3px;
+        text-align: center;
+        margin-bottom: 6px;
+        text-shadow: 0 0 20px rgba(110,196,255,0.5);
+    }
+    .player-dossier-role {
+        font-size: 0.8rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    .player-dossier-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: 14px 24px;
+        margin-bottom: 24px;
+    }
+    .player-dossier-stat-label {
+        font-size: 0.65rem;
+        color: #4a80c0;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .player-dossier-stat-value {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1rem;
+        color: #e6f4ff;
+        letter-spacing: 1px;
+    }
+    .player-dossier-lore-label {
+        font-size: 0.7rem;
+        color: var(--c2);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-bottom: 12px;
+    }
+    .player-dossier-lore {
+        color: #9ec3e6;
+        font-size: 0.9rem;
+        line-height: 1.9;
+        white-space: pre-wrap;
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 10px;
+        margin-bottom: 20px;
+    }
+    .player-dossier-lore::-webkit-scrollbar { width: 4px; }
+    .player-dossier-lore::-webkit-scrollbar-thumb { background: rgba(110,196,255,0.4); border-radius: 2px; }
+    .player-dossier-links {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .player-link-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border: 1px solid rgba(110,196,255,0.3);
+        color: var(--c2);
+        text-decoration: none;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+        border-radius: 20px;
+    }
+    .player-link-btn:hover { background: rgba(110,196,255,0.15); border-color: var(--c3); color: #fff; box-shadow: 0 0 20px rgba(110,196,255,0.4); }
+
+    /* Форма игрока в админке */
+    .player-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+        gap: 14px;
+        margin-bottom: 18px;
+    }
+    .player-input, .player-select {
+        width: 100%;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(110,196,255,0.25);
+        color: #e6f4ff;
+        padding: 10px 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        outline: none;
+        transition: border 0.3s;
+    }
+    .player-input:focus, .player-select:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
+    .player-select {
+        cursor: pointer;
+        appearance: none;
+        background-image: linear-gradient(45deg, transparent 50%, var(--c2) 50%), linear-gradient(135deg, var(--c2) 50%, transparent 50%);
+        background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%;
+        background-size: 5px 5px, 5px 5px;
+        background-repeat: no-repeat;
+        padding-right: 32px;
+    }
+    .player-select option { background: #050c1a; color: #fff; }
+    .player-textarea {
+        width: 100%;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(110,196,255,0.25);
+        color: #e6f4ff;
+        padding: 12px 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        outline: none;
+        resize: vertical;
+        min-height: 100px;
+        transition: border 0.3s;
+    }
+    .player-textarea:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
+
+    .avatar-preview {
+        width: 100px; height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(110,196,255,0.4);
+        box-shadow: 0 0 20px rgba(110,196,255,0.3);
+        display: block;
+        margin: 0 auto 12px;
+    }
+
+    /* Ссылки в форме */
+    .links-editor {
+        background: rgba(0,0,0,0.3);
+        border: 1px solid rgba(110,196,255,0.15);
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 14px;
+    }
+    .link-row {
+        display: grid;
+        grid-template-columns: 130px 1fr auto;
+        gap: 10px;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+    .link-row .player-input, .link-row .player-select { padding: 8px 12px; font-size: 0.8rem; }
+    .link-remove {
+        width: 32px; height: 32px;
+        border: 1px solid rgba(255,107,107,0.4);
+        background: transparent;
+        color: #ff6b6b;
+        border-radius: 6px;
+        font-size: 1rem;
+        line-height: 1;
         transition: all 0.3s;
     }
-    .lightbox-close:hover { background: rgba(255,107,107,0.3); border-color: #ff6b6b; color: #ff6b6b; transform: rotate(90deg); }
-    .lightbox-caption {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0,0,0,0.7);
-        padding: 12px 24px;
-        border: 1px solid rgba(110,196,255,0.3);
-        color: #fff;
-        font-family: 'Oswald', sans-serif;
-        letter-spacing: 2px;
-        max-width: 90vw;
-        text-align: center;
+    .link-remove:hover { background: rgba(255,107,107,0.2); }
+    .link-add-btn {
+        padding: 8px 16px;
+        border: 1px dashed rgba(110,196,255,0.4);
+        background: transparent;
+        color: var(--c2);
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+        width: 100%;
     }
-    .lightbox-caption .author { color: var(--c2); font-size: 0.8rem; margin-top: 4px; letter-spacing: 1px; }
+    .link-add-btn:hover { background: rgba(110,196,255,0.08); border-style: solid; border-color: var(--c3); }
 
     /* ===== ОТЗЫВЫ ===== */
     .review-form { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.25); padding: clamp(20px, 3vw, 30px) clamp(20px, 3vw, 32px); margin-bottom: 40px; position: relative; }
@@ -581,16 +837,45 @@
     .admin-btn.approve:hover { background: rgba(74,222,128,0.15); }
     .admin-btn.reject { color: #ff6b6b; border-color: rgba(255,107,107,0.4); }
     .admin-btn.reject:hover { background: rgba(255,107,107,0.15); }
+    .admin-btn.edit { color: var(--c2); border-color: rgba(110,196,255,0.4); }
+    .admin-btn.edit:hover { background: rgba(110,196,255,0.15); }
 
-    .admin-review-item, .admin-gallery-item { background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15); border-left: 3px solid #ffb347; padding: 18px 22px; margin-bottom: 12px; }
-    .admin-review-item.approved, .admin-gallery-item.approved { border-left-color: #4ade80; }
+    .admin-review-item, .admin-gallery-item, .admin-player-item { background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15); border-left: 3px solid #ffb347; padding: 18px 22px; margin-bottom: 12px; }
+    .admin-review-item.approved, .admin-gallery-item.approved, .admin-player-item.approved { border-left-color: #4ade80; }
     .admin-review-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
     .admin-review-author { font-family: 'Oswald', sans-serif; color: #e6f4ff; letter-spacing: 1px; }
     .admin-review-stars { color: #ffd700; letter-spacing: 2px; }
     .admin-review-text { color: #9ec3e6; font-size: 0.88rem; line-height: 1.7; margin-bottom: 12px; white-space: pre-wrap; }
     .admin-gallery-preview { width: 100%; max-width: 200px; height: auto; border-radius: 6px; margin-bottom: 12px; border: 1px solid rgba(110,196,255,0.2); }
 
+    .admin-player-item { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+    .admin-player-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(110,196,255,0.4); box-shadow: 0 0 20px rgba(110,196,255,0.3); flex-shrink: 0; }
+    .admin-player-placeholder { width: 72px; height: 72px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #a8e0ff, #3a8bd6 50%, #0a2545); display: flex; align-items: center; justify-content: center; font-family: 'Oswald', sans-serif; font-size: 1.6rem; color: #001020; flex-shrink: 0; }
+    .admin-player-info { flex: 1; min-width: 200px; }
+    .admin-player-nick { font-family: 'Oswald', sans-serif; color: #e6f4ff; font-size: 1.1rem; letter-spacing: 1.5px; margin-bottom: 4px; }
+    .admin-player-meta { font-size: 0.72rem; color: #4a80c0; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .admin-player-lore-preview { font-size: 0.82rem; color: #9ec3e6; line-height: 1.6; max-height: 60px; overflow: hidden; text-overflow: ellipsis; }
+
     .empty-state { text-align: center; padding: 40px 20px; color: #4a80c0; font-size: 0.8rem; letter-spacing: 2px; }
+
+    .form-row-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+    @media (max-width: 600px) { .form-row-2 { grid-template-columns: 1fr; } }
+
+    .avatar-upload-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 16px;
+        background: rgba(0,0,0,0.3);
+        border: 1px dashed rgba(110,196,255,0.3);
+        border-radius: 10px;
+        margin-bottom: 16px;
+    }
 
     @media (max-width: 900px) {
         .palette { right: 8px; top: auto; bottom: 80px; transform: none; flex-direction: row; }
@@ -601,13 +886,16 @@
     @media (max-width: 700px) {
         .topbar { padding: 12px 16px; }
         .topbar .status { width: 100%; justify-content: space-between; }
-        .nav-tabs { order: 3; width: 100%; justify-content: center; margin-top: 10px; }
+        .nav-tabs { order: 3; width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
         .log-terminal { display: none; }
         #galaxy { width: 500px; height: 500px; }
         .modal-inner { padding: 30px 24px; }
         .reviews-list { grid-template-columns: 1fr; }
         .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); }
         .hero { padding-top: 160px; }
+        .players-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
+        .link-row { grid-template-columns: 1fr; }
+        .link-remove { width: 100%; }
     }
     @media (max-width: 500px) {
         .nav-tab { padding: 5px 6px; font-size: 0.55rem; letter-spacing: 0.5px; }
@@ -668,6 +956,7 @@
     <div class="logo" id="topLogo">NOVA</div>
     <div class="nav-tabs">
         <button class="nav-tab active" data-page="main" onclick="switchPage('main')">Главная</button>
+        <button class="nav-tab" data-page="players" onclick="switchPage('players')">Игроки</button>
         <button class="nav-tab" data-page="archive" onclick="switchPage('archive')">Архив</button>
         <button class="nav-tab" data-page="gallery" onclick="switchPage('gallery')">Галерея</button>
     </div>
@@ -791,7 +1080,7 @@
                     </div>
                     <div class="protocol-body"><div class="protocol-body-inner">
                         <p><span class="bad">Спавн — общее пространство. (500×500 блоков от нулевых координат)</span></p>
-                        <p>Напомним: плагинов на приват нет, однако вы можете обозначить территорию с помощью табличек/блоков. Не забывайте о чужих границах — вы можете выставлять правила своей территории, однако они не должны противоречить/нарушать правила сервера. Если вас просят покинуть территорию — лучше просто уйдите, или, не заходя на территорию, спросите разрешения войти. Не стоит лишний раз провоцировать кого-либо — это в ваших же интересах.</p>
+                        <p>Напомним: плагинов на приват нет, однако вы можете обозначить территорию с помощью табличек/блоков. Не забывайте о чужих границах — вы можете выставлять правила своей территории, однако они не должны противоречить/нарушать правила сервера. Если вас просят покинуть территорию — лучше просто уйдите, или, не заходя на территорию, спросите разрешения войти.</p>
                     </div></div>
                 </div>
                 <div class="protocol" data-protocol="3">
@@ -808,17 +1097,17 @@
                             <li class="cross">Экстремистская символика — свастика и иная символика запрещённых организаций — запрещена как в чате, так и в постройках.</li>
                             <li class="cross">Пропаганда, призывы к насилию, а также экстремистские материалы любого рода запрещены.</li>
                             <li class="cross">Реклама сторонних серверов и ресурсов без разрешения администрации запрещена.</li>
-                            <li class="cross">Публичный (18+) контент, материалы сексуального характера и контент, связанный с насилием, в общем чате запрещены. Обсуждение таких тем допускается в личных сообщениях между совершеннолетними участниками на их усмотрение.</li>
+                            <li class="cross">Публичный (18+) контент, материалы сексуального характера и контент, связанный с насилием, в общем чате запрещены.</li>
                             <li class="cross">Общение должно оставаться в рамках разумного уважения — независимо от темы.</li>
                         </ul>
                         <h4>— Читы и сторонний софт —</h4>
                         <ul>
                             <li class="cross"><span class="bad">Запрещено:</span> X-ray, Kill-aura, флай-хаки, спид-хаки, NoFall и другие читы передвижения, любое ПО, дающее нечестное преимущество в PvP.</li>
-                            <li class="check"><span class="good">Разрешено:</span> автокликеры для AFK-ферм с оговоркой (игрок несёт ответственность за нагрузку и обязан остановить ферму по требованию администрации). Оптимизационные моды (OptiFine, Sodium, Lithium), мини-карты без X-ray, макросы без PvP-преимущества, Gamma.</li>
+                            <li class="check"><span class="good">Разрешено:</span> автокликеры для AFK-ферм, оптимизационные моды (OptiFine, Sodium, Lithium), мини-карты без X-ray, макросы без PvP-преимущества, Gamma.</li>
                         </ul>
                         <h4>— Дюпы —</h4>
                         <ul>
-                            <li class="check"><span class="good">Разрешены:</span> ТнТ (гуси — не более 2–4), крюки, ковры (для артов и печек), рельсы, сыпучие блоки.</li>
+                            <li class="check"><span class="good">Разрешены:</span> ТнТ (гуси — не более 2–4), крюки, ковры, рельсы, сыпучие блоки.</li>
                             <li class="cross"><span class="bad">Остальные дюпы запрещены.</span></li>
                         </ul>
                     </div></div>
@@ -852,7 +1141,7 @@
                         <ul>
                             <li class="cam">На сервере присутствуют стримеры и блогеры. Их трансляции — публичный контент.</li>
                             <li class="cam">Банворды, провокации и оскорбления во время стримов запрещены.</li>
-                            <li class="cam">Намеренное мешательство стримам строго запрещено: гриферинг, спам в чате, попытки «засветиться» негативом.</li>
+                            <li class="cam">Намеренное мешательство стримам строго запрещено.</li>
                         </ul>
                     </div></div>
                 </div>
@@ -903,6 +1192,31 @@
         </section>
     </div>
 
+    <!-- ====================== ИГРОКИ ====================== -->
+    <div class="tab-page" id="page-players" style="padding-top: 120px;">
+        <div class="players-head">
+            <h1 class="players-title">ИГРОКИ</h1>
+            <div class="players-sub">Состав сервера NOVA</div>
+            <div style="margin-top: 20px;">
+                <span class="players-count" id="playersCount">Загрузка...</span>
+            </div>
+        </div>
+
+        <div class="players-filter" id="playersFilter">
+            <button class="filter-chip active" data-role="all">Все</button>
+            <button class="filter-chip" data-role="owner">Владелец</button>
+            <button class="filter-chip" data-role="admin">Админ</button>
+            <button class="filter-chip" data-role="moderator">Модератор</button>
+            <button class="filter-chip" data-role="km">КМ</button>
+            <button class="filter-chip" data-role="mascot">Маскот</button>
+            <button class="filter-chip" data-role="player">Игроки</button>
+        </div>
+
+        <div class="players-grid" id="playersGrid">
+            <div class="news-empty">Загрузка игроков...</div>
+        </div>
+    </div>
+
     <!-- ====================== АРХИВ ====================== -->
     <div class="tab-page" id="page-archive" style="padding-top: 120px;">
         <div class="archive-head">
@@ -928,22 +1242,16 @@
             </div>
         </div>
 
-        <!-- Форма загрузки для всех -->
         <div class="upload-zone" id="uploadZone">
             <div class="upload-icon">📸</div>
             <div class="upload-title">Загрузить свой скриншот</div>
             <div class="upload-hint">Перетащи фото сюда или нажми кнопку. JPG/PNG до 10 МБ. После проверки админом фото появится в галерее.</div>
-
             <div class="upload-fields">
                 <input type="text" class="upload-input" id="uploadAuthor" placeholder="Твой ник" maxlength="30">
                 <input type="text" class="upload-input" id="uploadTitle" placeholder="Название (необязательно)" maxlength="60">
             </div>
-
-            <label for="fileInput" class="file-btn">
-                <span>📁 Выбрать файлы</span>
-            </label>
+            <label for="fileInput" class="file-btn"><span>📁 Выбрать файлы</span></label>
             <input type="file" id="fileInput" accept="image/*" multiple>
-
             <div class="upload-preview" id="uploadPreview"></div>
             <div class="upload-msg" id="uploadMsg"></div>
         </div>
@@ -960,13 +1268,13 @@
     <div>© 2026 · ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
 </footer>
 
-<!-- Лайтбокс -->
 <div class="lightbox" id="lightbox">
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     <img class="lightbox-img" id="lightboxImg" src="" alt="">
     <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
 
+<!-- Модалка входа -->
 <div class="modal" id="loginModal">
     <div class="modal-inner">
         <button class="modal-close" onclick="closeLoginModal()">✕</button>
@@ -980,11 +1288,44 @@
             <label class="modal-label">Пароль</label>
             <input type="password" class="modal-input" id="loginPassword" placeholder="••••••••">
         </div>
-        <button class="modal-btn" id="loginBtn" onclick="doLogin()">Войти</button>
+        <button class="modal-btn" onclick="doLogin()">Войти</button>
         <div class="modal-msg" id="loginMsg"></div>
     </div>
 </div>
 
+<!-- Модалка досье игрока -->
+<div class="modal" id="playerModal">
+    <div class="modal-inner modal-wide">
+        <button class="modal-close" onclick="closePlayerModal()">✕</button>
+        <img class="player-dossier-avatar" id="dossierAvatar" src="" alt="" style="display:none;">
+        <div class="player-dossier-avatar" id="dossierAvatarPlaceholder" style="display:none; align-items:center; justify-content:center; font-family:'Oswald';font-size:3rem;color:#001020;background:radial-gradient(circle at 35% 35%, #a8e0ff, #3a8bd6 50%, #0a2545);">?</div>
+        <div class="player-dossier-name" id="dossierName">—</div>
+        <div class="player-dossier-role" id="dossierRole">—</div>
+        <div class="player-dossier-stats">
+            <div>
+                <div class="player-dossier-stat-label">Раса</div>
+                <div class="player-dossier-stat-value" id="dossierRace">—</div>
+            </div>
+            <div>
+                <div class="player-dossier-stat-label">Пол</div>
+                <div class="player-dossier-stat-value" id="dossierGender">—</div>
+            </div>
+            <div>
+                <div class="player-dossier-stat-label">Уровень допуска</div>
+                <div class="player-dossier-stat-value" id="dossierAccess">—</div>
+            </div>
+            <div>
+                <div class="player-dossier-stat-label">Статус</div>
+                <div class="player-dossier-stat-value" id="dossierStatus">—</div>
+            </div>
+        </div>
+        <div class="player-dossier-lore-label">✧ История персонажа</div>
+        <div class="player-dossier-lore" id="dossierLore">—</div>
+        <div class="player-dossier-links" id="dossierLinks"></div>
+    </div>
+</div>
+
+<!-- Админка -->
 <div class="modal" id="adminModal">
     <div class="modal-inner modal-wide">
         <button class="modal-close" onclick="closeAdminModal()">✕</button>
@@ -993,11 +1334,13 @@
 
         <div class="admin-tabs">
             <button class="admin-tab active" data-tab="news" onclick="switchAdminTab('news')">Новости</button>
+            <button class="admin-tab" data-tab="players" onclick="switchAdminTab('players')">Игроки</button>
             <button class="admin-tab" data-tab="reviews" onclick="switchAdminTab('reviews')">Отзывы</button>
             <button class="admin-tab" data-tab="gallery" onclick="switchAdminTab('gallery')">Галерея</button>
             <button class="admin-tab" data-tab="account" onclick="switchAdminTab('account')">Аккаунт</button>
         </div>
 
+        <!-- Новости -->
         <div class="admin-panel active" id="panel-news">
             <div class="modal-field">
                 <label class="modal-label">Заголовок</label>
@@ -1009,13 +1352,86 @@
             </div>
             <button class="modal-btn" onclick="publishNews()">Опубликовать</button>
             <div class="modal-msg" id="newsMsg"></div>
-
             <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(110,196,255,0.15);">
                 <div class="modal-label" style="margin-bottom:16px;">Опубликованные новости</div>
                 <div id="adminNewsList"><div class="empty-state">Загрузка...</div></div>
             </div>
         </div>
 
+        <!-- ИГРОКИ -->
+        <div class="admin-panel" id="panel-players">
+            <div class="modal-label" style="margin-bottom:16px;" id="playerFormTitle">➕ Добавить нового игрока</div>
+
+            <div class="avatar-upload-area">
+                <img class="avatar-preview" id="avatarPreview" src="" alt="" style="display:none;">
+                <div id="avatarPlaceholder" class="admin-player-placeholder" style="width:100px;height:100px;font-size:2rem;">?</div>
+                <label for="avatarInput" class="file-btn" style="padding:8px 20px;font-size:0.75rem;"><span>📷 Загрузить аватар</span></label>
+                <input type="file" id="avatarInput" accept="image/*">
+                <div style="font-size:0.7rem;color:#4a80c0;letter-spacing:1px;">JPG/PNG, будет сжат до 500×500</div>
+            </div>
+
+            <div class="player-form-grid">
+                <div>
+                    <label class="modal-label">Ник *</label>
+                    <input type="text" class="player-input" id="pNick" placeholder="NickName" maxlength="40">
+                </div>
+                <div>
+                    <label class="modal-label">Раса</label>
+                    <input type="text" class="player-input" id="pRace" placeholder="Человек" maxlength="60">
+                </div>
+                <div>
+                    <label class="modal-label">Пол</label>
+                    <input type="text" class="player-input" id="pGender" placeholder="М / Ж" maxlength="20">
+                </div>
+                <div>
+                    <label class="modal-label">Роль</label>
+                    <select class="player-select" id="pRole">
+                        <option value="player">Игрок</option>
+                        <option value="mascot">Маскот</option>
+                        <option value="km">КМ</option>
+                        <option value="moderator">Модератор</option>
+                        <option value="admin">Админ</option>
+                        <option value="owner">Владелец</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="modal-label">Статус</label>
+                    <select class="player-select" id="pStatus">
+                        <option value="active">Активен</option>
+                        <option value="streaming">В эфире</option>
+                        <option value="afk">AFK</option>
+                        <option value="offline">Оффлайн</option>
+                        <option value="vacation">Отпуск</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="modal-label">Уровень допуска (0–100)</label>
+                    <input type="number" class="player-input" id="pAccess" min="0" max="100" value="40">
+                </div>
+            </div>
+
+            <label class="modal-label">Лор персонажа</label>
+            <textarea class="player-textarea" id="pLore" placeholder="История игрока..." maxlength="5000"></textarea>
+
+            <label class="modal-label" style="margin-top:16px;">Ссылки</label>
+            <div class="links-editor" id="linksEditor">
+                <div id="linksList"></div>
+                <button class="link-add-btn" onclick="addLinkRow()">+ Добавить ссылку</button>
+            </div>
+
+            <div class="form-row-2" style="margin-top:16px;">
+                <button class="modal-btn" id="playerSubmitBtn" onclick="submitPlayer()" style="margin:0;">Добавить игрока</button>
+                <button class="modal-btn" onclick="resetPlayerForm()" style="margin:0;background:rgba(255,107,107,0.1);border-color:rgba(255,107,107,0.4);color:#ff6b6b;">Сбросить</button>
+            </div>
+            <div class="modal-msg" id="playerMsg"></div>
+
+            <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(110,196,255,0.15);">
+                <div class="modal-label" style="margin-bottom:16px;">Все игроки</div>
+                <div id="adminPlayersList"><div class="empty-state">Загрузка...</div></div>
+            </div>
+        </div>
+
+        <!-- Отзывы -->
         <div class="admin-panel" id="panel-reviews">
             <div class="modal-label" style="margin-bottom:16px;">Отзывы на модерации</div>
             <div id="adminPendingList"><div class="empty-state">Загрузка...</div></div>
@@ -1023,6 +1439,7 @@
             <div id="adminApprovedList"><div class="empty-state">Загрузка...</div></div>
         </div>
 
+        <!-- Галерея -->
         <div class="admin-panel" id="panel-gallery">
             <div class="modal-label" style="margin-bottom:16px;">Фото на модерации</div>
             <div id="adminGalleryPending"><div class="empty-state">Загрузка...</div></div>
@@ -1030,6 +1447,7 @@
             <div id="adminGalleryApproved"><div class="empty-state">Загрузка...</div></div>
         </div>
 
+        <!-- Аккаунт -->
         <div class="admin-panel" id="panel-account">
             <div class="modal-field">
                 <label class="modal-label">Email</label>
@@ -1057,6 +1475,10 @@ const NEWS_ON_MAIN = 3;
 const ARCHIVE_PER_PAGE = 5;
 const GALLERY_PER_PAGE = 30;
 
+const ROLE_PRIORITY = { owner: 1, admin: 2, moderator: 3, km: 4, mascot: 5, player: 6 };
+const ROLE_LABELS = { owner: 'Владелец', admin: 'Админ', moderator: 'Модератор', km: 'КМ', mascot: 'Маскот', player: 'Игрок' };
+const STATUS_LABELS = { active: 'Активен', streaming: 'В эфире', afk: 'AFK', offline: 'Оффлайн', vacation: 'Отпуск' };
+
 let currentUser = null;
 let currentProfile = null;
 let selectedRating = 0;
@@ -1064,11 +1486,16 @@ let archivePage = 1;
 let archiveTotalPages = 1;
 let allArchiveNews = [];
 let allGallery = [];
+let allPlayers = [];
+let playersFilter = 'all';
 let selectedFiles = [];
+let editingPlayerId = null;
+let pendingAvatarUrl = null;
+let pendingAvatarBlob = null;
 
 /* ======================= УТИЛИТЫ ======================= */
 function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function fmtDate(iso) {
     const d = new Date(iso);
@@ -1080,7 +1507,6 @@ function setMsg(el, text, type = '') {
     el.textContent = text;
 }
 
-/* ======================= КОМПРЕССИЯ ФОТО ======================= */
 async function compressImage(file, maxSide = 1920, quality = 0.82) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -1089,23 +1515,14 @@ async function compressImage(file, maxSide = 1920, quality = 0.82) {
             img.onload = () => {
                 let { width, height } = img;
                 if (width > maxSide || height > maxSide) {
-                    if (width > height) {
-                        height = Math.round(height * maxSide / width);
-                        width = maxSide;
-                    } else {
-                        width = Math.round(width * maxSide / height);
-                        height = maxSide;
-                    }
+                    if (width > height) { height = Math.round(height * maxSide / width); width = maxSide; }
+                    else { width = Math.round(width * maxSide / height); height = maxSide; }
                 }
                 const canvas = document.createElement('canvas');
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                canvas.toBlob(blob => {
-                    if (blob) resolve(blob);
-                    else reject(new Error('Ошибка сжатия'));
-                }, 'image/jpeg', quality);
+                canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Ошибка сжатия')), 'image/jpeg', quality);
             };
             img.onerror = reject;
             img.src = e.target.result;
@@ -1124,6 +1541,7 @@ function switchPage(page) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (page === 'archive') renderArchive();
     if (page === 'gallery') renderGallery();
+    if (page === 'players') renderPlayers();
     playBeep(600);
 }
 
@@ -1249,7 +1667,7 @@ function switchPage(page) {
     setTimeout(tick, 1000);
 })();
 
-/* ======================= HERO БУКВЫ ======================= */
+/* ======================= HERO ======================= */
 (function buildTitle() {
     const el = document.getElementById('heroTitle');
     'NOVA'.split('').forEach(ch => {
@@ -1302,24 +1720,12 @@ function switchPage(page) {
         requestAnimationFrame(anim);
     })();
     document.addEventListener('mouseover', e => {
-        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn');
+        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove');
         if (t) ring.classList.add('hover');
     });
     document.addEventListener('mouseout', e => {
-        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn'))
+        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove'))
             ring.classList.remove('hover');
-    });
-})();
-
-(function magnetic() {
-    document.querySelectorAll('.hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text, .pager-btn, .reaction-btn').forEach(item => {
-        item.addEventListener('mousemove', e => {
-            const r = item.getBoundingClientRect();
-            const x = (e.clientX - r.left - r.width/2) * 0.15;
-            const y = (e.clientY - r.top - r.height/2) * 0.25;
-            item.style.transform = `translate(${x}px, ${y}px)`;
-        });
-        item.addEventListener('mouseleave', () => { item.style.transform = ''; });
     });
 })();
 
@@ -1332,7 +1738,7 @@ function switchPage(page) {
     });
 })();
 
-/* ======================= ВЗРЫВ ======================= */
+/* ======================= ВЗРЫВ + РЕЗОНАНС ======================= */
 function spawnBoom(x, y) {
     for (let i = 0; i < 24; i++) {
         const p = document.createElement('div');
@@ -1373,7 +1779,6 @@ function toggleProtocol(head) {
         document.getElementById('rulesCount').textContent = `${openedProtocols.size} / 6`;
         document.getElementById('rulesFill').style.width = (openedProtocols.size/6*100) + '%';
     } else playBeep(350);
-    addLog(proto.classList.contains('open') ? 'Открыт протокол' : 'Закрыт протокол');
 }
 
 /* ======================= СЕКЦИИ ======================= */
@@ -1388,7 +1793,7 @@ function toggleProtocol(head) {
 })();
 
 /* ======================= ЛОГ ======================= */
-const logs = ['Сканирование сектора...', 'Соединение установлено', 'Пинг: 24ms', 'Загрузка чанков...', 'Проверка целостности...', 'Пакет получен', 'Обновление данных', 'Сигнал стабилен', 'Ожидание оператора...', 'Шифрование канала', 'Синхронизация...'];
+const logs = ['Сканирование сектора...', 'Соединение установлено', 'Пинг: 24ms', 'Загрузка чанков...', 'Проверка целостности...', 'Пакет получен', 'Обновление данных', 'Сигнал стабилен', 'Шифрование канала', 'Синхронизация...'];
 function addLog(text) {
     const box = document.getElementById('logLines');
     const div = document.createElement('div');
@@ -1546,6 +1951,127 @@ document.getElementById('palette').addEventListener('click', e => {
     document.addEventListener('mouseup', e => { if (e.button === 2) dragging = false; });
 })();
 
+/* ======================= ИГРОКИ ======================= */
+async function loadPlayersData() {
+    const { data, error } = await sb.from('players').select('*').eq('approved', true);
+    if (error) {
+        document.getElementById('playersGrid').innerHTML = '<div class="news-empty">Ошибка загрузки игроков</div>';
+        document.getElementById('playersCount').textContent = '—';
+        return;
+    }
+    allPlayers = (data || []).sort((a, b) => {
+        const pa = ROLE_PRIORITY[a.role] || 999;
+        const pb = ROLE_PRIORITY[b.role] || 999;
+        if (pa !== pb) return pa - pb;
+        return (a.nickname || '').localeCompare(b.nickname || '');
+    });
+    document.getElementById('playersCount').textContent = `Всего: ${allPlayers.length} игроков`;
+    renderPlayers();
+}
+
+function renderPlayers() {
+    const grid = document.getElementById('playersGrid');
+    if (!grid) return;
+    const list = playersFilter === 'all' ? allPlayers : allPlayers.filter(p => p.role === playersFilter);
+    if (!list.length) {
+        grid.innerHTML = '<div class="news-empty">Пока нет игроков в этой категории</div>';
+        return;
+    }
+    grid.innerHTML = list.map(p => {
+        const initial = (p.nickname || '?')[0].toUpperCase();
+        const avatar = p.avatar_url
+            ? `<img class="player-avatar" src="${escapeHtml(p.avatar_url)}" alt="" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">`
+            : '';
+        const placeholderStyle = p.avatar_url ? 'display:none;' : '';
+        return `
+            <div class="player-card role-${p.role}" onclick="openPlayerModal(${p.id})">
+                <div class="player-avatar-wrap">
+                    <div class="player-avatar-ring"></div>
+                    ${avatar}
+                    <div class="player-avatar-placeholder" style="${placeholderStyle}">${initial}</div>
+                    <div class="player-status-dot ${p.status}"></div>
+                </div>
+                <div class="player-body">
+                    <div class="player-role-badge role-${p.role}">${ROLE_LABELS[p.role] || p.role}</div>
+                    <div class="player-nick">${escapeHtml(p.nickname)}</div>
+                    <div class="player-race">${escapeHtml(p.race || '—')}</div>
+                    <div class="player-access-row"><span>Уровень допуска</span><span>${p.access}%</span></div>
+                    <div class="player-access-bar"><div class="player-access-fill" data-access="${p.access}"></div></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    setTimeout(() => {
+        document.querySelectorAll('.player-access-fill').forEach(el => {
+            el.style.width = el.dataset.access + '%';
+        });
+    }, 100);
+}
+
+document.getElementById('playersFilter').addEventListener('click', e => {
+    const chip = e.target.closest('.filter-chip');
+    if (!chip) return;
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    playersFilter = chip.dataset.role;
+    renderPlayers();
+    playBeep(600);
+});
+
+function openPlayerModal(id) {
+    const p = allPlayers.find(x => x.id === id);
+    if (!p) return;
+
+    const avatarEl = document.getElementById('dossierAvatar');
+    const placeholder = document.getElementById('dossierAvatarPlaceholder');
+    if (p.avatar_url) {
+        avatarEl.src = p.avatar_url;
+        avatarEl.style.display = 'block';
+        placeholder.style.display = 'none';
+    } else {
+        avatarEl.style.display = 'none';
+        placeholder.style.display = 'flex';
+        placeholder.textContent = (p.nickname || '?')[0].toUpperCase();
+    }
+
+    document.getElementById('dossierName').textContent = p.nickname;
+    const roleEl = document.getElementById('dossierRole');
+    roleEl.textContent = ROLE_LABELS[p.role] || p.role;
+    roleEl.className = 'player-dossier-role player-role-badge role-' + p.role;
+    roleEl.style.display = 'inline-block';
+    roleEl.style.margin = '0 auto 24px';
+    roleEl.style.textAlign = 'center';
+
+    document.getElementById('dossierRace').textContent = p.race || '—';
+    document.getElementById('dossierGender').textContent = p.gender || '—';
+    document.getElementById('dossierAccess').textContent = (p.access ?? 0) + '%';
+    document.getElementById('dossierStatus').textContent = STATUS_LABELS[p.status] || p.status || '—';
+    document.getElementById('dossierLore').textContent = p.lore || 'Лор не заполнен.';
+
+    const linksEl = document.getElementById('dossierLinks');
+    const links = Array.isArray(p.links) ? p.links : [];
+    if (links.length) {
+        const icons = { twitch: '📺', youtube: '🎬', telegram: '✈️', discord: '💬', tiktok: '🎵', vk: '🅥', other: '🔗' };
+        linksEl.innerHTML = links.filter(l => l && l.url).map(l => `
+            <a href="${escapeHtml(l.url)}" target="_blank" class="player-link-btn">
+                ${icons[l.type] || '🔗'} ${escapeHtml(l.label || l.type || 'Link')}
+            </a>
+        `).join('');
+    } else {
+        linksEl.innerHTML = '';
+    }
+
+    document.getElementById('playerModal').classList.add('active');
+    document.body.classList.add('modal-open');
+    playBeep(700);
+}
+
+function closePlayerModal() {
+    document.getElementById('playerModal').classList.remove('active');
+    document.body.classList.remove('modal-open');
+    playBeep(300);
+}
+
 /* ======================= ОТЗЫВЫ ======================= */
 document.getElementById('ratingStars').addEventListener('click', e => {
     const star = e.target.closest('.rating-star');
@@ -1582,8 +2108,6 @@ async function submitReview() {
     if (name.length < 2 || name.length > 30) { setMsg(msg, '⛔ Имя: от 2 до 30 символов', 'err'); return; }
     if (selectedRating < 1) { setMsg(msg, '⛔ Поставьте оценку', 'err'); return; }
     if (text.length < 10 || text.length > 500) { setMsg(msg, '⛔ Отзыв: от 10 до 500 символов', 'err'); return; }
-    const links = (text.match(/https?:\/\//g) || []).length;
-    if (links > 1) { setMsg(msg, '⛔ Слишком много ссылок', 'err'); return; }
 
     const last = localStorage.getItem('lastReviewTime');
     const now = Date.now();
@@ -1628,10 +2152,7 @@ async function loadReviews() {
 
 /* ======================= РЕАКЦИИ ======================= */
 const myVotes = JSON.parse(localStorage.getItem('nova_my_votes') || '{}');
-
-function saveMyVotes() {
-    localStorage.setItem('nova_my_votes', JSON.stringify(myVotes));
-}
+function saveMyVotes() { localStorage.setItem('nova_my_votes', JSON.stringify(myVotes)); }
 
 async function loadReactionsFor(newsId) {
     const { data } = await sb.from('reactions').select('emoji, count').eq('news_id', newsId);
@@ -1650,34 +2171,18 @@ async function ensureReactionRow(newsId, emoji) {
 
 async function reactTo(newsId, emoji) {
     const key = `${newsId}_${emoji}`;
-    if (myVotes[key]) {
-        addLog('Уже голосовал за эту реакцию');
-        playBeep(250);
-        return;
-    }
-
+    if (myVotes[key]) { addLog('Уже голосовал'); playBeep(250); return; }
     const rowId = await ensureReactionRow(newsId, emoji);
     if (!rowId) return;
-
     const { data: current } = await sb.from('reactions').select('count').eq('id', rowId).single();
     const newCount = (current?.count || 0) + 1;
     const { error } = await sb.from('reactions').update({ count: newCount }).eq('id', rowId);
-
     if (!error) {
         myVotes[key] = true;
         saveMyVotes();
         playBeep(700);
-        addLog(`Реакция ${emoji}`);
-        bumpReactionUI(newsId, emoji);
-    }
-}
-
-function bumpReactionUI(newsId, emoji) {
-    const btn = document.querySelector(`.reaction-btn[data-news="${newsId}"][data-emoji="${emoji}"]`);
-    if (btn) {
-        btn.classList.add('voted');
-        btn.classList.add('bump');
-        setTimeout(() => btn.classList.remove('bump'), 400);
+        const btn = document.querySelector(`.reaction-btn[data-news="${newsId}"][data-emoji="${emoji}"]`);
+        if (btn) { btn.classList.add('voted', 'bump'); setTimeout(() => btn.classList.remove('bump'), 400); }
     }
 }
 
@@ -1686,7 +2191,7 @@ function renderReactions(newsId, map) {
         <div class="reactions" data-news="${newsId}">
             ${REACTION_EMOJIS.map(e => {
                 const voted = myVotes[`${newsId}_${e}`] ? 'voted' : '';
-                return `<button class="reaction-btn ${voted}" data-news="${newsId}" data-emoji="${e}" onclick="reactTo(${newsId}, '${e}')">
+                return `<button class="reaction-btn ${voted}" data-news="${newsId}" data-emoji="${e}" onclick="event.stopPropagation(); reactTo(${newsId}, '${e}')">
                     <span class="emoji">${e}</span><span class="count">${map[e] || 0}</span>
                 </button>`;
             }).join('')}
@@ -1700,7 +2205,6 @@ async function loadNews() {
     const { data, error } = await sb.from('news').select('*').eq('published', true).order('created_at', { ascending: false }).limit(NEWS_ON_MAIN);
     if (error) { list.innerHTML = '<div class="news-empty">Ошибка загрузки новостей</div>'; return; }
     if (!data || data.length === 0) { list.innerHTML = '<div class="news-empty">Пока нет новостей</div>'; return; }
-
     const html = await Promise.all(data.map(async n => {
         const map = await loadReactionsFor(n.id);
         return `
@@ -1745,7 +2249,6 @@ function renderArchive() {
     const end = start + ARCHIVE_PER_PAGE;
     const pageItems = allArchiveNews.slice(start, end);
     const totalNum = allArchiveNews.length;
-
     list.innerHTML = pageItems.map((n, idx) => {
         const globalNum = totalNum - (start + idx);
         return `
@@ -1809,8 +2312,8 @@ function renderGallery() {
         return;
     }
     grid.innerHTML = allGallery.map(g => `
-        <div class="gallery-item" onclick="openLightbox('${g.image_url}', '${escapeHtml(g.title || 'Без названия')}', '${escapeHtml(g.author || 'Неизвестный')}')">
-            <img src="${g.image_url}" alt="${escapeHtml(g.title || '')}" loading="lazy">
+        <div class="gallery-item" onclick="openLightbox('${escapeHtml(g.image_url)}', '${escapeHtml(g.title || 'Без названия')}', '${escapeHtml(g.author || 'Неизвестный')}')">
+            <img src="${escapeHtml(g.image_url)}" alt="" loading="lazy">
             <div class="gallery-item-overlay">
                 <div class="gallery-item-title">${escapeHtml(g.title || 'Без названия')}</div>
                 <div class="gallery-item-author">by ${escapeHtml(g.author || 'Неизвестный')}</div>
@@ -1821,46 +2324,34 @@ function renderGallery() {
 
 function openLightbox(url, title, author) {
     document.getElementById('lightboxImg').src = url;
-    document.getElementById('lightboxCaption').innerHTML = `${title}<div class="author">by ${author}</div>`;
+    document.getElementById('lightboxCaption').innerHTML = `${escapeHtml(title)}<div class="author">by ${escapeHtml(author)}</div>`;
     document.getElementById('lightbox').classList.add('active');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
     playBeep(800);
 }
-
 function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
+    document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
     playBeep(300);
 }
-
-document.getElementById('lightbox').addEventListener('click', e => {
-    if (e.target.id === 'lightbox') closeLightbox();
-});
+document.getElementById('lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') closeLightbox(); });
 document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'Escape') {
+        closeLightbox();
+        closePlayerModal();
+    }
 });
 
-/* ======================= ЗАГРУЗКА ФОТО ======================= */
+/* ======================= ЗАГРУЗКА ФОТО В ГАЛЕРЕЮ ======================= */
 const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
 const uploadPreview = document.getElementById('uploadPreview');
 
-fileInput.addEventListener('change', e => {
-    handleFiles(Array.from(e.target.files));
-});
-
-['dragenter', 'dragover'].forEach(evt => {
-    uploadZone.addEventListener(evt, e => {
-        e.preventDefault();
-        uploadZone.classList.add('dragover');
-    });
-});
-['dragleave', 'drop'].forEach(evt => {
-    uploadZone.addEventListener(evt, e => {
-        e.preventDefault();
-        uploadZone.classList.remove('dragover');
-    });
-});
+fileInput.addEventListener('change', e => handleFiles(Array.from(e.target.files)));
+['dragenter', 'dragover'].forEach(evt => uploadZone.addEventListener(evt, e => { e.preventDefault(); uploadZone.classList.add('dragover'); }));
+['dragleave', 'drop'].forEach(evt => uploadZone.addEventListener(evt, e => { e.preventDefault(); uploadZone.classList.remove('dragover'); }));
 uploadZone.addEventListener('drop', e => {
     const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
     handleFiles(files);
@@ -1868,17 +2359,10 @@ uploadZone.addEventListener('drop', e => {
 
 function handleFiles(files) {
     if (!files.length) return;
-    if (files.length > 10) {
-        setMsg(document.getElementById('uploadMsg'), '⛔ Максимум 10 файлов за раз', 'err');
-        return;
-    }
+    if (files.length > 10) { setMsg(document.getElementById('uploadMsg'), '⛔ Максимум 10 файлов за раз', 'err'); return; }
     selectedFiles = files;
-    uploadPreview.innerHTML = files.map(f => {
-        const url = URL.createObjectURL(f);
-        return `<div class="preview-item"><img src="${url}" alt=""></div>`;
-    }).join('');
-    setMsg(document.getElementById('uploadMsg'), `Выбрано: ${files.length} фото. Нажми "Отправить"`, '');
-    // Кнопка отправки
+    uploadPreview.innerHTML = files.map(f => `<div class="preview-item"><img src="${URL.createObjectURL(f)}" alt=""></div>`).join('');
+    setMsg(document.getElementById('uploadMsg'), `Выбрано: ${files.length} фото`, '');
     if (!document.getElementById('uploadSubmitBtn')) {
         const btn = document.createElement('button');
         btn.className = 'file-btn';
@@ -1895,54 +2379,32 @@ async function submitGallery() {
     const author = document.getElementById('uploadAuthor').value.trim();
     const title = document.getElementById('uploadTitle').value.trim();
     const msg = document.getElementById('uploadMsg');
+    if (author.length < 2) { setMsg(msg, '⛔ Укажи ник', 'err'); return; }
+    if (!selectedFiles.length) { setMsg(msg, '⛔ Выбери фото', 'err'); return; }
 
-    if (author.length < 2) { setMsg(msg, '⛔ Укажи ник (мин. 2 символа)', 'err'); return; }
-    if (!selectedFiles.length) { setMsg(msg, '⛔ Выбери хотя бы одно фото', 'err'); return; }
-
-    // Антиспам: 1 загрузка в 60 сек
     const last = localStorage.getItem('lastGalleryUpload');
     const now = Date.now();
     if (last && now - parseInt(last) < 60000) {
-        const wait = Math.ceil((60000 - (now - parseInt(last))) / 1000);
-        setMsg(msg, `⛔ Подожди ${wait} сек.`, 'err');
+        setMsg(msg, `⛔ Подожди ${Math.ceil((60000 - (now - parseInt(last))) / 1000)} сек.`, 'err');
         return;
     }
 
     const btn = document.getElementById('uploadSubmitBtn');
     btn.disabled = true;
-
     let uploaded = 0;
     for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
-        setMsg(msg, `📤 Сжатие и загрузка ${i+1}/${selectedFiles.length}...`);
-
+        setMsg(msg, `📤 Загрузка ${i+1}/${selectedFiles.length}...`);
         try {
-            const compressed = await compressImage(file);
-            const ext = 'jpg';
-            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
-
-            const { error: upErr } = await sb.storage.from('gallery').upload(fileName, compressed, {
-                contentType: 'image/jpeg',
-                cacheControl: '3600'
-            });
+            const compressed = await compressImage(selectedFiles[i]);
+            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.jpg`;
+            const { error: upErr } = await sb.storage.from('gallery').upload(fileName, compressed, { contentType: 'image/jpeg', cacheControl: '3600' });
             if (upErr) throw upErr;
-
             const { data: urlData } = sb.storage.from('gallery').getPublicUrl(fileName);
-
-            const { error: dbErr } = await sb.from('gallery').insert({
-                title: title || 'Без названия',
-                image_url: urlData.publicUrl,
-                author,
-                approved: false
-            });
+            const { error: dbErr } = await sb.from('gallery').insert({ title: title || 'Без названия', image_url: urlData.publicUrl, author, approved: false });
             if (dbErr) throw dbErr;
-
             uploaded++;
-        } catch (err) {
-            console.error('Ошибка загрузки:', err);
-        }
+        } catch (err) { console.error(err); }
     }
-
     btn.disabled = false;
     if (uploaded > 0) {
         setMsg(msg, `✅ Загружено: ${uploaded}. Отправлено на модерацию.`, 'ok');
@@ -1952,9 +2414,7 @@ async function submitGallery() {
         fileInput.value = '';
         btn.remove();
         playBeep(900);
-    } else {
-        setMsg(msg, '⛔ Ошибка загрузки', 'err');
-    }
+    } else setMsg(msg, '⛔ Ошибка загрузки', 'err');
 }
 
 /* ======================= АВТОРИЗАЦИЯ ======================= */
@@ -1979,11 +2439,8 @@ function updateAuthUI() {
 }
 
 function handleAuthClick() {
-    if (currentUser && currentProfile && currentProfile.role === 'admin') {
-        openAdminModal();
-    } else {
-        openLoginModal();
-    }
+    if (currentUser && currentProfile && currentProfile.role === 'admin') openAdminModal();
+    else openLoginModal();
 }
 
 function openLoginModal() {
@@ -2028,6 +2485,7 @@ function openAdminModal() {
     loadAdminNews();
     loadAdminReviews();
     loadAdminGallery();
+    loadAdminPlayers();
     switchAdminTab('news');
 }
 function closeAdminModal() {
@@ -2042,12 +2500,13 @@ function switchAdminTab(tab) {
     document.getElementById('panel-' + tab).classList.add('active');
 }
 
+/* ======================= АДМИН — НОВОСТИ ======================= */
 async function publishNews() {
     const title = document.getElementById('newsTitle').value.trim();
     const content = document.getElementById('newsContent').value.trim();
     const msg = document.getElementById('newsMsg');
-    if (title.length < 3) { setMsg(msg, '⛔ Заголовок: минимум 3 символа', 'err'); return; }
-    if (content.length < 5) { setMsg(msg, '⛔ Текст: минимум 5 символов', 'err'); return; }
+    if (title.length < 3) { setMsg(msg, '⛔ Заголовок: мин. 3', 'err'); return; }
+    if (content.length < 5) { setMsg(msg, '⛔ Текст: мин. 5', 'err'); return; }
     setMsg(msg, 'Публикация...');
     const { error } = await sb.from('news').insert({ title, content, author_id: currentUser.id, published: true });
     if (error) { setMsg(msg, '⛔ ' + error.message, 'err'); return; }
@@ -2082,13 +2541,217 @@ async function deleteNews(id) {
     loadAdminNews(); loadNews(); loadArchiveData();
 }
 
+/* ======================= АДМИН — ИГРОКИ ======================= */
+async function loadAdminPlayers() {
+    const list = document.getElementById('adminPlayersList');
+    const { data, error } = await sb.from('players').select('*').order('created_at', { ascending: false });
+    if (error || !data) { list.innerHTML = '<div class="empty-state">Ошибка загрузки</div>'; return; }
+    if (!data.length) { list.innerHTML = '<div class="empty-state">Игроков нет</div>'; return; }
+    list.innerHTML = data.map(p => `
+        <div class="admin-player-item ${p.approved ? 'approved' : ''}">
+            ${p.avatar_url
+                ? `<img class="admin-player-avatar" src="${escapeHtml(p.avatar_url)}" alt="">`
+                : `<div class="admin-player-placeholder">${(p.nickname || '?')[0].toUpperCase()}</div>`}
+            <div class="admin-player-info">
+                <div class="admin-player-nick">${escapeHtml(p.nickname)}</div>
+                <div class="admin-player-meta">${ROLE_LABELS[p.role] || p.role} · ${escapeHtml(p.race || '—')} · ${p.access}% · ${STATUS_LABELS[p.status] || p.status} ${p.approved ? '' : ' · <span style="color:#ffb347;">НЕ ОДОБРЕН</span>'}</div>
+                <div class="admin-player-lore-preview">${escapeHtml((p.lore || '').slice(0, 120))}${(p.lore || '').length > 120 ? '…' : ''}</div>
+            </div>
+            <div class="admin-actions">
+                ${!p.approved ? `<button class="admin-btn approve" onclick="approvePlayer(${p.id})">Одобрить</button>` : ''}
+                <button class="admin-btn edit" onclick="editPlayer(${p.id})">✎ Ред.</button>
+                <button class="admin-btn reject" onclick="deletePlayer(${p.id})">Удалить</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function approvePlayer(id) {
+    const { error } = await sb.from('players').update({ approved: true }).eq('id', id);
+    if (error) { alert('Ошибка: ' + error.message); return; }
+    loadAdminPlayers(); loadPlayersData();
+    playBeep(900);
+}
+
+async function deletePlayer(id) {
+    if (!confirm('Удалить игрока?')) return;
+    const p = allPlayers.find(x => x.id === id);
+    const { error } = await sb.from('players').delete().eq('id', id);
+    if (error) { alert('Ошибка: ' + error.message); return; }
+    // Удалить аватар из Storage, если был
+    if (p?.avatar_url) {
+        const fileName = p.avatar_url.split('/').pop();
+        if (fileName) await sb.storage.from('avatars').remove([fileName]).catch(() => {});
+    }
+    loadAdminPlayers(); loadPlayersData();
+}
+
+/* Форма игрока */
+function addLinkRow(type = 'twitch', url = '', label = '') {
+    const list = document.getElementById('linksList');
+    const row = document.createElement('div');
+    row.className = 'link-row';
+    row.innerHTML = `
+        <select class="player-select link-type">
+            <option value="twitch" ${type==='twitch'?'selected':''}>📺 Twitch</option>
+            <option value="youtube" ${type==='youtube'?'selected':''}>🎬 YouTube</option>
+            <option value="telegram" ${type==='telegram'?'selected':''}>✈️ Telegram</option>
+            <option value="discord" ${type==='discord'?'selected':''}>💬 Discord</option>
+            <option value="tiktok" ${type==='tiktok'?'selected':''}>🎵 TikTok</option>
+            <option value="vk" ${type==='vk'?'selected':''}>🅥 VK</option>
+            <option value="other" ${type==='other'?'selected':''}>🔗 Другое</option>
+        </select>
+        <input type="url" class="player-input link-url" placeholder="https://..." value="${escapeHtml(url)}">
+        <button class="link-remove" onclick="this.parentElement.remove()">✕</button>
+    `;
+    list.appendChild(row);
+}
+
+document.getElementById('avatarInput').addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+        pendingAvatarBlob = await compressImage(file, 500, 0.85);
+        pendingAvatarUrl = URL.createObjectURL(pendingAvatarBlob);
+        document.getElementById('avatarPreview').src = pendingAvatarUrl;
+        document.getElementById('avatarPreview').style.display = 'block';
+        document.getElementById('avatarPlaceholder').style.display = 'none';
+        playBeep(700);
+    } catch (err) {
+        alert('Ошибка обработки фото: ' + err.message);
+    }
+});
+
+function resetPlayerForm() {
+    editingPlayerId = null;
+    pendingAvatarBlob = null;
+    pendingAvatarUrl = null;
+    document.getElementById('pNick').value = '';
+    document.getElementById('pRace').value = '';
+    document.getElementById('pGender').value = '';
+    document.getElementById('pRole').value = 'player';
+    document.getElementById('pStatus').value = 'active';
+    document.getElementById('pAccess').value = 40;
+    document.getElementById('pLore').value = '';
+    document.getElementById('linksList').innerHTML = '';
+    document.getElementById('avatarPreview').style.display = 'none';
+    document.getElementById('avatarPreview').src = '';
+    document.getElementById('avatarPlaceholder').style.display = 'flex';
+    document.getElementById('avatarInput').value = '';
+    document.getElementById('playerFormTitle').textContent = '➕ Добавить нового игрока';
+    document.getElementById('playerSubmitBtn').textContent = 'Добавить игрока';
+    document.getElementById('playerMsg').textContent = '';
+}
+
+async function editPlayer(id) {
+    const { data: p } = await sb.from('players').select('*').eq('id', id).single();
+    if (!p) return;
+    editingPlayerId = id;
+    pendingAvatarBlob = null;
+    pendingAvatarUrl = null;
+    document.getElementById('pNick').value = p.nickname || '';
+    document.getElementById('pRace').value = p.race || '';
+    document.getElementById('pGender').value = p.gender || '';
+    document.getElementById('pRole').value = p.role || 'player';
+    document.getElementById('pStatus').value = p.status || 'active';
+    document.getElementById('pAccess').value = p.access ?? 40;
+    document.getElementById('pLore').value = p.lore || '';
+
+    const linksList = document.getElementById('linksList');
+    linksList.innerHTML = '';
+    const links = Array.isArray(p.links) ? p.links : [];
+    links.forEach(l => addLinkRow(l.type || 'other', l.url || '', l.label || ''));
+
+    if (p.avatar_url) {
+        document.getElementById('avatarPreview').src = p.avatar_url;
+        document.getElementById('avatarPreview').style.display = 'block';
+        document.getElementById('avatarPlaceholder').style.display = 'none';
+    } else {
+        document.getElementById('avatarPreview').style.display = 'none';
+        document.getElementById('avatarPlaceholder').style.display = 'flex';
+    }
+
+    document.getElementById('playerFormTitle').textContent = '✎ Редактировать игрока';
+    document.getElementById('playerSubmitBtn').textContent = 'Сохранить изменения';
+    document.getElementById('playerMsg').textContent = '';
+    switchAdminTab('players');
+    document.getElementById('adminModal').scrollTo({ top: 0, behavior: 'smooth' });
+    playBeep(700);
+}
+
+async function submitPlayer() {
+    const msg = document.getElementById('playerMsg');
+    const btn = document.getElementById('playerSubmitBtn');
+
+    const nickname = document.getElementById('pNick').value.trim();
+    const race = document.getElementById('pRace').value.trim();
+    const gender = document.getElementById('pGender').value.trim();
+    const role = document.getElementById('pRole').value;
+    const status = document.getElementById('pStatus').value;
+    const access = Math.max(0, Math.min(100, parseInt(document.getElementById('pAccess').value) || 0));
+    const lore = document.getElementById('pLore').value.trim();
+
+    if (nickname.length < 2) { setMsg(msg, '⛔ Ник: мин. 2 символа', 'err'); return; }
+
+    // Собираем ссылки
+    const links = [];
+    document.querySelectorAll('#linksList .link-row').forEach(row => {
+        const type = row.querySelector('.link-type').value;
+        const url = row.querySelector('.link-url').value.trim();
+        if (url) links.push({ type, url });
+    });
+
+    btn.disabled = true;
+    setMsg(msg, 'Сохранение...');
+
+    // Загрузка аватара (если выбран новый)
+    let avatar_url = null;
+    if (editingPlayerId) {
+        const { data: existing } = await sb.from('players').select('avatar_url').eq('id', editingPlayerId).single();
+        avatar_url = existing?.avatar_url || null;
+    }
+    if (pendingAvatarBlob) {
+        try {
+            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.jpg`;
+            const { error: upErr } = await sb.storage.from('avatars').upload(fileName, pendingAvatarBlob, { contentType: 'image/jpeg', cacheControl: '3600' });
+            if (upErr) throw upErr;
+            const { data: urlData } = sb.storage.from('avatars').getPublicUrl(fileName);
+            avatar_url = urlData.publicUrl;
+        } catch (err) {
+            btn.disabled = false;
+            setMsg(msg, '⛔ Ошибка загрузки аватара: ' + err.message, 'err');
+            return;
+        }
+    }
+
+    const payload = {
+        nickname, race, gender, role, status, access, lore, avatar_url,
+        links, approved: true
+    };
+
+    let error;
+    if (editingPlayerId) {
+        ({ error } = await sb.from('players').update(payload).eq('id', editingPlayerId));
+    } else {
+        ({ error } = await sb.from('players').insert(payload));
+    }
+
+    btn.disabled = false;
+    if (error) { setMsg(msg, '⛔ ' + error.message, 'err'); return; }
+    setMsg(msg, editingPlayerId ? '✅ Изменения сохранены' : '✅ Игрок добавлен', 'ok');
+    resetPlayerForm();
+    loadAdminPlayers(); loadPlayersData();
+    playBeep(900);
+}
+
+/* ======================= АДМИН — ОТЗЫВЫ ======================= */
 async function loadAdminReviews() {
     const pending = document.getElementById('adminPendingList');
     const approved = document.getElementById('adminApprovedList');
     const { data: p } = await sb.from('reviews').select('*').eq('approved', false).order('created_at', { ascending: false });
     const { data: a } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(50);
     pending.innerHTML = (p && p.length) ? p.map(r => renderAdminReview(r, false)).join('') : '<div class="empty-state">Нет отзывов на модерации</div>';
-    approved.innerHTML = (a && a.length) ? a.map(r => renderAdminReview(r, true)).join('') : '<div class="empty-state">Одобренных отзывов пока нет</div>';
+    approved.innerHTML = (a && a.length) ? a.map(r => renderAdminReview(r, true)).join('') : '<div class="empty-state">Одобренных пока нет</div>';
 }
 
 function renderAdminReview(r, isApproved) {
@@ -2129,13 +2792,13 @@ async function loadAdminGallery() {
     const { data: p } = await sb.from('gallery').select('*').eq('approved', false).order('created_at', { ascending: false });
     const { data: a } = await sb.from('gallery').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(50);
     pending.innerHTML = (p && p.length) ? p.map(g => renderAdminGallery(g, false)).join('') : '<div class="empty-state">Нет фото на модерации</div>';
-    approved.innerHTML = (a && a.length) ? a.map(g => renderAdminGallery(g, true)).join('') : '<div class="empty-state">Одобренных фото пока нет</div>';
+    approved.innerHTML = (a && a.length) ? a.map(g => renderAdminGallery(g, true)).join('') : '<div class="empty-state">Одобренных пока нет</div>';
 }
 
 function renderAdminGallery(g, isApproved) {
     return `
         <div class="admin-gallery-item ${isApproved ? 'approved' : ''}">
-            <img class="admin-gallery-preview" src="${g.image_url}" alt="" loading="lazy">
+            <img class="admin-gallery-preview" src="${escapeHtml(g.image_url)}" alt="" loading="lazy">
             <div class="admin-review-head">
                 <span class="admin-review-author">${escapeHtml(g.title || 'Без названия')}</span>
                 <span class="admin-news-date">${escapeHtml(g.author || '')}</span>
@@ -2143,7 +2806,7 @@ function renderAdminGallery(g, isApproved) {
             <div class="admin-news-date" style="margin-bottom:12px;">${fmtDate(g.created_at)}</div>
             <div class="admin-actions">
                 ${!isApproved ? `<button class="admin-btn approve" onclick="approveGallery(${g.id})">Одобрить</button>` : ''}
-                <button class="admin-btn reject" onclick="deleteGallery(${g.id})">Удалить</button>
+                <button class="admin-btn reject" onclick="deleteGalleryItem(${g.id})">Удалить</button>
             </div>
         </div>
     `;
@@ -2156,15 +2819,14 @@ async function approveGallery(id) {
     playBeep(900);
 }
 
-async function deleteGallery(id) {
+async function deleteGalleryItem(id) {
     if (!confirm('Удалить фото?')) return;
     const { data: item } = await sb.from('gallery').select('image_url').eq('id', id).single();
     const { error } = await sb.from('gallery').delete().eq('id', id);
     if (error) { alert('Ошибка: ' + error.message); return; }
-    // Пытаемся удалить файл из Storage
     if (item?.image_url) {
         const fileName = item.image_url.split('/').pop();
-        if (fileName) await sb.storage.from('gallery').remove([fileName]);
+        if (fileName) await sb.storage.from('gallery').remove([fileName]).catch(() => {});
     }
     loadAdminGallery(); loadGalleryData();
 }
@@ -2172,13 +2834,11 @@ async function deleteGallery(id) {
 /* ======================= ЗАКРЫТИЕ МОДАЛОК ======================= */
 document.getElementById('loginModal').addEventListener('click', e => { if (e.target.id === 'loginModal') closeLoginModal(); });
 document.getElementById('adminModal').addEventListener('click', e => { if (e.target.id === 'adminModal') closeAdminModal(); });
+document.getElementById('playerModal').addEventListener('click', e => { if (e.target.id === 'playerModal') closePlayerModal(); });
 
 /* ======================= REALTIME ======================= */
 sb.channel('nova-realtime')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, () => {
-        addLog('Realtime: обновление новостей');
-        loadNews(); loadArchiveData();
-    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, () => { loadNews(); loadArchiveData(); })
     .on('postgres_changes', { event: '*', schema: 'public', table: 'reactions' }, payload => {
         const r = payload.new;
         if (!r) return;
@@ -2189,14 +2849,9 @@ sb.channel('nova-realtime')
             setTimeout(() => btn.classList.remove('bump'), 400);
         }
     })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => {
-        addLog('Realtime: обновление отзывов');
-        loadReviews();
-    })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => {
-        addLog('Realtime: обновление галереи');
-        loadGalleryData();
-    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => { loadReviews(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => { loadGalleryData(); })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'players' }, () => { loadPlayersData(); })
     .subscribe();
 
 /* ======================= СТАРТ ======================= */
@@ -2205,6 +2860,7 @@ loadNews();
 loadReviews();
 loadArchiveData();
 loadGalleryData();
+loadPlayersData();
 </script>
 </body>
 </html>
