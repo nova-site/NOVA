@@ -8,80 +8,47 @@
 <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    :root {
-        --c1: #4a80c0; --c2: #6ec4ff; --c3: #a8e0ff; --c4: #ffffff;
-        --scale: 1;
-    }
-    * {
-        -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
-        -webkit-tap-highlight-color: transparent;
-    }
-    input, textarea, select, .news-text, .review-content, .protocol-body-inner p,
-    .protocol-body-inner li, .data-value, .final-hint, .gallery-desc {
-        -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; user-select: text;
-    }
-    html { font-size: calc(16px * var(--scale)); }
+    :root { --c1: #4a80c0; --c2: #6ec4ff; --c3: #a8e0ff; --c4: #ffffff; }
     body {
         font-family: 'JetBrains Mono', monospace;
         background: #000308; color: #cfe6ff;
         overflow-x: hidden; cursor: none; min-height: 100vh;
-        transition: filter 0.4s; font-size: 1rem; zoom: var(--scale);
+        transition: filter 0.4s;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
     }
-    @media (max-width: 900px) { body { zoom: 1; cursor: auto; } html { font-size: 16px; } }
+    /* Разрешаем выделение только в полях ввода */
+    input, textarea {
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+        user-select: text !important;
+    }
+    body.inverted { filter: invert(1) hue-rotate(180deg); }
+    @media (max-width: 900px) { body { cursor: auto; } }
 
-    input, textarea, select, .modal-input, .review-input, .review-textarea { cursor: text !important; }
+    input, textarea, select,
+    .modal-input, .review-input, .review-textarea {
+        cursor: text !important;
+    }
     body.modal-open { cursor: auto !important; }
-    body.modal-open .cursor-dot, body.modal-open .cursor-ring { display: none !important; }
+    body.modal-open .cursor-dot,
+    body.modal-open .cursor-ring {
+        display: none !important;
+    }
     button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn,
-    .review-submit, .hero-cta, .palette-dot, .news-more-btn, .reaction-btn,
-    .gallery-card, .gallery-upload-btn { cursor: pointer; }
+    .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn {
+        cursor: pointer;
+    }
 
     .scroll-progress {
         position: fixed; top: 0; left: 0; height: 2px; width: 0%;
         background: linear-gradient(90deg, var(--c1), var(--c3), var(--c4));
         box-shadow: 0 0 15px var(--c2); z-index: 10001;
     }
-
-    /* ===== WEBGL AURORA ===== */
-    #aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55; }
-    @media (max-width: 700px) { #aurora { opacity: 0.3; } }
-
-    /* ===== SPOTLIGHT ЗА КУРСОРОМ ===== */
-    .spotlight {
-        position: fixed; inset: 0; pointer-events: none; z-index: 4;
-        background: radial-gradient(
-            circle 380px at var(--sx, 50%) var(--sy, 50%),
-            rgba(110,196,255,0.10), transparent 70%
-        );
-        mix-blend-mode: screen;
-        transition: background 0.15s;
-    }
-    @media (max-width: 900px) { .spotlight { display: none; } }
-
-    /* ===== RIPPLE ===== */
-    .ripple {
-        position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
-        border: 1px solid var(--c2);
-        box-shadow: 0 0 25px var(--c2), inset 0 0 15px rgba(110,196,255,0.5);
-        transform: translate(-50%, -50%) scale(0);
-        animation: rippleGrow 0.9s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
-    }
-    @keyframes rippleGrow {
-        to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-    }
-
-    /* ===== GLOW TRAIL ===== */
-    .glow-trail {
-        position: fixed; width: 6px; height: 6px; border-radius: 50%;
-        pointer-events: none; z-index: 9996;
-        background: radial-gradient(circle, var(--c3), transparent 70%);
-        transform: translate(-50%, -50%);
-        animation: trailGone 0.9s ease-out forwards;
-    }
-    @keyframes trailGone {
-        to { opacity: 0; transform: translate(-50%, -50%) scale(2.5); }
-    }
-
     #preloader {
         position: fixed; inset: 0; background: #000; z-index: 100000;
         display: flex; flex-direction: column; justify-content: center; align-items: center;
@@ -117,16 +84,16 @@
     .comet-layer { position: fixed; inset: 0; pointer-events: none; z-index: 3; overflow: hidden; }
     .comet { position: absolute; opacity: 0; pointer-events: none; will-change: transform; animation: fly 17s linear infinite; top: -10%; }
     @keyframes fly {
-        0%   { transform: translate(110vw, 0) scale(1);     opacity: 0; }
+        0%   { transform: translate(110vw, 0);     opacity: 0; }
         10%  { opacity: 0.9; } 90% { opacity: 0.9; }
-        100% { transform: translate(-20vw, 90vh) scale(0.7);  opacity: 0; }
+        100% { transform: translate(-20vw, 90vh);  opacity: 0; }
     }
-    .comet-1 { width: 180px; filter: drop-shadow(0 0 25px rgba(110, 196, 255, 0.9)) drop-shadow(0 0 50px rgba(110, 196, 255, 0.5)); animation-delay: 0s; }
-    .comet-2 { width: 110px; filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.9)) brightness(1.3); animation-delay: 2.8s; }
-    .comet-3 { width: 150px; filter: drop-shadow(0 0 30px rgba(180, 110, 255, 0.9)) hue-rotate(30deg); animation-delay: 5.6s; }
-    .comet-4 { width: 70px;  filter: drop-shadow(0 0 20px rgba(255, 110, 180, 0.95)) hue-rotate(-40deg); animation-delay: 8.4s; }
-    .comet-5 { width: 130px; filter: drop-shadow(0 0 25px rgba(74, 222, 128, 0.95)) hue-rotate(80deg); animation-delay: 11.2s; }
-    .comet-6 { width: 95px;  filter: drop-shadow(0 0 25px rgba(255, 179, 71, 0.95)) hue-rotate(-80deg); animation-delay: 14s; }
+    .comet-1 { width: clamp(100px, 12vw, 180px); filter: drop-shadow(0 0 25px rgba(110, 196, 255, 0.9)) drop-shadow(0 0 50px rgba(110, 196, 255, 0.5)); animation-delay: 0s; }
+    .comet-2 { width: clamp(60px, 8vw, 110px); filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.9)) brightness(1.3); animation-delay: 2.8s; }
+    .comet-3 { width: clamp(80px, 10vw, 150px); filter: drop-shadow(0 0 30px rgba(180, 110, 255, 0.9)) hue-rotate(30deg); animation-delay: 5.6s; }
+    .comet-4 { width: clamp(40px, 5vw, 70px);  filter: drop-shadow(0 0 20px rgba(255, 110, 180, 0.95)) hue-rotate(-40deg); animation-delay: 8.4s; }
+    .comet-5 { width: clamp(70px, 9vw, 130px); filter: drop-shadow(0 0 25px rgba(74, 222, 128, 0.95)) hue-rotate(80deg); animation-delay: 11.2s; }
+    .comet-6 { width: clamp(50px, 6.5vw, 95px);  filter: drop-shadow(0 0 25px rgba(255, 179, 71, 0.95)) hue-rotate(-80deg); animation-delay: 14s; }
 
     .cursor-dot {
         position: fixed; width: 6px; height: 6px; background: var(--c3); border-radius: 50%;
@@ -188,11 +155,35 @@
         border-bottom: 1px solid rgba(110, 196, 255, 0.15);
         font-size: 0.72rem; letter-spacing: 2px;
     }
-    .topbar .logo { font-family: 'Oswald', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--c3); letter-spacing: 7px; text-shadow: 0 0 15px rgba(110, 196, 255, 0.7); transition: all 0.15s; }
-    .topbar .status { display: flex; align-items: center; gap: 24px; color: #4a80c0; flex-wrap: wrap; }
+    .topbar .logo { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2.5vw, 1.3rem); font-weight: 700; color: var(--c3); letter-spacing: clamp(4px, 1vw, 7px); text-shadow: 0 0 15px rgba(110, 196, 255, 0.7); transition: all 0.15s; }
+    .topbar .status { display: flex; align-items: center; gap: clamp(10px, 2vw, 24px); color: #4a80c0; flex-wrap: wrap; font-size: clamp(0.6rem, 1.2vw, 0.72rem); }
     .topbar .live { display: flex; align-items: center; gap: 8px; color: #4ade80; }
     .topbar .live::before { content: ''; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 8px #4ade80; animation: pulseDot 1.5s infinite; }
     @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+
+    /* ===== НАВИГАЦИЯ В ХЕДЕРЕ ===== */
+    .nav-tabs {
+        display: flex;
+        gap: 4px;
+        background: rgba(0,0,0,0.4);
+        border: 1px solid rgba(110,196,255,0.15);
+        border-radius: 6px;
+        padding: 4px;
+        margin: 0 16px;
+    }
+    .nav-tab {
+        background: none; border: none;
+        padding: 6px 14px;
+        color: #4a80c0;
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.7rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+        border-radius: 4px;
+    }
+    .nav-tab:hover { color: var(--c3); background: rgba(110,196,255,0.08); }
+    .nav-tab.active { color: #fff; background: rgba(110,196,255,0.15); box-shadow: inset 0 0 10px rgba(110,196,255,0.2); }
 
     .auth-btn {
         background: transparent; border: 1px solid rgba(110,196,255,0.3);
@@ -204,272 +195,180 @@
     .auth-btn.admin { color: #ffd700; border-color: rgba(255,215,0,0.4); }
     .auth-btn.admin:hover { background: rgba(255,215,0,0.15); border-color: #ffd700; }
 
-    .wrap { position: relative; z-index: 10; max-width: 1080px; margin: 0 auto; padding: 0 30px 100px; }
+    .wrap { position: relative; z-index: 10; max-width: 1080px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 30px) 100px; }
+
+    /* ===== ВКЛАДКИ СТРАНИЦ ===== */
+    .tab-page { display: none; }
+    .tab-page.active { display: block; animation: pageFade 0.5s ease; }
+    @keyframes pageFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
     .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 120px 0 80px; position: relative; }
     .hero-meta { font-size: 0.72rem; letter-spacing: 4px; color: #4a80c0; margin-bottom: 30px; display: flex; flex-wrap: wrap; gap: 20px; opacity: 0; animation: fadeUp 1s ease 1.8s forwards; }
     .hero-meta span::before { content: '// '; color: var(--c2); }
-    .hero-title { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(5rem, 20vw, 15rem); line-height: 0.85; color: #e6f4ff; position: relative; margin-bottom: 40px; display: flex; perspective: 1000px; text-shadow: 0 0 30px rgba(110, 196, 255, 0.6), 0 0 80px rgba(110, 196, 255, 0.3); }
+    .hero-title { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(3.5rem, 20vw, 15rem); line-height: 0.85; color: #e6f4ff; position: relative; margin-bottom: 40px; display: flex; perspective: 1000px; text-shadow: 0 0 30px rgba(110, 196, 255, 0.6), 0 0 80px rgba(110, 196, 255, 0.3); }
     .hero-title .letter { display: inline-block; opacity: 0; transform: translateY(-100px) rotateX(90deg); animation: letterDrop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; will-change: transform; transition: color 0.25s, text-shadow 0.25s; }
-    .hero-title .letter:nth-child(1) { animation-delay: 1.5s; } .hero-title .letter:nth-child(2) { animation-delay: 1.65s; } .hero-title .letter:nth-child(3) { animation-delay: 1.8s; } .hero-title .letter:nth-child(4) { animation-delay: 1.95s; }
+    .hero-title .letter:nth-child(1) { animation-delay: 1.5s; } .hero-title .letter:nth-child(2) { animation-delay: 1.65s; } .hero-title .letter:nth-child(3) { animation-delay: 1.8s; } .hero-title .letter:nth-child(4) { animation-delay: 1.95s; } .hero-title .letter:nth-child(5) { animation-delay: 2.1s; }
     @keyframes letterDrop { to { opacity: 1; transform: translateY(0) rotateX(0); } }
     .hero-title .letter:hover { color: #ffffff; text-shadow: 0 0 20px var(--c3), 0 0 60px var(--c2), 0 0 120px var(--c2); }
-    .hero-sub { font-size: 1rem; color: #7fa8d4; max-width: 560px; line-height: 1.8; letter-spacing: 0.3px; margin-bottom: 50px; opacity: 0; animation: fadeUp 1s ease 2.4s forwards; }
+    .hero-sub { font-size: clamp(0.9rem, 1.5vw, 1rem); color: #7fa8d4; max-width: 560px; line-height: 1.8; letter-spacing: 0.3px; margin-bottom: 50px; opacity: 0; animation: fadeUp 1s ease 2.4s forwards; }
     .hero-sub .typed { color: var(--c3); border-right: 2px solid var(--c2); padding-right: 4px; animation: blink 0.9s step-end infinite; }
     @keyframes blink { 50% { border-color: transparent; } }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    .hero-cta { display: inline-flex; align-items: center; gap: 14px; padding: 16px 32px; border: 1px solid var(--c2); color: var(--c3); font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; background: rgba(110,196,255,0.05); position: relative; overflow: hidden; transition: all 0.3s; opacity: 0; animation: fadeUp 1s ease 2.7s forwards; }
+    .hero-cta { display: inline-flex; align-items: center; gap: 14px; padding: clamp(12px, 2vw, 16px) clamp(22px, 4vw, 32px); border: 1px solid var(--c2); color: var(--c3); font-family: 'Oswald', sans-serif; font-size: clamp(0.8rem, 1.4vw, 0.9rem); letter-spacing: clamp(2px, 0.8vw, 4px); text-transform: uppercase; text-decoration: none; background: rgba(110,196,255,0.05); position: relative; overflow: hidden; transition: all 0.3s; opacity: 0; animation: fadeUp 1s ease 2.7s forwards; }
     .hero-cta::before { content: ''; position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(110,196,255,0.4), transparent 70%); pointer-events: none; transform: translate(-50%, -50%); left: var(--mx, 50%); top: var(--my, 50%); opacity: 0; transition: opacity 0.3s; }
     .hero-cta:hover::before { opacity: 1; }
     .hero-cta::after { content: '→'; transition: transform 0.3s; position: relative; z-index: 1; }
     .hero-cta span { position: relative; z-index: 1; }
-    .hero-cta:hover { background: rgba(110,196,255,0.15); box-shadow: 0 0 30px rgba(110,196,255,0.5); letter-spacing: 5px; }
+    .hero-cta:hover { background: rgba(110,196,255,0.15); box-shadow: 0 0 30px rgba(110,196,255,0.5); letter-spacing: clamp(3px, 1vw, 5px); }
     .hero-cta:hover::after { transform: translateX(6px); }
     .scroll-marker { position: absolute; bottom: 40px; right: 0; font-size: 0.68rem; letter-spacing: 3px; color: #4a80c0; writing-mode: vertical-rl; opacity: 0; animation: fadeUp 1s ease 3s forwards, marker 2s infinite ease-in-out 3s; }
     @keyframes marker { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
-    section.block { padding: 100px 0; border-top: 1px solid rgba(110, 196, 255, 0.1); opacity: 0; transform: translateY(50px) scale(0.98); filter: blur(6px); transition: opacity 1s ease, transform 1s ease, filter 1s ease; }
+    section.block { padding: clamp(60px, 8vw, 100px) 0; border-top: 1px solid rgba(110, 196, 255, 0.1); opacity: 0; transform: translateY(50px) scale(0.98); filter: blur(6px); transition: opacity 1s ease, transform 1s ease, filter 1s ease; }
     section.block.visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
     section.block.passed { opacity: 0.35; filter: blur(2px); }
-    .block-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: 50px; flex-wrap: wrap; transition: transform 0.4s; }
+    .block-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: clamp(30px, 5vw, 50px); flex-wrap: wrap; transition: transform 0.4s; }
     .block-num { font-size: 0.7rem; color: #4a80c0; letter-spacing: 3px; }
-    .block-title { font-family: 'Oswald', sans-serif; font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: #e6f4ff; letter-spacing: 6px; text-transform: uppercase; text-shadow: 0 0 25px rgba(110, 196, 255, 0.4); }
+    .block-title { font-family: 'Oswald', sans-serif; font-size: clamp(1.4rem, 4vw, 2.6rem); font-weight: 700; color: #e6f4ff; letter-spacing: clamp(3px, 1.2vw, 6px); text-transform: uppercase; text-shadow: 0 0 25px rgba(110, 196, 255, 0.4); }
     .block-title .accent { color: var(--c2); }
 
-    .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: rgba(110, 196, 255, 0.12); border: 1px solid rgba(110, 196, 255, 0.18); }
-    .data-cell { background: #03080f; padding: 26px 24px; transition: background 0.3s; position: relative; overflow: hidden; }
+    .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 1px; background: rgba(110, 196, 255, 0.12); border: 1px solid rgba(110, 196, 255, 0.18); }
+    .data-cell { background: #03080f; padding: clamp(18px, 3vw, 26px) clamp(16px, 2.5vw, 24px); transition: background 0.3s; position: relative; overflow: hidden; }
     .data-cell::after { content: ''; position: absolute; left: 0; top: 0; width: 2px; height: 0; background: var(--c2); transition: height 0.4s; box-shadow: 0 0 15px var(--c2); }
     .data-cell:hover { background: #051222; } .data-cell:hover::after { height: 100%; }
     .data-label { font-size: 0.68rem; letter-spacing: 2.5px; color: #4a80c0; text-transform: uppercase; margin-bottom: 12px; }
-    .data-value { font-family: 'Oswald', sans-serif; font-size: 1.35rem; color: #e6f4ff; letter-spacing: 1px; }
-    .data-value a { color: var(--c2); text-decoration: none; transition: all 0.3s; }
-    .data-value a:hover { color: #ffffff; text-shadow: 0 0 15px var(--c2); }
+    .data-value { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2vw, 1.35rem); color: #e6f4ff; letter-spacing: 1px; }
 
-    .classified { color: #ff6b6b; letter-spacing: 3px; font-size: 0.9rem; text-shadow: 0 0 12px rgba(255,107,107,0.6); animation: classifiedPulse 1.5s infinite; }
-    @keyframes classifiedPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .classified {
+        color: #ff6b6b;
+        letter-spacing: 3px;
+        font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+        text-shadow: 0 0 12px rgba(255,107,107,0.6);
+        animation: classifiedPulse 1.5s infinite;
+    }
+    @keyframes classifiedPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+    }
 
     .news-list { display: flex; flex-direction: column; gap: 16px; }
-    .news-item {
-        background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.2);
-        border-left: 3px solid var(--c2); padding: 24px 28px;
-        transition: all 0.35s; position: relative; overflow: hidden;
-        transform-style: preserve-3d; will-change: transform;
-    }
-    .news-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
+    .news-item { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.2); border-left: 3px solid var(--c2); padding: clamp(18px, 2.5vw, 24px) clamp(18px, 2.5vw, 28px); transition: all 0.35s; position: relative; overflow: hidden; }
+    .news-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); transform: translateX(6px); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
     .news-meta { display: flex; gap: 16px; align-items: center; font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; flex-wrap: wrap; }
     .news-tag { padding: 3px 10px; border: 1px solid rgba(110,196,255,0.4); color: var(--c2); background: rgba(110,196,255,0.08); }
-    .news-title { font-family: 'Oswald', sans-serif; font-size: 1.3rem; color: #e6f4ff; letter-spacing: 1px; margin-bottom: 12px; }
-    .news-text { color: #9ec3e6; font-size: 0.92rem; line-height: 1.8; white-space: pre-wrap; }
+    .news-title { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2.2vw, 1.3rem); color: #e6f4ff; letter-spacing: 1px; margin-bottom: 12px; }
+    .news-text { color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.92rem); line-height: 1.8; white-space: pre-wrap; }
     .news-empty { text-align: center; padding: 60px 20px; color: #4a80c0; font-size: 0.85rem; letter-spacing: 2px; }
 
-    /* ===== РЕАКЦИИ ===== */
-    .reactions {
-        display: flex; gap: 8px; margin-top: 16px; padding-top: 14px;
-        border-top: 1px dashed rgba(110,196,255,0.15);
-        align-items: center; flex-wrap: wrap;
+    /* ===== АРХИВ ===== */
+    .archive-head {
+        text-align: center;
+        margin-bottom: 50px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid rgba(110,196,255,0.15);
     }
-    .reaction-btn {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 5px 12px; border: 1px solid rgba(110,196,255,0.2);
-        background: rgba(110,196,255,0.04);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.78rem; color: #9ec3e6;
-        border-radius: 14px;
-        transition: all 0.25s;
-        position: relative; overflow: hidden;
-    }
-    .reaction-btn:hover {
-        border-color: var(--c2); background: rgba(110,196,255,0.14);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(110,196,255,0.25);
-    }
-    .reaction-btn.active {
-        border-color: var(--c3); color: #fff;
-        background: rgba(110,196,255,0.2);
-        box-shadow: 0 0 15px rgba(110,196,255,0.5);
-    }
-    .reaction-btn .emoji { font-size: 1rem; line-height: 1; }
-    .reaction-btn .count { font-weight: 700; min-width: 12px; text-align: center; }
-    .reaction-btn.pop { animation: reactionPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
-    @keyframes reactionPop {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.25); }
-        100% { transform: scale(1); }
-    }
-    .reaction-btn .burst {
-        position: absolute; inset: 0; pointer-events: none;
-        background: radial-gradient(circle at center, var(--c3), transparent 60%);
-        opacity: 0; animation: burst 0.6s ease-out;
-    }
-    @keyframes burst { 0% { opacity: 0.9; transform: scale(0.3); } 100% { opacity: 0; transform: scale(2); } }
-
-    /* ===== КНОПКА «ВСЕ НОВОСТИ» ===== */
-    .news-more-wrap { margin-top: 30px; text-align: center; }
-    .news-more-btn {
-        display: inline-flex; align-items: center; gap: 12px;
-        padding: 14px 32px; border: 1px solid var(--c2);
-        background: rgba(110,196,255,0.06); color: var(--c3);
-        font-family: 'Oswald', sans-serif; font-size: 0.85rem;
-        letter-spacing: 4px; text-transform: uppercase;
-        transition: all 0.3s;
-    }
-    .news-more-btn:hover { background: rgba(110,196,255,0.18); box-shadow: 0 0 25px rgba(110,196,255,0.4); letter-spacing: 5px; }
-    .news-more-btn::after { content: '→'; transition: transform 0.3s; }
-    .news-more-btn:hover::after { transform: translateX(6px); }
-
-    /* ===== ГАЛЕРЕЯ ===== */
-    .gallery-upload-bar {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 28px; padding: 20px 24px;
-        background: linear-gradient(135deg, rgba(3,8,15,0.9), rgba(5,15,30,0.7));
-        border: 1px solid rgba(110,196,255,0.2);
-        flex-wrap: wrap; gap: 16px;
-        position: relative; overflow: hidden;
-    }
-    .gallery-upload-bar::before {
-        content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(110,196,255,0.08), transparent);
-        animation: shimmer 4s infinite;
-    }
-    @keyframes shimmer { to { left: 100%; } }
-    .gallery-upload-info { display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 1; }
-    .gallery-upload-title { font-family: 'Oswald', sans-serif; color: var(--c3); letter-spacing: 2px; font-size: 1.05rem; }
-    .gallery-upload-hint { font-size: 0.7rem; color: #4a80c0; letter-spacing: 1px; }
-    .gallery-upload-btn {
-        display: inline-flex; align-items: center; gap: 10px;
-        padding: 12px 24px; border: 1px solid var(--c2);
-        background: rgba(110,196,255,0.1); color: var(--c3);
-        font-family: 'Oswald', sans-serif; font-size: 0.85rem;
-        letter-spacing: 3px; text-transform: uppercase;
-        transition: all 0.3s; position: relative; z-index: 1;
-    }
-    .gallery-upload-btn:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); letter-spacing: 4px; }
-
-    .gallery-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 14px;
-    }
-    .gallery-card {
-        position: relative; overflow: hidden; aspect-ratio: 4/3;
-        border: 1px solid rgba(110,196,255,0.2);
-        background: #03080f;
-        transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        transform-style: preserve-3d; will-change: transform;
-    }
-    .gallery-card img {
-        width: 100%; height: 100%; object-fit: cover;
-        transition: transform 0.6s, filter 0.4s;
-        filter: brightness(0.85);
-    }
-    .gallery-card:hover { border-color: var(--c3); box-shadow: 0 15px 40px rgba(110,196,255,0.3); z-index: 2; }
-    .gallery-card:hover img { transform: scale(1.08); filter: brightness(1); }
-    .gallery-card-overlay {
-        position: absolute; inset: 0;
-        background: linear-gradient(to top, rgba(0,3,8,0.95) 0%, rgba(0,3,8,0.5) 40%, transparent 70%);
-        display: flex; flex-direction: column; justify-content: flex-end;
-        padding: 16px 18px; opacity: 0; transition: opacity 0.35s;
-    }
-    .gallery-card:hover .gallery-card-overlay { opacity: 1; }
-    .gallery-title {
-        font-family: 'Oswald', sans-serif; color: #e6f4ff;
-        font-size: 1rem; letter-spacing: 1px; margin-bottom: 4px;
-        transform: translateY(10px); transition: transform 0.35s;
-    }
-    .gallery-author {
-        font-size: 0.68rem; color: var(--c2); letter-spacing: 1.5px;
-        text-transform: uppercase;
-        transform: translateY(10px); transition: transform 0.35s 0.05s;
-    }
-    .gallery-card:hover .gallery-title,
-    .gallery-card:hover .gallery-author { transform: translateY(0); }
-    .gallery-desc { font-size: 0.75rem; color: #9ec3e6; margin-top: 4px; line-height: 1.5;
-        transform: translateY(10px); transition: transform 0.35s 0.1s; }
-    .gallery-card:hover .gallery-desc { transform: translateY(0); }
-
-    .gallery-badge {
-        position: absolute; top: 12px; right: 12px;
-        padding: 4px 10px; background: rgba(0,3,8,0.85);
-        border: 1px solid rgba(110,196,255,0.4);
-        font-size: 0.65rem; color: var(--c2);
-        letter-spacing: 1px; backdrop-filter: blur(6px);
-        display: flex; align-items: center; gap: 5px;
-    }
-
-    /* ===== ЛАЙТБОКС ===== */
-    .lightbox {
-        position: fixed; inset: 0; z-index: 10005;
-        background: rgba(0, 3, 8, 0.96); backdrop-filter: blur(16px);
-        display: none; justify-content: center; align-items: center;
-        padding: 40px 20px;
-    }
-    .lightbox.active { display: flex; }
-    .lightbox-img-wrap {
-        max-width: 90vw; max-height: 80vh; position: relative;
-        border: 1px solid rgba(110,196,255,0.4);
-        box-shadow: 0 0 80px rgba(110,196,255,0.3);
-        animation: lightboxIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes lightboxIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
-    .lightbox-img-wrap img {
-        display: block; max-width: 90vw; max-height: 80vh;
-        object-fit: contain;
-    }
-    .lightbox-info {
-        position: absolute; bottom: 0; left: 0; right: 0;
-        padding: 20px 24px;
-        background: linear-gradient(to top, rgba(0,3,8,0.95), transparent);
+    .archive-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(2rem, 6vw, 3.5rem);
         color: #e6f4ff;
+        letter-spacing: clamp(4px, 1.5vw, 10px);
+        text-transform: uppercase;
+        text-shadow: 0 0 30px rgba(110,196,255,0.5);
+        margin-bottom: 12px;
     }
-    .lightbox-info .gallery-title { font-size: 1.2rem; }
-    .lightbox-close {
-        position: absolute; top: -50px; right: 0;
-        background: none; border: 1px solid rgba(110,196,255,0.4);
-        color: var(--c3); font-size: 1.4rem;
-        width: 40px; height: 40px; padding: 0;
-        transition: all 0.3s; line-height: 1;
+    .archive-sub {
+        font-size: clamp(0.7rem, 1.3vw, 0.85rem);
+        color: #4a80c0;
+        letter-spacing: 4px;
+        text-transform: uppercase;
     }
-    .lightbox-close:hover { color: #ff6b6b; border-color: #ff6b6b; transform: rotate(90deg); }
-    .lightbox-nav {
-        position: absolute; top: 50%; transform: translateY(-50%);
-        background: rgba(0,3,8,0.7); border: 1px solid rgba(110,196,255,0.4);
-        color: var(--c3); font-size: 1.6rem; width: 48px; height: 48px;
-        transition: all 0.3s; line-height: 1;
+    .archive-count {
+        font-family: 'Oswald', sans-serif;
+        color: var(--c2);
+        letter-spacing: 2px;
+        font-size: 1rem;
     }
-    .lightbox-nav:hover { background: rgba(110,196,255,0.25); color: #fff; }
-    .lightbox-nav.prev { left: -70px; }
-    .lightbox-nav.next { right: -70px; }
-    @media (max-width: 900px) {
-        .lightbox-nav.prev { left: 10px; }
-        .lightbox-nav.next { right: 10px; }
+    .archive-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+    .archive-item {
+        display: flex;
+        gap: 20px;
+        background: rgba(3, 8, 15, 0.85);
+        border: 1px solid rgba(110, 196, 255, 0.2);
+        border-left: 3px solid var(--c2);
+        padding: clamp(16px, 2.5vw, 22px) clamp(18px, 2.5vw, 26px);
+        transition: all 0.35s;
+        align-items: flex-start;
+        flex-wrap: wrap;
     }
-
-    /* ===== МОДАЛКА ВСЕХ НОВОСТЕЙ ===== */
-    .all-news-toolbar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
-    .all-news-search {
-        flex: 1; min-width: 200px; background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(110,196,255,0.25); color: #e6f4ff;
-        padding: 10px 14px; font-family: 'JetBrains Mono', monospace;
-        font-size: 0.85rem; outline: none; transition: border 0.3s;
+    .archive-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); transform: translateX(6px); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
+    .archive-num {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+        color: var(--c2);
+        min-width: 60px;
+        text-align: center;
+        text-shadow: 0 0 15px rgba(110,196,255,0.6);
+        padding-top: 4px;
     }
-    .all-news-search:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
-    .all-news-count { font-size: 0.7rem; color: #4a80c0; letter-spacing: 2px; }
-    .all-news-pager { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
-    .all-news-pager button {
-        padding: 8px 16px; border: 1px solid rgba(110,196,255,0.3);
-        background: transparent; color: var(--c2);
+    .archive-body { flex: 1; min-width: 200px; }
+    .archive-item-date {
+        font-size: 0.68rem;
+        color: #4a80c0;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+    .archive-item-title {
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: #e6f4ff;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+    .archive-item-text {
+        color: #9ec3e6;
+        font-size: clamp(0.82rem, 1.4vw, 0.9rem);
+        line-height: 1.8;
+        white-space: pre-wrap;
+    }
+    .pager {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+    .pager-btn {
+        min-width: 40px;
+        height: 40px;
+        padding: 0 14px;
+        background: rgba(3,8,15,0.85);
+        border: 1px solid rgba(110,196,255,0.3);
+        color: var(--c2);
         font-family: 'JetBrains Mono', monospace;
-        font-size: 0.75rem; letter-spacing: 1px;
+        font-size: 0.8rem;
+        letter-spacing: 1px;
         transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
-    .all-news-pager button:hover:not(:disabled) { background: rgba(110,196,255,0.15); border-color: var(--c3); color: #fff; }
-    .all-news-pager button:disabled { opacity: 0.3; }
-    .all-news-pager .all-news-page-info { font-size: 0.75rem; color: #4a80c0; letter-spacing: 2px; }
+    .pager-btn:hover:not(:disabled) {
+        background: rgba(110,196,255,0.15);
+        border-color: var(--c3);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(110,196,255,0.4);
+    }
+    .pager-btn.active {
+        background: rgba(110,196,255,0.2);
+        border-color: var(--c3);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(110,196,255,0.5);
+    }
+    .pager-btn:disabled { opacity: 0.3; }
 
-    .review-form { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.25); padding: 30px 32px; margin-bottom: 40px; position: relative; }
+    .review-form { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.25); padding: clamp(20px, 3vw, 30px) clamp(20px, 3vw, 32px); margin-bottom: 40px; position: relative; }
     .review-form::before { content: '▌ ОСТАВИТЬ ОТЗЫВ'; display: block; font-size: 0.68rem; color: var(--c2); letter-spacing: 3px; margin-bottom: 20px; }
     .review-field { margin-bottom: 18px; }
     .review-label { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 8px; }
@@ -479,39 +378,56 @@
         color: #e6f4ff; padding: 12px 16px;
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.9rem; outline: none;
-        transition: border 0.3s; resize: vertical;
+        transition: border 0.3s;
+        resize: vertical;
     }
     .review-input:focus, .review-textarea:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
     .review-textarea { min-height: 120px; }
 
     .rating-stars { display: flex; gap: 6px; align-items: center; }
-    .rating-star { font-size: 2rem; color: #2a4568; transition: color 0.2s, transform 0.2s, text-shadow 0.2s; background: none; border: none; padding: 0 4px; line-height: 1; font-family: 'Oswald', sans-serif; }
-    .rating-star:hover { color: #ffd700; text-shadow: 0 0 20px #ffd700; transform: scale(1.2); }
-    .rating-star.active { color: #ffd700; text-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5); }
+    .rating-star {
+        font-size: clamp(1.6rem, 3.5vw, 2rem);
+        color: #2a4568;
+        transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
+        background: none;
+        border: none;
+        padding: 0 4px;
+        line-height: 1;
+        font-family: 'Oswald', sans-serif;
+    }
+    .rating-star:hover {
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700;
+        transform: scale(1.2);
+    }
+    .rating-star.active {
+        color: #ffd700;
+        text-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5);
+    }
 
-    .review-submit { background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: 12px 32px; font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; transition: all 0.3s; }
-    .review-submit:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); letter-spacing: 5px; }
+    .review-submit { background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: clamp(10px, 2vw, 12px) clamp(22px, 4vw, 32px); font-family: 'Oswald', sans-serif; font-size: clamp(0.8rem, 1.4vw, 0.9rem); letter-spacing: clamp(2px, 0.8vw, 4px); text-transform: uppercase; transition: all 0.3s; }
+    .review-submit:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); letter-spacing: clamp(3px, 1vw, 5px); }
     .review-submit:disabled { opacity: 0.4; }
     .review-msg { margin-top: 16px; font-size: 0.85rem; letter-spacing: 1px; min-height: 20px; }
     .review-msg.ok { color: #4ade80; } .review-msg.err { color: #ff6b6b; }
 
-    .reviews-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .reviews-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
     .review-card { background: rgba(3, 8, 15, 0.7); border: 1px solid rgba(110, 196, 255, 0.15); border-left: 3px solid var(--c2); padding: 20px 22px; transition: all 0.35s; }
     .review-card:hover { border-left-color: var(--c3); transform: translateY(-3px); }
-    .review-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; gap: 12px; }
-    .review-author { font-family: 'Oswald', sans-serif; font-size: 1.05rem; color: #e6f4ff; letter-spacing: 1px; }
+    .review-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+    .review-author { font-family: 'Oswald', sans-serif; font-size: clamp(0.95rem, 1.8vw, 1.05rem); color: #e6f4ff; letter-spacing: 1px; }
     .review-date { font-size: 0.68rem; color: #4a80c0; letter-spacing: 1px; }
     .review-rating { color: #ffd700; font-size: 0.95rem; letter-spacing: 2px; margin-bottom: 10px; }
-    .review-content { color: #9ec3e6; font-size: 0.88rem; line-height: 1.7; white-space: pre-wrap; }
+    .review-content { color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.88rem); line-height: 1.7; white-space: pre-wrap; }
 
-    .rules-progress { margin-bottom: 30px; display: flex; align-items: center; gap: 16px; font-size: 0.72rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; }
-    .rules-progress-bar { flex: 1; height: 3px; background: rgba(110,196,255,0.1); position: relative; overflow: hidden; }
+    .rules-progress { margin-bottom: 30px; display: flex; align-items: center; gap: 16px; font-size: 0.72rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; flex-wrap: wrap; }
+    .rules-progress-bar { flex: 1; height: 3px; background: rgba(110,196,255,0.1); position: relative; overflow: hidden; min-width: 100px; }
     .rules-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--c1), var(--c3)); box-shadow: 0 0 10px var(--c2); transition: width 0.5s ease; }
     .rules-progress-count { font-family: 'Oswald', sans-serif; font-size: 0.95rem; color: var(--c3); }
-    .protocol-list { position: relative; padding-left: 30px; }
+    .protocol-list { position: relative; padding-left: clamp(20px, 3vw, 30px); }
     .protocol-list::before { content: ''; position: absolute; top: 0; bottom: 0; left: 8px; width: 1px; background: linear-gradient(to bottom, transparent, rgba(110,196,255,0.4), transparent); }
     .protocol { position: relative; margin-bottom: 20px; background: rgba(3, 8, 15, 0.7); border: 1px solid rgba(110, 196, 255, 0.15); transition: all 0.35s; overflow: hidden; }
-    .protocol::before { content: ''; position: absolute; left: -30px; top: 26px; width: 14px; height: 14px; background: #03080f; border: 1px solid rgba(110, 196, 255, 0.5); border-radius: 50%; transition: all 0.35s; z-index: 2; }
+    .protocol::before { content: ''; position: absolute; left: clamp(-20px, -3vw, -30px); top: 26px; width: 14px; height: 14px; background: #03080f; border: 1px solid rgba(110, 196, 255, 0.5); border-radius: 50%; transition: all 0.35s; z-index: 2; }
     .protocol.open::before { background: var(--c2); box-shadow: 0 0 15px var(--c2); border-color: var(--c3); animation: nodePulse 1.5s infinite; }
     @keyframes nodePulse { 0%, 100% { box-shadow: 0 0 15px var(--c2); } 50% { box-shadow: 0 0 25px var(--c2), 0 0 40px rgba(110,196,255,0.6); } }
     .protocol:hover { border-color: rgba(110, 196, 255, 0.4); background: rgba(5, 15, 30, 0.8); }
@@ -519,9 +435,9 @@
     .protocol-scan { position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--c2), transparent); opacity: 0; }
     .protocol.open .protocol-scan { animation: scanDown 0.9s ease-out; }
     @keyframes scanDown { 0% { top: 0; opacity: 1; } 100% { top: 100%; opacity: 0; } }
-    .protocol-head { display: flex; align-items: center; gap: 20px; padding: 22px 26px; flex-wrap: wrap; position: relative; }
+    .protocol-head { display: flex; align-items: center; gap: clamp(10px, 2vw, 20px); padding: clamp(16px, 2.5vw, 22px) clamp(18px, 2.5vw, 26px); flex-wrap: wrap; position: relative; }
     .protocol-code { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; min-width: 55px; }
-    .protocol-name { font-family: 'Oswald', sans-serif; font-size: 1.1rem; letter-spacing: 3px; color: #cfe6ff; text-transform: uppercase; flex: 1; transition: color 0.3s; }
+    .protocol-name { font-family: 'Oswald', sans-serif; font-size: clamp(0.9rem, 1.8vw, 1.1rem); letter-spacing: clamp(2px, 0.6vw, 3px); color: #cfe6ff; text-transform: uppercase; flex: 1; min-width: 160px; transition: color 0.3s; }
     .protocol.open .protocol-name { color: var(--c3); }
     .threat { font-size: 0.62rem; letter-spacing: 2px; padding: 4px 10px; border: 1px solid; text-transform: uppercase; transition: all 0.3s; }
     .threat.low { color: #4ade80; border-color: rgba(74,222,128,0.4); }
@@ -531,8 +447,8 @@
     .protocol.open .protocol-toggle { transform: rotate(45deg); }
     .protocol-body { max-height: 0; overflow: hidden; transition: max-height 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
     .protocol.open .protocol-body { max-height: 3000px; }
-    .protocol-body-inner { padding: 0 30px 30px 101px; color: #9ec3e6; font-size: 0.9rem; line-height: 1.9; }
-    .protocol-body-inner h4 { font-family: 'Oswald', sans-serif; color: var(--c3); font-size: 1rem; letter-spacing: 2px; text-transform: uppercase; margin: 20px 0 12px; }
+    .protocol-body-inner { padding: 0 clamp(18px, 2.5vw, 30px) clamp(20px, 3vw, 30px) clamp(18px, 3vw, 101px); color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.9rem); line-height: 1.9; }
+    .protocol-body-inner h4 { font-family: 'Oswald', sans-serif; color: var(--c3); font-size: clamp(0.9rem, 1.6vw, 1rem); letter-spacing: 2px; text-transform: uppercase; margin: 20px 0 12px; }
     .protocol-body-inner h4:first-child { margin-top: 0; }
     .protocol-body-inner p { margin-bottom: 12px; }
     .protocol-body-inner ul { list-style: none; margin-bottom: 12px; }
@@ -545,32 +461,52 @@
     .bad { color: #ff6b6b; font-weight: 700; } .good { color: #4ade80; font-weight: 700; } .note { color: #ffb347; }
     .code-inline { background: rgba(110,196,255,0.08); border: 1px solid rgba(110,196,255,0.2); padding: 1px 6px; border-radius: 3px; color: var(--c3); font-size: 0.85em; }
 
-    .channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1px; background: rgba(110, 196, 255, 0.12); border: 1px solid rgba(110, 196, 255, 0.18); }
-    .channel { display: flex; flex-direction: column; gap: 10px; padding: 34px 28px; background: #03080f; text-decoration: none; color: #cfe6ff; transition: all 0.4s; position: relative; overflow: hidden; }
+    .channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 1px; background: rgba(110, 196, 255, 0.12); border: 1px solid rgba(110, 196, 255, 0.18); }
+    .channel { display: flex; flex-direction: column; gap: 10px; padding: clamp(24px, 4vw, 34px) clamp(20px, 3vw, 28px); background: #03080f; text-decoration: none; color: #cfe6ff; transition: all 0.4s; position: relative; overflow: hidden; }
     .channel::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(110, 196, 255, 0.12), transparent); transition: left 0.7s; }
     .channel:hover::before { left: 100%; }
     .channel:hover { background: #051222; transform: translateY(-4px); }
-    .channel-icon { font-size: 1.6rem; margin-bottom: 4px; }
-    .channel-name { font-family: 'Oswald', sans-serif; font-size: 1.15rem; letter-spacing: 3px; text-transform: uppercase; color: var(--c3); }
-    .channel-handle { font-size: 0.78rem; color: var(--c2); letter-spacing: 1px; }
+    .channel-icon { font-size: clamp(1.3rem, 3vw, 1.6rem); margin-bottom: 4px; }
+    .channel-name { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2vw, 1.15rem); letter-spacing: clamp(2px, 0.6vw, 3px); text-transform: uppercase; color: var(--c3); }
+    .channel-handle { font-size: clamp(0.7rem, 1.3vw, 0.78rem); color: var(--c2); letter-spacing: 1px; }
 
-    .final { text-align: center; padding: 140px 0 100px; position: relative; }
+    .final { text-align: center; padding: clamp(80px, 12vw, 140px) 0 clamp(60px, 10vw, 100px); position: relative; }
     .final-text {
-        font-family: 'Oswald', sans-serif; font-size: clamp(2.5rem, 9vw, 7rem);
-        font-weight: 700; letter-spacing: clamp(4px, 1.5vw, 14px);
-        color: transparent; -webkit-text-stroke: 1px rgba(110,196,255,0.4);
-        transition: all 0.6s; line-height: 1.05; margin-bottom: 20px;
-        text-decoration: none; display: inline-block; position: relative;
+        font-family: 'Oswald', sans-serif;
+        font-size: clamp(1.8rem, 9vw, 7rem);
+        font-weight: 700;
+        letter-spacing: clamp(2px, 1.5vw, 14px);
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(110,196,255,0.4);
+        transition: all 0.6s;
+        line-height: 1.05;
+        margin-bottom: 20px;
+        text-decoration: none;
+        display: inline-block;
+        position: relative;
     }
-    .final-text::after { content: ''; position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); width: 0; height: 2px; background: var(--c3); box-shadow: 0 0 20px var(--c2); transition: width 0.5s; }
-    .final-text:hover { color: var(--c3); -webkit-text-stroke: 1px var(--c3); text-shadow: 0 0 40px rgba(110,196,255,0.7); }
+    .final-text::after {
+        content: '';
+        position: absolute;
+        left: 50%; bottom: -8px;
+        transform: translateX(-50%);
+        width: 0; height: 2px;
+        background: var(--c3);
+        box-shadow: 0 0 20px var(--c2);
+        transition: width 0.5s;
+    }
+    .final-text:hover {
+        color: var(--c3);
+        -webkit-text-stroke: 1px var(--c3);
+        text-shadow: 0 0 40px rgba(110,196,255,0.7);
+    }
     .final-text:hover::after { width: 80%; }
-    .final-sub { font-size: 0.75rem; letter-spacing: 6px; color: #4a80c0; text-transform: uppercase; }
-    .final-hint { font-size: 0.7rem; color: var(--c2); letter-spacing: 3px; margin-top: 16px; opacity: 0.7; }
+    .final-sub { font-size: clamp(0.65rem, 1.2vw, 0.75rem); letter-spacing: clamp(3px, 1vw, 6px); color: #4a80c0; text-transform: uppercase; }
+    .final-hint { font-size: clamp(0.62rem, 1.1vw, 0.7rem); color: var(--c2); letter-spacing: 3px; margin-top: 16px; opacity: 0.7; }
 
-    footer { position: relative; z-index: 10; border-top: 1px solid rgba(110, 196, 255, 0.1); padding: 40px 30px; text-align: center; font-size: 0.7rem; color: #4a80c0; letter-spacing: 3px; }
-    footer .foot-logo { font-family: 'Oswald', sans-serif; font-size: 1.1rem; color: var(--c3); letter-spacing: 10px; margin-bottom: 12px; text-shadow: 0 0 15px rgba(110, 196, 255, 0.5); }
-    footer .hint { margin-top: 16px; font-size: 0.62rem; color: #4a80c0; opacity: 0.7; }
+    footer { position: relative; z-index: 10; border-top: 1px solid rgba(110, 196, 255, 0.1); padding: 40px clamp(16px, 3vw, 30px); text-align: center; font-size: clamp(0.62rem, 1.1vw, 0.7rem); color: #4a80c0; letter-spacing: clamp(2px, 0.8vw, 3px); }
+    footer .foot-logo { font-family: 'Oswald', sans-serif; font-size: clamp(0.95rem, 2vw, 1.1rem); color: var(--c3); letter-spacing: clamp(5px, 2vw, 10px); margin-bottom: 12px; text-shadow: 0 0 15px rgba(110, 196, 255, 0.5); }
+    footer .hint { margin-top: 16px; font-size: clamp(0.55rem, 1vw, 0.62rem); color: #4a80c0; opacity: 0.7; }
     footer .hint kbd { background: rgba(110,196,255,0.1); border: 1px solid rgba(110,196,255,0.3); padding: 2px 6px; border-radius: 3px; color: var(--c3); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; }
 
     .modal {
@@ -582,7 +518,7 @@
     .modal.active { display: flex; opacity: 1; }
     .modal-inner {
         background: rgba(5, 15, 30, 0.98); border: 1px solid rgba(110, 196, 255, 0.4);
-        max-width: 480px; width: 100%; padding: 40px 44px;
+        max-width: 480px; width: 100%; padding: clamp(24px, 4vw, 40px) clamp(22px, 4vw, 44px);
         position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(110,196,255,0.2);
         transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -592,7 +528,7 @@
     .modal-wide::-webkit-scrollbar-thumb { background: rgba(110,196,255,0.4); border-radius: 3px; }
     .modal-close { position: absolute; top: 18px; right: 22px; font-size: 1.6rem; color: rgba(180,220,255,0.6); transition: all 0.3s; line-height: 1; background: none; border: none; padding: 5px 12px; }
     .modal-close:hover { color: #ff6b6b; transform: rotate(90deg); text-shadow: 0 0 20px #ff6b6b; }
-    .modal-title { font-family: 'Oswald', sans-serif; font-size: 1.8rem; color: #e6f4ff; letter-spacing: 4px; margin-bottom: 6px; }
+    .modal-title { font-family: 'Oswald', sans-serif; font-size: clamp(1.4rem, 3vw, 1.8rem); color: #e6f4ff; letter-spacing: clamp(2px, 1vw, 4px); margin-bottom: 6px; }
     .modal-sub { font-size: 0.7rem; color: #4a80c0; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; }
     .modal-field { margin-bottom: 18px; }
     .modal-label { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 8px; }
@@ -613,52 +549,13 @@
     .modal-msg { margin-top: 14px; font-size: 0.82rem; min-height: 18px; letter-spacing: 1px; }
     .modal-msg.ok { color: #4ade80; } .modal-msg.err { color: #ff6b6b; }
 
-    /* ===== UPLOAD DROPZONE ===== */
-    .dropzone {
-        border: 2px dashed rgba(110,196,255,0.3);
-        padding: 40px 20px; text-align: center;
-        background: rgba(110,196,255,0.02);
-        transition: all 0.3s; cursor: pointer;
-        position: relative; overflow: hidden;
-    }
-    .dropzone:hover, .dropzone.dragover {
-        border-color: var(--c2); background: rgba(110,196,255,0.08);
-        box-shadow: inset 0 0 30px rgba(110,196,255,0.15);
-    }
-    .dropzone-icon { font-size: 2.5rem; color: var(--c2); margin-bottom: 12px; }
-    .dropzone-text { font-size: 0.85rem; color: #9ec3e6; letter-spacing: 1px; }
-    .dropzone-hint { font-size: 0.68rem; color: #4a80c0; margin-top: 6px; letter-spacing: 1px; }
-    .dropzone-preview {
-        position: relative; margin-top: 16px;
-        border: 1px solid rgba(110,196,255,0.3);
-        max-height: 240px; overflow: hidden;
-    }
-    .dropzone-preview img { width: 100%; display: block; max-height: 240px; object-fit: contain; background: #000; }
-    .dropzone-preview .remove {
-        position: absolute; top: 8px; right: 8px;
-        background: rgba(0,0,0,0.7); border: 1px solid rgba(255,107,107,0.5);
-        color: #ff6b6b; width: 30px; height: 30px; font-size: 1rem;
-        transition: all 0.3s; line-height: 1;
-    }
-    .dropzone-preview .remove:hover { background: rgba(255,107,107,0.3); }
-
-    .upload-progress {
-        margin-top: 14px; height: 3px; background: rgba(110,196,255,0.1);
-        overflow: hidden; display: none;
-    }
-    .upload-progress.active { display: block; }
-    .upload-progress-fill {
-        height: 100%; width: 0%;
-        background: linear-gradient(90deg, var(--c1), var(--c3));
-        box-shadow: 0 0 15px var(--c2); transition: width 0.2s;
-    }
-
     .admin-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; border-bottom: 1px solid rgba(110,196,255,0.15); }
     .admin-tab {
         padding: 12px 20px; background: none; border: none;
         color: #4a80c0; font-family: 'Oswald', sans-serif;
         font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
-        transition: all 0.3s; border-bottom: 2px solid transparent; margin-bottom: -1px;
+        transition: all 0.3s;
+        border-bottom: 2px solid transparent; margin-bottom: -1px;
     }
     .admin-tab:hover { color: var(--c3); }
     .admin-tab.active { color: #fff; border-bottom-color: var(--c2); }
@@ -668,7 +565,7 @@
     .admin-news-item {
         display: flex; justify-content: space-between; gap: 16px;
         background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15);
-        padding: 16px 20px; margin-bottom: 12px; align-items: center;
+        padding: 16px 20px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;
     }
     .admin-news-info { flex: 1; min-width: 0; }
     .admin-news-title { font-family: 'Oswald', sans-serif; color: #e6f4ff; letter-spacing: 1px; font-size: 1rem; margin-bottom: 4px; word-break: break-word; }
@@ -696,61 +593,27 @@
     .admin-review-stars { color: #ffd700; letter-spacing: 2px; }
     .admin-review-text { color: #9ec3e6; font-size: 0.88rem; line-height: 1.7; margin-bottom: 12px; white-space: pre-wrap; }
 
-    .admin-gallery-item {
-        display: flex; gap: 16px; background: rgba(3,8,15,0.7);
-        border: 1px solid rgba(110,196,255,0.15); border-left: 3px solid #ffb347;
-        padding: 12px; margin-bottom: 12px; align-items: center;
-    }
-    .admin-gallery-item.approved { border-left-color: #4ade80; }
-    .admin-gallery-thumb { width: 80px; height: 80px; object-fit: cover; border: 1px solid rgba(110,196,255,0.2); flex-shrink: 0; }
-    .admin-gallery-info { flex: 1; min-width: 0; }
-
     .empty-state { text-align: center; padding: 40px 20px; color: #4a80c0; font-size: 0.8rem; letter-spacing: 2px; }
 
-    /* ===== TOAST ===== */
-    .toast-container {
-        position: fixed; top: 80px; right: 20px; z-index: 10010;
-        display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    @media (max-width: 900px) {
+        .palette { right: 8px; top: auto; bottom: 80px; transform: none; flex-direction: row; }
+        .palette-dot { width: 18px; height: 18px; }
+        .nav-tabs { margin: 0; padding: 3px; gap: 2px; }
+        .nav-tab { padding: 5px 8px; font-size: 0.6rem; letter-spacing: 1px; }
     }
-    .toast {
-        background: rgba(5,15,30,0.97); border: 1px solid var(--c2);
-        border-left: 3px solid var(--c2);
-        padding: 14px 20px; min-width: 260px; max-width: 340px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 30px rgba(110,196,255,0.3);
-        color: #e6f4ff; font-size: 0.85rem;
-        animation: toastIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        pointer-events: auto;
-    }
-    .toast.ok { border-color: #4ade80; border-left-color: #4ade80; }
-    .toast.err { border-color: #ff6b6b; border-left-color: #ff6b6b; }
-    .toast-title { font-family: 'Oswald', sans-serif; letter-spacing: 2px; font-size: 0.75rem; color: var(--c2); margin-bottom: 4px; text-transform: uppercase; }
-    .toast.ok .toast-title { color: #4ade80; }
-    .toast.err .toast-title { color: #ff6b6b; }
-    .toast.out { animation: toastOut 0.3s forwards; }
-    @keyframes toastIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes toastOut { to { opacity: 0; transform: translateX(50px); } }
-
     @media (max-width: 700px) {
-        .topbar { padding: 12px 16px; font-size: 0.65rem; letter-spacing: 1.5px; }
-        .topbar .logo { font-size: 1rem; letter-spacing: 5px; }
-        .topbar .status { gap: 10px; }
-        .topbar .live span { display: none; }
-        .wrap { padding: 0 20px 80px; }
-        .protocol-list { padding-left: 20px; }
-        .protocol::before { left: -20px; width: 10px; height: 10px; top: 24px; }
-        .protocol-body-inner { padding: 0 20px 20px 20px; }
+        .topbar { padding: 12px 16px; }
+        .topbar .status { width: 100%; justify-content: space-between; }
+        .nav-tabs { order: 3; width: 100%; justify-content: center; margin-top: 10px; }
         .log-terminal { display: none; }
         #galaxy { width: 500px; height: 500px; }
-        .palette { right: 8px; }
-        .palette-dot { width: 16px; height: 16px; }
         .modal-inner { padding: 30px 24px; }
-        .review-form { padding: 22px 20px; }
         .reviews-list { grid-template-columns: 1fr; }
-        .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
-        .all-news-toolbar { flex-direction: column; }
-        .all-news-search { width: 100%; }
-        .toast-container { top: 70px; right: 10px; left: 10px; }
-        .toast { min-width: auto; max-width: 100%; }
+        .hero { padding-top: 160px; }
+    }
+    @media (max-width: 500px) {
+        .nav-tab { padding: 5px 6px; font-size: 0.55rem; letter-spacing: 0.5px; }
+        .hero-title { letter-spacing: 8px; }
     }
 </style>
 </head>
@@ -758,9 +621,6 @@
 
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="resonance-flash" id="resonanceFlash"></div>
-
-<canvas id="aurora"></canvas>
-<div class="spotlight" id="spotlight"></div>
 
 <div id="preloader">
     <div class="pre-status">REC</div>
@@ -794,8 +654,6 @@
 <div class="cursor-dot" id="cDot"></div>
 <div class="cursor-ring" id="cRing"></div>
 
-<div class="toast-container" id="toastContainer"></div>
-
 <div class="log-terminal"><div id="logLines"></div></div>
 <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Звук">🔊</button>
 
@@ -810,6 +668,10 @@
 
 <div class="topbar">
     <div class="logo" id="topLogo">NOVA</div>
+    <div class="nav-tabs">
+        <button class="nav-tab active" data-page="main" onclick="switchPage('main')">Главная</button>
+        <button class="nav-tab" data-page="archive" onclick="switchPage('archive')">Архив</button>
+    </div>
     <div class="status">
         <div class="live"><span>SIGNAL</span></div>
         <div id="clock">--:--:--</div>
@@ -819,254 +681,255 @@
 
 <div class="wrap">
 
-    <section class="hero">
-        <div class="hero-meta">
-            <span>SEASON 01</span>
-            <span>EST. 2026</span>
-            <span>MINECRAFT</span>
-        </div>
-        <h1 class="hero-title" id="heroTitle" aria-label="NOVA"></h1>
-        <p class="hero-sub"><span class="typed" id="typed"></span></p>
-        <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="hero-cta" id="cta"><span>Вступить в NOVA</span></a>
-        <div class="scroll-marker">SCROLL ↓</div>
-    </section>
+    <!-- ====================== ГЛАВНАЯ ====================== -->
+    <div class="tab-page active" id="page-main">
 
-    <section class="block" id="about">
-        <div class="block-head">
-            <span class="block-num">01</span>
-            <h2 class="block-title">О <span class="accent">сервере</span></h2>
-        </div>
-        <div class="data-grid">
-            <div class="data-cell"><div class="data-label">Версия клиента</div><div class="data-value">Fabric 26.2</div></div>
-            <div class="data-cell"><div class="data-label">Ядро сервера</div><div class="data-value">Paper</div></div>
-            <div class="data-cell"><div class="data-label">Лицензия</div><div class="data-value">Не требуется</div></div>
-            <div class="data-cell"><div class="data-label">Старт сезона</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
-            <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
-            <div class="data-cell"><div class="data-label">Открытие энда</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
-            <div class="data-cell"><div class="data-label">Telegram</div><div class="data-value"><a href="https://t.me/l_NOVA_l" target="_blank">@l_NOVA_l</a></div></div>
-            <div class="data-cell"><div class="data-label">YouTube</div><div class="data-value"><a href="https://www.youtube.com/channel/UCJTn2B6Fz9cIlDpKX4vs3sA" target="_blank">NOVA | Канал</a></div></div>
-        </div>
-    </section>
-
-    <section class="block" id="news">
-        <div class="block-head">
-            <span class="block-num">02</span>
-            <h2 class="block-title">Новости <span class="accent">сервера</span></h2>
-        </div>
-        <div class="news-list" id="newsList">
-            <div class="news-empty">Загрузка новостей...</div>
-        </div>
-        <div class="news-more-wrap">
-            <button class="news-more-btn" onclick="openAllNews()">Все новости</button>
-        </div>
-    </section>
-
-    <section class="block" id="gallery">
-        <div class="block-head">
-            <span class="block-num">03</span>
-            <h2 class="block-title">Галерея <span class="accent">построек</span></h2>
-        </div>
-        <div class="gallery-upload-bar">
-            <div class="gallery-upload-info">
-                <div class="gallery-upload-title">Покажи свой мир</div>
-                <div class="gallery-upload-hint">Загрузи скриншот постройки — после модерации он появится здесь</div>
+        <section class="hero">
+            <div class="hero-meta">
+                <span>SEASON 01</span>
+                <span>EST. 2026</span>
+                <span>MINECRAFT</span>
             </div>
-            <button class="gallery-upload-btn" onclick="openUploadModal()">＋ Загрузить фото</button>
-        </div>
-        <div class="gallery-grid" id="galleryGrid">
-            <div class="news-empty" style="grid-column: 1/-1;">Загрузка галереи...</div>
-        </div>
-    </section>
+            <h1 class="hero-title" id="heroTitle" aria-label="NOVA"></h1>
+            <p class="hero-sub"><span class="typed" id="typed"></span></p>
+            <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="hero-cta" id="cta"><span>Вступить в NOVA</span></a>
+            <div class="scroll-marker">SCROLL ↓</div>
+        </section>
 
-    <section class="block" id="reviews">
-        <div class="block-head">
-            <span class="block-num">04</span>
-            <h2 class="block-title">Отзывы <span class="accent">игроков</span></h2>
-        </div>
-
-        <div class="review-form">
-            <div class="review-field">
-                <label class="review-label">Ваше имя</label>
-                <input type="text" class="review-input" id="reviewName" placeholder="Как вас зовут?" maxlength="30">
+        <section class="block" id="about">
+            <div class="block-head">
+                <span class="block-num">01</span>
+                <h2 class="block-title">О <span class="accent">сервере</span></h2>
             </div>
-            <div class="review-field">
-                <label class="review-label">Оценка <span id="ratingValue" style="color:#ffd700;margin-left:8px;">—</span></label>
-                <div class="rating-stars" id="ratingStars">
-                    <button type="button" class="rating-star" data-value="1">★</button>
-                    <button type="button" class="rating-star" data-value="2">★</button>
-                    <button type="button" class="rating-star" data-value="3">★</button>
-                    <button type="button" class="rating-star" data-value="4">★</button>
-                    <button type="button" class="rating-star" data-value="5">★</button>
+            <div class="data-grid">
+                <div class="data-cell"><div class="data-label">Версия клиента</div><div class="data-value">Fabric 26.2</div></div>
+                <div class="data-cell"><div class="data-label">Ядро сервера</div><div class="data-value">Paper</div></div>
+                <div class="data-cell"><div class="data-label">Лицензия</div><div class="data-value">Не требуется</div></div>
+                <div class="data-cell"><div class="data-label">Старт сезона</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
+                <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
+                <div class="data-cell"><div class="data-label">Открытие энда</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
+            </div>
+        </section>
+
+        <section class="block" id="news">
+            <div class="block-head">
+                <span class="block-num">02</span>
+                <h2 class="block-title">Последние <span class="accent">новости</span></h2>
+            </div>
+            <div class="news-list" id="newsList">
+                <div class="news-empty">Загрузка новостей...</div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="pager-btn" onclick="switchPage('archive')" style="min-width: 200px;">📁 Весь архив новостей →</button>
+            </div>
+        </section>
+
+        <section class="block" id="reviews">
+            <div class="block-head">
+                <span class="block-num">03</span>
+                <h2 class="block-title">Отзывы <span class="accent">игроков</span></h2>
+            </div>
+
+            <div class="review-form">
+                <div class="review-field">
+                    <label class="review-label">Ваше имя</label>
+                    <input type="text" class="review-input" id="reviewName" placeholder="Как вас зовут?" maxlength="30">
+                </div>
+                <div class="review-field">
+                    <label class="review-label">Оценка <span id="ratingValue" style="color:#ffd700;margin-left:8px;">—</span></label>
+                    <div class="rating-stars" id="ratingStars">
+                        <button type="button" class="rating-star" data-value="1">★</button>
+                        <button type="button" class="rating-star" data-value="2">★</button>
+                        <button type="button" class="rating-star" data-value="3">★</button>
+                        <button type="button" class="rating-star" data-value="4">★</button>
+                        <button type="button" class="rating-star" data-value="5">★</button>
+                    </div>
+                </div>
+                <div class="review-field">
+                    <label class="review-label">Ваш отзыв</label>
+                    <textarea class="review-textarea" id="reviewText" placeholder="Что вам нравится на сервере? Что можно улучшить?" maxlength="500"></textarea>
+                </div>
+                <button class="review-submit" id="reviewSubmit" onclick="submitReview()">Отправить отзыв</button>
+                <div class="review-msg" id="reviewMsg"></div>
+            </div>
+
+            <div class="reviews-list" id="reviewsList">
+                <div class="news-empty">Загрузка отзывов...</div>
+            </div>
+        </section>
+
+        <section class="block" id="rules">
+            <div class="block-head">
+                <span class="block-num">04</span>
+                <h2 class="block-title">Протоколы <span class="accent">поведения</span></h2>
+            </div>
+            <div class="rules-progress">
+                <span>Изучено:</span>
+                <span class="rules-progress-count" id="rulesCount">0 / 6</span>
+                <div class="rules-progress-bar"><div class="rules-progress-fill" id="rulesFill"></div></div>
+            </div>
+            <div class="protocol-list" id="protocols">
+                <div class="protocol" data-protocol="1">
+                    <div class="protocol-scan"></div>
+                    <div class="protocol-head" onclick="toggleProtocol(this)">
+                        <span class="protocol-code">П-01</span>
+                        <span class="protocol-name">◆ 1. Основы</span>
+                        <span class="threat low">Уровень: низкий</span>
+                        <span class="protocol-toggle">+</span>
+                    </div>
+                    <div class="protocol-body"><div class="protocol-body-inner">
+                        <p>Сервер держится на людях. На сервере нет плагинов на приват или ограничение игры для ограждения от других. Вы должны понимать, что ваши действия и слова — это ваша ответственность, и вы должны отдавать себе отчётность в том, что делаете. То, как ведёте себя вы — будет и по отношению к вам. Не забывайте об этом: эффект «Бумеранга» или «Зеркала» никто не отменял.</p>
+                        <p>Сервер старается создавать свою историю, каждый из вас является кусочком её. Любая постройка, действие или иные обстоятельства могут быть превращены в сюжет, однако стоит помнить — <span class="note">не любые действия сюжетны</span>. Представьте, каково будет, если кто-нибудь придёт, сломает вам механизм и скажет: «о, это лор!» (p.s. НЕТ — так не работает. В таких случаях должна быть договорённость между игроками.)</p>
+                    </div></div>
+                </div>
+                <div class="protocol" data-protocol="2">
+                    <div class="protocol-scan"></div>
+                    <div class="protocol-head" onclick="toggleProtocol(this)">
+                        <span class="protocol-code">П-02</span>
+                        <span class="protocol-name">◆ 2. Территории</span>
+                        <span class="threat mid">Уровень: средний</span>
+                        <span class="protocol-toggle">+</span>
+                    </div>
+                    <div class="protocol-body"><div class="protocol-body-inner">
+                        <p><span class="bad">Спавн — общее пространство. (500×500 блоков от нулевых координат)</span></p>
+                        <p>Напомним: плагинов на приват нет, однако вы можете обозначить территорию с помощью табличек/блоков. Не забывайте о чужих границах — вы можете выставлять правила своей территории, однако они не должны противоречить/нарушать правила сервера. Если вас просят покинуть территорию — лучше просто уйдите, или, не заходя на территорию, спросите разрешения войти. Не стоит лишний раз провоцировать кого-либо — это в ваших же интересах.</p>
+                    </div></div>
+                </div>
+                <div class="protocol" data-protocol="3">
+                    <div class="protocol-scan"></div>
+                    <div class="protocol-head" onclick="toggleProtocol(this)">
+                        <span class="protocol-code">П-03</span>
+                        <span class="protocol-name">◆ 3. Запреты</span>
+                        <span class="threat high">Уровень: критический</span>
+                        <span class="protocol-toggle">+</span>
+                    </div>
+                    <div class="protocol-body"><div class="protocol-body-inner">
+                        <ul>
+                            <li class="cross">Дискриминационные высказывания, оскорбления по расовому, половому, религиозному, национальному или любому иному признаку запрещены в любом виде.</li>
+                            <li class="cross">Экстремистская символика — свастика и иная символика запрещённых организаций — запрещена как в чате, так и в постройках.</li>
+                            <li class="cross">Пропаганда, призывы к насилию, а также экстремистские материалы любого рода запрещены.</li>
+                            <li class="cross">Реклама сторонних серверов и ресурсов без разрешения администрации запрещена.</li>
+                            <li class="cross">Публичный (18+) контент, материалы сексуального характера и контент, связанный с насилием, в общем чате запрещены. Обсуждение таких тем допускается в личных сообщениях между совершеннолетними участниками на их усмотрение.</li>
+                            <li class="cross">Общение должно оставаться в рамках разумного уважения — независимо от темы.</li>
+                        </ul>
+                        <h4>— Читы и сторонний софт —</h4>
+                        <ul>
+                            <li class="cross"><span class="bad">Запрещено:</span> X-ray, Kill-aura, флай-хаки, спид-хаки, NoFall и другие читы передвижения, любое ПО, дающее нечестное преимущество в PvP.</li>
+                            <li class="check"><span class="good">Разрешено:</span> автокликеры для AFK-ферм с оговоркой (игрок несёт ответственность за нагрузку и обязан остановить ферму по требованию администрации). Оптимизационные моды (OptiFine, Sodium, Lithium), мини-карты без X-ray, макросы без PvP-преимущества, Gamma.</li>
+                        </ul>
+                        <h4>— Дюпы —</h4>
+                        <ul>
+                            <li class="check"><span class="good">Разрешены:</span> ТнТ (гуси — не более 2–4), крюки, ковры (для артов и печек), рельсы, сыпучие блоки.</li>
+                            <li class="cross"><span class="bad">Остальные дюпы запрещены.</span></li>
+                        </ul>
+                    </div></div>
+                </div>
+                <div class="protocol" data-protocol="4">
+                    <div class="protocol-scan"></div>
+                    <div class="protocol-head" onclick="toggleProtocol(this)">
+                        <span class="protocol-code">П-04</span>
+                        <span class="protocol-name">◆ 4. Строительство</span>
+                        <span class="threat mid">Уровень: средний</span>
+                        <span class="protocol-toggle">+</span>
+                    </div>
+                    <div class="protocol-body"><div class="protocol-body-inner">
+                        <ul>
+                            <li class="gear">Все активные механизмы рекомендуется оснащать рубильником для быстрого отключения.</li>
+                            <li class="gear">Нельзя намеренно держать чанки загруженными через <span class="code-inline">chunk loader</span> без разрешения администрации.</li>
+                            <li class="gear">При падении TPS администрация вправе принудительно выгрузить чанки или удалить источник нагрузки.</li>
+                            <li class="gear">Крупные фермы (более 5×5 чанков активной площади) строятся по согласованию с администрацией.</li>
+                        </ul>
+                    </div></div>
+                </div>
+                <div class="protocol" data-protocol="5">
+                    <div class="protocol-scan"></div>
+                    <div class="protocol-head" onclick="toggleProtocol(this)">
+                        <span class="protocol-code">П-05</span>
+                        <span class="protocol-name">◆ 5. Стримы</span>
+                        <span class="threat mid">Уровень: средний</span>
+                        <span class="protocol-toggle">+</span>
+                    </div>
+                    <div class="protocol-body"><div class="protocol-body-inner">
+                        <ul>
+                            <li class="cam">На сервере присутствуют стримеры и блогеры. Их трансляции — публичный контент.</li>
+                            <li class="cam">Банворды, провокации и оскорбления во время стримов запрещены.</li>
+                            <li class="cam">Намеренное мешательство стримам строго запрещено: гриферинг, спам в чате, попытки «засветиться» негативом.</li>
+                        </ul>
+                    </div></div>
+                </div>
+                <div class="protocol" data-protocol="6">
+                    <div class="protocol-scan"></div>
+                    <div class="protocol-head" onclick="toggleProtocol(this)">
+                        <span class="protocol-code">П-06</span>
+                        <span class="protocol-name">◆ 6. Администрация</span>
+                        <span class="threat low">Уровень: низкий</span>
+                        <span class="protocol-toggle">+</span>
+                    </div>
+                    <div class="protocol-body"><div class="protocol-body-inner">
+                        <p>⚖️ Наказания: от предупреждения и мута до временной или перманентной блокировки — на усмотрение администрации.</p>
+                        <p style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(110,196,255,0.15); color: var(--c2);">🌟 NOVA желает вам комфортной игры и эпичных моментов, которые войдут в историю этого сезона 🌟</p>
+                        <p style="color: #ff6b6b; font-size: 0.8rem; margin-top: 12px;">Правила могут дополняться. Кик по личной неприязни присутствует.</p>
+                    </div></div>
                 </div>
             </div>
-            <div class="review-field">
-                <label class="review-label">Ваш отзыв</label>
-                <textarea class="review-textarea" id="reviewText" placeholder="Что вам нравится на сервере? Что можно улучшить?" maxlength="500"></textarea>
+        </section>
+
+        <section class="block" id="channels">
+            <div class="block-head">
+                <span class="block-num">05</span>
+                <h2 class="block-title">Каналы <span class="accent">связи</span></h2>
             </div>
-            <button class="review-submit" id="reviewSubmit" onclick="submitReview()">Отправить отзыв</button>
-            <div class="review-msg" id="reviewMsg"></div>
+            <div class="channels">
+                <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="channel">
+                    <div class="channel-icon">💬</div>
+                    <div class="channel-name">Discord</div>
+                    <div class="channel-handle">Основной чат</div>
+                </a>
+                <a href="https://t.me/l_NOVA_l" target="_blank" class="channel">
+                    <div class="channel-icon">✈️</div>
+                    <div class="channel-name">Telegram</div>
+                    <div class="channel-handle">@l_NOVA_l</div>
+                </a>
+                <a href="https://www.youtube.com/channel/UCJTn2B6Fz9cIlDpKX4vs3sA" target="_blank" class="channel">
+                    <div class="channel-icon">▶️</div>
+                    <div class="channel-name">YouTube</div>
+                    <div class="channel-handle">NOVA | Официальный канал</div>
+                </a>
+            </div>
+        </section>
+
+        <section class="final">
+            <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="final-text">ПРИСОЕДИНЯЙСЯ</a>
+            <div class="final-sub">Код доступа: NOVA-2026</div>
+            <div class="final-hint">▲ Клик ведёт на Discord-сервер</div>
+        </section>
+    </div>
+
+    <!-- ====================== АРХИВ ====================== -->
+    <div class="tab-page" id="page-archive" style="padding-top: 120px;">
+        <div class="archive-head">
+            <h1 class="archive-title">АРХИВ</h1>
+            <div class="archive-sub">Все объявления и новости NOVA</div>
+            <div style="margin-top: 20px;">
+                <span class="archive-count" id="archiveCount">Загрузка...</span>
+            </div>
         </div>
 
-        <div class="reviews-list" id="reviewsList">
-            <div class="news-empty">Загрузка отзывов...</div>
+        <div class="archive-list" id="archiveList">
+            <div class="news-empty">Загрузка архива...</div>
         </div>
-    </section>
 
-    <section class="block" id="rules">
-        <div class="block-head">
-            <span class="block-num">05</span>
-            <h2 class="block-title">Протоколы <span class="accent">поведения</span></h2>
-        </div>
-        <div class="rules-progress">
-            <span>Изучено:</span>
-            <span class="rules-progress-count" id="rulesCount">0 / 6</span>
-            <div class="rules-progress-bar"><div class="rules-progress-fill" id="rulesFill"></div></div>
-        </div>
-        <div class="protocol-list" id="protocols">
-            <div class="protocol" data-protocol="1">
-                <div class="protocol-scan"></div>
-                <div class="protocol-head" onclick="toggleProtocol(this)">
-                    <span class="protocol-code">П-01</span>
-                    <span class="protocol-name">◆ 1. Основы</span>
-                    <span class="threat low">Уровень: низкий</span>
-                    <span class="protocol-toggle">+</span>
-                </div>
-                <div class="protocol-body"><div class="protocol-body-inner">
-                    <p>Сервер держится на людях. На сервере нет плагинов на приват или ограничение игры для ограждения от других. Вы должны понимать, что ваши действия и слова — это ваша ответственность, и вы должны отдавать себе отчётность в том, что делаете. То, как ведёте себя вы — будет и по отношению к вам. Не забывайте об этом: эффект «Бумеранга» или «Зеркала» никто не отменял.</p>
-                    <p>Сервер старается создавать свою историю, каждый из вас является кусочком её. Любая постройка, действие или иные обстоятельства могут быть превращены в сюжет, однако стоит помнить — <span class="note">не любые действия сюжетны</span>. Представьте, каково будет, если кто-нибудь придёт, сломает вам механизм и скажет: «о, это лор!» (p.s. НЕТ — так не работает. В таких случаях должна быть договорённость между игроками.)</p>
-                </div></div>
-            </div>
-            <div class="protocol" data-protocol="2">
-                <div class="protocol-scan"></div>
-                <div class="protocol-head" onclick="toggleProtocol(this)">
-                    <span class="protocol-code">П-02</span>
-                    <span class="protocol-name">◆ 2. Территории</span>
-                    <span class="threat mid">Уровень: средний</span>
-                    <span class="protocol-toggle">+</span>
-                </div>
-                <div class="protocol-body"><div class="protocol-body-inner">
-                    <p><span class="bad">Спавн — общее пространство. (500×500 блоков от нулевых координат)</span></p>
-                    <p>Напомним: плагинов на приват нет, однако вы можете обозначить территорию с помощью табличек/блоков. Не забывайте о чужих границах — вы можете выставлять правила своей территории, однако они не должны противоречить/нарушать правила сервера. Если вас просят покинуть территорию — лучше просто уйдите, или, не заходя на территорию, спросите разрешения войти. Не стоит лишний раз провоцировать кого-либо — это в ваших же интересах.</p>
-                </div></div>
-            </div>
-            <div class="protocol" data-protocol="3">
-                <div class="protocol-scan"></div>
-                <div class="protocol-head" onclick="toggleProtocol(this)">
-                    <span class="protocol-code">П-03</span>
-                    <span class="protocol-name">◆ 3. Запреты</span>
-                    <span class="threat high">Уровень: критический</span>
-                    <span class="protocol-toggle">+</span>
-                </div>
-                <div class="protocol-body"><div class="protocol-body-inner">
-                    <ul>
-                        <li class="cross">Дискриминационные высказывания, оскорбления по расовому, половому, религиозному, национальному или любому иному признаку запрещены в любом виде.</li>
-                        <li class="cross">Экстремистская символика — свастика и иная символика запрещённых организаций — запрещена как в чате, так и в постройках.</li>
-                        <li class="cross">Пропаганда, призывы к насилию, а также экстремистские материалы любого рода запрещены.</li>
-                        <li class="cross">Реклама сторонних серверов и ресурсов без разрешения администрации запрещена.</li>
-                        <li class="cross">Публичный (18+) контент, материалы сексуального характера и контент, связанный с насилием, в общем чате запрещены. Обсуждение таких тем допускается в личных сообщениях между совершеннолетними участниками на их усмотрение.</li>
-                        <li class="cross">Общение должно оставаться в рамках разумного уважения — независимо от темы.</li>
-                    </ul>
-                    <h4>— Читы и сторонний софт —</h4>
-                    <ul>
-                        <li class="cross"><span class="bad">Запрещено:</span> X-ray, Kill-aura, флай-хаки, спид-хаки, NoFall и другие читы передвижения, любое ПО, дающее нечестное преимущество в PvP.</li>
-                        <li class="check"><span class="good">Разрешено:</span> автокликеры для AFK-ферм с оговоркой (игрок несёт ответственность за нагрузку и обязан остановить ферму по требованию администрации). Оптимизационные моды (OptiFine, Sodium, Lithium), мини-карты без X-ray, макросы без PvP-преимущества, Gamma.</li>
-                    </ul>
-                    <h4>— Дюпы —</h4>
-                    <ul>
-                        <li class="check"><span class="good">Разрешены:</span> ТнТ (гуси — не более 2–4), крюки, ковры (для артов и печек), рельсы, сыпучие блоки.</li>
-                        <li class="cross"><span class="bad">Остальные дюпы запрещены.</span></li>
-                    </ul>
-                </div></div>
-            </div>
-            <div class="protocol" data-protocol="4">
-                <div class="protocol-scan"></div>
-                <div class="protocol-head" onclick="toggleProtocol(this)">
-                    <span class="protocol-code">П-04</span>
-                    <span class="protocol-name">◆ 4. Строительство</span>
-                    <span class="threat mid">Уровень: средний</span>
-                    <span class="protocol-toggle">+</span>
-                </div>
-                <div class="protocol-body"><div class="protocol-body-inner">
-                    <ul>
-                        <li class="gear">Все активные механизмы рекомендуется оснащать рубильником для быстрого отключения.</li>
-                        <li class="gear">Нельзя намеренно держать чанки загруженными через <span class="code-inline">chunk loader</span> без разрешения администрации.</li>
-                        <li class="gear">При падении TPS администрация вправе принудительно выгрузить чанки или удалить источник нагрузки.</li>
-                        <li class="gear">Крупные фермы (более 5×5 чанков активной площади) строятся по согласованию с администрацией.</li>
-                    </ul>
-                </div></div>
-            </div>
-            <div class="protocol" data-protocol="5">
-                <div class="protocol-scan"></div>
-                <div class="protocol-head" onclick="toggleProtocol(this)">
-                    <span class="protocol-code">П-05</span>
-                    <span class="protocol-name">◆ 5. Стримы</span>
-                    <span class="threat mid">Уровень: средний</span>
-                    <span class="protocol-toggle">+</span>
-                </div>
-                <div class="protocol-body"><div class="protocol-body-inner">
-                    <ul>
-                        <li class="cam">На сервере присутствуют стримеры и блогеры. Их трансляции — публичный контент.</li>
-                        <li class="cam">Банворды, провокации и оскорбления во время стримов запрещены.</li>
-                        <li class="cam">Намеренное мешательство стримам строго запрещено: гриферинг, спам в чате, попытки «засветиться» негативом.</li>
-                    </ul>
-                </div></div>
-            </div>
-            <div class="protocol" data-protocol="6">
-                <div class="protocol-scan"></div>
-                <div class="protocol-head" onclick="toggleProtocol(this)">
-                    <span class="protocol-code">П-06</span>
-                    <span class="protocol-name">◆ 6. Администрация</span>
-                    <span class="threat low">Уровень: низкий</span>
-                    <span class="protocol-toggle">+</span>
-                </div>
-                <div class="protocol-body"><div class="protocol-body-inner">
-                    <p>⚖️ Наказания: от предупреждения и мута до временной или перманентной блокировки — на усмотрение администрации.</p>
-                    <p style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(110,196,255,0.15); color: var(--c2);">🌟 NOVA желает вам комфортной игры и эпичных моментов, которые войдут в историю этого сезона 🌟</p>
-                    <p style="color: #ff6b6b; font-size: 0.8rem; margin-top: 12px;">Правила могут дополняться. Кик по личной неприязни присутствует.</p>
-                </div></div>
-            </div>
-        </div>
-    </section>
-
-    <section class="block" id="channels">
-        <div class="block-head">
-            <span class="block-num">06</span>
-            <h2 class="block-title">Каналы <span class="accent">связи</span></h2>
-        </div>
-        <div class="channels">
-            <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="channel">
-                <div class="channel-icon">💬</div>
-                <div class="channel-name">Discord</div>
-                <div class="channel-handle">Основной чат</div>
-            </a>
-            <a href="https://t.me/l_NOVA_l" target="_blank" class="channel">
-                <div class="channel-icon">✈️</div>
-                <div class="channel-name">Telegram</div>
-                <div class="channel-handle">@l_NOVA_l</div>
-            </a>
-            <a href="https://www.youtube.com/channel/UCJTn2B6Fz9cIlDpKX4vs3sA" target="_blank" class="channel">
-                <div class="channel-icon">▶️</div>
-                <div class="channel-name">YouTube</div>
-                <div class="channel-handle">NOVA | Официальный канал</div>
-            </a>
-        </div>
-    </section>
-
-    <section class="final">
-        <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="final-text">ПРИСОЕДИНЯЙСЯ</a>
-        <div class="final-sub">Код доступа: NOVA-2026</div>
-        <div class="final-hint">▲ Клик ведёт на Discord-сервер</div>
-    </section>
+        <div class="pager" id="archivePager"></div>
+    </div>
 
 </div>
 
 <footer>
     <div class="foot-logo">NOVA</div>
     <div>© 2026 · ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
-    <div class="hint"><kbd>↑↑↓↓←→←→</kbd> — секрет</div>
+    <div class="hint"><kbd>↑↑↓↓←→←→BA</kbd> — секрет</div>
 </footer>
 
-<!-- Модалка входа -->
 <div class="modal" id="loginModal">
     <div class="modal-inner">
         <button class="modal-close" onclick="closeLoginModal()">✕</button>
@@ -1085,74 +948,6 @@
     </div>
 </div>
 
-<!-- Модалка загрузки фото -->
-<div class="modal" id="uploadModal">
-    <div class="modal-inner">
-        <button class="modal-close" onclick="closeUploadModal()">✕</button>
-        <div class="modal-title">ЗАГРУЗКА ФОТО</div>
-        <div class="modal-sub">Поделись своей постройкой</div>
-
-        <div class="dropzone" id="dropzone">
-            <input type="file" id="fileInput" accept="image/*" style="display:none;">
-            <div class="dropzone-icon">🖼️</div>
-            <div class="dropzone-text">Перетащи изображение сюда</div>
-            <div class="dropzone-hint">или нажми, чтобы выбрать · JPG/PNG/WebP · до 5 МБ</div>
-        </div>
-        <div id="previewWrap"></div>
-
-        <div class="upload-progress" id="uploadProgress">
-            <div class="upload-progress-fill" id="uploadProgressFill"></div>
-        </div>
-
-        <div class="modal-field" style="margin-top:18px;">
-            <label class="modal-label">Ваше имя / ник</label>
-            <input type="text" class="modal-input" id="uploadAuthor" placeholder="Как вас подписать?" maxlength="30">
-        </div>
-        <div class="modal-field">
-            <label class="modal-label">Название (необязательно)</label>
-            <input type="text" class="modal-input" id="uploadTitle" placeholder="Например: Мой замок" maxlength="60">
-        </div>
-        <div class="modal-field">
-            <label class="modal-label">Описание (необязательно)</label>
-            <textarea class="modal-input" id="uploadDesc" placeholder="Короткое описание" maxlength="200" style="min-height:70px;resize:vertical;font-family:'JetBrains Mono',monospace;padding:12px 16px;"></textarea>
-        </div>
-
-        <button class="modal-btn" id="uploadSubmit" onclick="uploadPhoto()">Отправить на модерацию</button>
-        <div class="modal-msg" id="uploadMsg"></div>
-    </div>
-</div>
-
-<!-- Модалка всех новостей -->
-<div class="modal" id="allNewsModal">
-    <div class="modal-inner modal-wide">
-        <button class="modal-close" onclick="closeAllNews()">✕</button>
-        <div class="modal-title">ВСЕ НОВОСТИ</div>
-        <div class="modal-sub">Архив объявлений NOVA</div>
-        <div class="all-news-toolbar">
-            <input type="text" class="all-news-search" id="allNewsSearch" placeholder="Поиск по новостям..." oninput="renderAllNews()">
-            <div class="all-news-count" id="allNewsCount"></div>
-        </div>
-        <div id="allNewsList"><div class="empty-state">Загрузка...</div></div>
-        <div class="all-news-pager" id="allNewsPager"></div>
-    </div>
-</div>
-
-<!-- Лайтбокс -->
-<div class="lightbox" id="lightbox">
-    <div class="lightbox-img-wrap">
-        <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-        <button class="lightbox-nav prev" onclick="lightboxNav(-1)">‹</button>
-        <button class="lightbox-nav next" onclick="lightboxNav(1)">›</button>
-        <img id="lightboxImg" src="" alt="">
-        <div class="lightbox-info">
-            <div class="gallery-title" id="lightboxTitle"></div>
-            <div class="gallery-author" id="lightboxAuthor"></div>
-            <div class="gallery-desc" id="lightboxDesc"></div>
-        </div>
-    </div>
-</div>
-
-<!-- Админка -->
 <div class="modal" id="adminModal">
     <div class="modal-inner modal-wide">
         <button class="modal-close" onclick="closeAdminModal()">✕</button>
@@ -1161,7 +956,6 @@
 
         <div class="admin-tabs">
             <button class="admin-tab active" data-tab="news" onclick="switchAdminTab('news')">Новости</button>
-            <button class="admin-tab" data-tab="gallery" onclick="switchAdminTab('gallery')">Галерея</button>
             <button class="admin-tab" data-tab="reviews" onclick="switchAdminTab('reviews')">Отзывы</button>
             <button class="admin-tab" data-tab="account" onclick="switchAdminTab('account')">Аккаунт</button>
         </div>
@@ -1177,17 +971,11 @@
             </div>
             <button class="modal-btn" onclick="publishNews()">Опубликовать</button>
             <div class="modal-msg" id="newsMsg"></div>
+
             <div style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(110,196,255,0.15);">
                 <div class="modal-label" style="margin-bottom:16px;">Опубликованные новости</div>
                 <div id="adminNewsList"><div class="empty-state">Загрузка...</div></div>
             </div>
-        </div>
-
-        <div class="admin-panel" id="panel-gallery">
-            <div class="modal-label" style="margin-bottom:16px;">Фото на модерации</div>
-            <div id="adminGalleryPending"><div class="empty-state">Загрузка...</div></div>
-            <div class="modal-label" style="margin:32px 0 16px;">Одобренные</div>
-            <div id="adminGalleryApproved"><div class="empty-state">Загрузка...</div></div>
         </div>
 
         <div class="admin-panel" id="panel-reviews">
@@ -1213,30 +1001,24 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* ======================= НАСТРОЙКИ SUPABASE ======================= */
 const SUPABASE_URL = 'https://jzudvypmsdsjgksiczuq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6dWR2eXBtc2Rzamdrc2ljenVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5ODg1OTYsImV4cCI6MjEwNzU2NDU5Nn0.dOdNify2IUavXdPnozngILOZXBIlJOjNjuiEfoRQlfg';
+
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
 let currentProfile = null;
 let selectedRating = 0;
-let userFingerprint = localStorage.getItem('nova_fp');
-if (!userFingerprint) {
-    userFingerprint = 'fp_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
-    localStorage.setItem('nova_fp', userFingerprint);
-}
-
-const REACTION_EMOJIS = ['👍', '🔥', '❤️'];
-const REACTED_KEY = 'nova_reactions'; // {newsId: {emoji: true}}
-
-function getMyReactions() {
-    try { return JSON.parse(localStorage.getItem(REACTED_KEY) || '{}'); } catch { return {}; }
-}
-function saveMyReactions(obj) { localStorage.setItem(REACTED_KEY, JSON.stringify(obj)); }
+let archivePage = 1;
+let archiveTotalPages = 1;
+let allArchiveNews = [];
+const ARCHIVE_PER_PAGE = 5;
+const NEWS_ON_MAIN = 3;
 
 /* ======================= УТИЛИТЫ ======================= */
 function escapeHtml(s) {
-    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 function fmtDate(iso) {
     const d = new Date(iso);
@@ -1247,29 +1029,17 @@ function setMsg(el, text, type = '') {
     el.className = el.className.split(' ')[0] + (type ? ' ' + type : '');
     el.textContent = text;
 }
-function toast(title, text = '', type = '') {
-    const c = document.getElementById('toastContainer');
-    const t = document.createElement('div');
-    t.className = 'toast ' + type;
-    t.innerHTML = `<div class="toast-title">${escapeHtml(title)}</div><div>${escapeHtml(text)}</div>`;
-    c.appendChild(t);
-    setTimeout(() => {
-        t.classList.add('out');
-        setTimeout(() => t.remove(), 350);
-    }, 4500);
-}
 
-/* ======================= АДАПТИВНОЕ МАСШТАБИРОВАНИЕ ======================= */
-function applyScale() {
-    const w = window.innerWidth;
-    if (w <= 900) { document.documentElement.style.setProperty('--scale', '1'); return; }
-    let scale = w / 1440;
-    scale = Math.max(0.75, Math.min(1.35, scale));
-    scale = Math.round(scale * 100) / 100;
-    document.documentElement.style.setProperty('--scale', String(scale));
+/* ======================= ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ ======================= */
+function switchPage(page) {
+    document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    document.querySelector(`.nav-tab[data-page="${page}"]`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (page === 'archive') renderArchive();
+    playBeep(600);
 }
-applyScale();
-window.addEventListener('resize', applyScale);
 
 /* ======================= ПРЕЛОАДЕР ======================= */
 (function preloader() {
@@ -1289,96 +1059,6 @@ window.addEventListener('resize', applyScale);
         }
         bar.style.width = progress + '%';
     }, 90);
-})();
-
-/* ======================= WEBGL AURORA SHADER ======================= */
-(function aurora() {
-    const canvas = document.getElementById('aurora');
-    const gl = canvas.getContext('webgl');
-    if (!gl) return;
-
-    const vs = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
-    const fs = `
-        precision highp float;
-        uniform vec2 r; uniform float t; uniform vec3 c1; uniform vec3 c2; uniform vec3 c3;
-        float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
-        float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
-            return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-        float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<5;i++){v+=a*n(p);p*=2.02;a*=.5;}return v;}
-        void main(){
-            vec2 uv=gl_FragCoord.xy/r.xy;
-            vec2 p=uv*3.0;
-            float f1=fbm(p+vec2(t*0.05,t*0.03));
-            float f2=fbm(p*1.5-vec2(t*0.04,t*0.06));
-            float f3=fbm(p*0.7+vec2(0.,t*0.02));
-            float band=smoothstep(0.3,0.9,f1)*smoothstep(0.2,0.8,f2);
-            vec3 col=mix(c1,c2,band);
-            col=mix(col,c3,f3*0.6);
-            float vig=smoothstep(1.4,0.2,length(uv-0.5)*2.0);
-            col*=vig;
-            col*=0.55;
-            gl_FragColor=vec4(col,1.);
-        }`;
-    function sh(type, src) {
-        const s = gl.createShader(type);
-        gl.shaderSource(s, src); gl.compileShader(s);
-        return s;
-    }
-    const prog = gl.createProgram();
-    gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs));
-    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs));
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'p');
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const uR = gl.getUniformLocation(prog, 'r');
-    const uT = gl.getUniformLocation(prog, 't');
-    const uC1 = gl.getUniformLocation(prog, 'c1');
-    const uC2 = gl.getUniformLocation(prog, 'c2');
-    const uC3 = gl.getUniformLocation(prog, 'c3');
-
-    function hex(h){h=h.replace('#','');return [parseInt(h.slice(0,2),16)/255,parseInt(h.slice(2,4),16)/255,parseInt(h.slice(4,6),16)/255];}
-
-    function resize(){
-        const dpr = Math.min(devicePixelRatio, 2);
-        canvas.width = innerWidth * dpr * 0.5;
-        canvas.height = innerHeight * dpr * 0.5;
-        gl.viewport(0,0,canvas.width,canvas.height);
-    }
-    resize(); addEventListener('resize', resize);
-
-    let t0 = performance.now();
-    (function loop(now) {
-        const t = (now - t0) / 1000;
-        const cs = getComputedStyle(document.documentElement);
-        gl.uniform2f(uR, canvas.width, canvas.height);
-        gl.uniform1f(uT, t);
-        gl.uniform3fv(uC1, hex(cs.getPropertyValue('--c1').trim() || '#4a80c0'));
-        gl.uniform3fv(uC2, hex(cs.getPropertyValue('--c2').trim() || '#6ec4ff'));
-        gl.uniform3fv(uC3, hex(cs.getPropertyValue('--c3').trim() || '#a8e0ff'));
-        gl.drawArrays(gl.TRIANGLES, 0, 6);
-        requestAnimationFrame(loop);
-    })(t0);
-})();
-
-/* ======================= SPOTLIGHT ======================= */
-(function spotlight() {
-    const s = document.getElementById('spotlight');
-    let mx = innerWidth/2, my = innerHeight/2, tx = mx, ty = my;
-    addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; });
-    (function anim() {
-        mx += (tx - mx) * 0.1;
-        my += (ty - my) * 0.1;
-        s.style.setProperty('--sx', mx + 'px');
-        s.style.setProperty('--sy', my + 'px');
-        requestAnimationFrame(anim);
-    })();
 })();
 
 /* ======================= ФОН ======================= */
@@ -1461,9 +1141,8 @@ window.addEventListener('resize', applyScale);
         const armOffset = Math.floor(Math.random()*2)*Math.PI;
         stars.push({ angle: angle + armOffset, radius, size: 0.5+Math.random()*1.5, color: Math.random()<0.7?'rgba(110,196,255,0.7)':'rgba(255,255,255,0.9)' });
     }
-    let rot = 0, t0 = performance.now();
-    (function draw(now) {
-        const dt = (now - t0) / 1000;
+    let rot = 0;
+    (function draw() {
         ctx.clearRect(0, 0, w, h);
         ctx.save(); ctx.translate(w/2, h/2); ctx.rotate(rot);
         stars.forEach(s => {
@@ -1472,9 +1151,9 @@ window.addEventListener('resize', applyScale);
             ctx.fillStyle = s.color; ctx.shadowBlur = 8; ctx.shadowColor = s.color; ctx.fill();
         });
         ctx.restore();
-        rot += dt * 0.0008 * 1000;
+        rot += 0.0008;
         requestAnimationFrame(draw);
-    })(t0);
+    })();
 })();
 
 /* ======================= ЧАСЫ ======================= */
@@ -1484,7 +1163,7 @@ window.addEventListener('resize', applyScale);
     setTimeout(tick, 1000);
 })();
 
-/* ======================= HERO ======================= */
+/* ======================= HERO БУКВЫ ======================= */
 (function buildTitle() {
     const el = document.getElementById('heroTitle');
     'NOVA'.split('').forEach(ch => {
@@ -1522,7 +1201,7 @@ window.addEventListener('resize', applyScale);
         mx = e.clientX; my = e.clientY;
         dot.style.left = mx + 'px'; dot.style.top = my + 'px';
         const now = Date.now();
-        if (now - lastTrail > 50) {
+        if (now - lastTrail > 40) {
             lastTrail = now;
             const p = document.createElement('div');
             p.className = 'trail-particle';
@@ -1537,58 +1216,17 @@ window.addEventListener('resize', applyScale);
         requestAnimationFrame(anim);
     })();
     document.addEventListener('mouseover', e => {
-        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .news-more-btn, .reaction-btn, .gallery-card, .gallery-upload-btn, .lightbox-nav, .lightbox-close');
+        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn');
         if (t) ring.classList.add('hover');
     });
     document.addEventListener('mouseout', e => {
-        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .news-more-btn, .reaction-btn, .gallery-card, .gallery-upload-btn, .lightbox-nav, .lightbox-close'))
+        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn'))
             ring.classList.remove('hover');
     });
 })();
 
-/* ======================= RIPPLE НА КЛИК ======================= */
-document.addEventListener('click', e => {
-    if (e.target.closest('input, textarea, select')) return;
-    const size = 120;
-    const r = document.createElement('div');
-    r.className = 'ripple';
-    r.style.left = e.clientX + 'px';
-    r.style.top = e.clientY + 'px';
-    r.style.width = size + 'px';
-    r.style.height = size + 'px';
-    document.body.appendChild(r);
-    setTimeout(() => r.remove(), 900);
-});
-
-/* ======================= GLOW TRAIL ======================= */
-(function glowTrail() {
-    let lastTime = 0;
-    addEventListener('mousemove', e => {
-        const now = performance.now();
-        if (now - lastTime < 35) return;
-        lastTime = now;
-        const g = document.createElement('div');
-        g.className = 'glow-trail';
-        g.style.left = e.clientX + 'px';
-        g.style.top = e.clientY + 'px';
-        document.body.appendChild(g);
-        setTimeout(() => g.remove(), 900);
-    });
-})();
-
-/* ======================= 3D TILT ======================= */
-function attachTilt(el, max = 8) {
-    el.addEventListener('mousemove', e => {
-        const r = el.getBoundingClientRect();
-        const px = (e.clientX - r.left) / r.width - 0.5;
-        const py = (e.clientY - r.top) / r.height - 0.5;
-        el.style.transform = `perspective(900px) rotateY(${px * max}deg) rotateX(${-py * max}deg) translateY(-3px)`;
-    });
-    el.addEventListener('mouseleave', () => { el.style.transform = ''; });
-}
-
 (function magnetic() {
-    document.querySelectorAll('.hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text, .news-more-btn, .gallery-upload-btn').forEach(item => {
+    document.querySelectorAll('.hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text, .pager-btn').forEach(item => {
         item.addEventListener('mousemove', e => {
             const r = item.getBoundingClientRect();
             const x = (e.clientX - r.left - r.width/2) * 0.15;
@@ -1685,9 +1323,13 @@ setInterval(() => {
     setTimeout(() => { t.style.transform = ''; t.style.color = ''; }, 90);
 }, 1800);
 
-/* ======================= ЗВУК ======================= */
-let audioCtx = null, soundOn = true, ambient = null, ambientTimeout = null;
+/* ======================= ЗВУК С ЗАТУХАНИЕМ ======================= */
+let audioCtx = null, soundOn = true, ambient = null;
+let ambientFadeTimer = null;
+const AMBIENT_TIMEOUT = 15000; // 15 секунд тишины → плавно затухает
+
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
 function playBeep(freq = 500) {
     if (!soundOn) return;
     try {
@@ -1700,6 +1342,7 @@ function playBeep(freq = 500) {
         o.stop(audioCtx.currentTime + 0.1);
     } catch (e) {}
 }
+
 function startAmbient() {
     if (!soundOn || ambient) return;
     try {
@@ -1711,27 +1354,54 @@ function startAmbient() {
         o1.connect(g); o2.connect(g); g.connect(audioCtx.destination);
         o1.start(); o2.start();
         ambient = { o1, o2, g };
-        if (ambientTimeout) clearTimeout(ambientTimeout);
-        ambientTimeout = setTimeout(() => {
-            if (!ambient) return;
-            try {
-                ambient.g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4);
-                setTimeout(() => {
-                    if (!ambient) return;
-                    ambient.o1.stop(); ambient.o2.stop(); ambient = null;
-                }, 4500);
-            } catch (e) { ambient = null; }
-        }, 30000);
+        scheduleAmbientFade();
     } catch (e) {}
 }
+
+function scheduleAmbientFade() {
+    if (ambientFadeTimer) clearTimeout(ambientFadeTimer);
+    ambientFadeTimer = setTimeout(() => {
+        // Плавное затухание гула
+        if (ambient) {
+            try {
+                ambient.g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 2);
+                setTimeout(() => {
+                    if (ambient) {
+                        try { ambient.o1.stop(); ambient.o2.stop(); } catch(e) {}
+                        ambient = null;
+                        addLog('Аудио: затухание');
+                    }
+                }, 2100);
+            } catch (e) { ambient = null; }
+        }
+    }, AMBIENT_TIMEOUT);
+}
+
+function bumpAmbient() {
+    if (!soundOn) return;
+    if (!ambient) { startAmbient(); return; }
+    // Восстанавливаем громкость, если был фейд
+    try {
+        ambient.g.gain.cancelScheduledValues(audioCtx.currentTime);
+        ambient.g.gain.setValueAtTime(Math.max(ambient.g.gain.value, 0.012), audioCtx.currentTime);
+    } catch(e) {}
+    scheduleAmbientFade();
+}
+
 function stopAmbient() {
-    if (ambientTimeout) { clearTimeout(ambientTimeout); ambientTimeout = null; }
+    if (ambientFadeTimer) clearTimeout(ambientFadeTimer);
     if (!ambient) return;
     try {
         ambient.g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3);
-        setTimeout(() => { if (!ambient) return; ambient.o1.stop(); ambient.o2.stop(); ambient = null; }, 350);
+        setTimeout(() => {
+            if (ambient) {
+                try { ambient.o1.stop(); ambient.o2.stop(); } catch(e) {}
+                ambient = null;
+            }
+        }, 350);
     } catch (e) { ambient = null; }
 }
+
 function toggleSound() {
     soundOn = !soundOn;
     const btn = document.getElementById('soundBtn');
@@ -1739,6 +1409,13 @@ function toggleSound() {
     btn.textContent = soundOn ? '🔊' : '🔇';
     if (soundOn) { startAmbient(); playBeep(600); } else stopAmbient();
 }
+
+// Любое действие пользователя продлевает звук
+['click', 'keydown', 'scroll', 'mousemove'].forEach(evt => {
+    document.addEventListener(evt, () => {
+        if (soundOn) bumpAmbient();
+    }, { passive: true });
+});
 document.addEventListener('click', () => { if (soundOn && !ambient) startAmbient(); }, { once: true });
 
 /* ======================= ПРОКРУТКА ======================= */
@@ -1762,7 +1439,7 @@ document.getElementById('palette').addEventListener('click', e => {
 
 /* ======================= KONAMI ======================= */
 (function konami() {
-    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight'];
+    const code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
     let idx = 0;
     document.addEventListener('keydown', e => {
         const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
@@ -1807,6 +1484,7 @@ document.getElementById('ratingStars').addEventListener('click', e => {
     document.getElementById('ratingValue').textContent = labels[selectedRating];
     playBeep(400 + selectedRating * 100);
 });
+
 document.getElementById('ratingStars').addEventListener('mouseover', e => {
     const star = e.target.closest('.rating-star');
     if (!star) return;
@@ -1828,11 +1506,13 @@ async function submitReview() {
     const text = document.getElementById('reviewText').value.trim();
     const msg = document.getElementById('reviewMsg');
     const btn = document.getElementById('reviewSubmit');
+
     if (name.length < 2 || name.length > 30) { setMsg(msg, '⛔ Имя: от 2 до 30 символов', 'err'); return; }
     if (selectedRating < 1) { setMsg(msg, '⛔ Поставьте оценку', 'err'); return; }
     if (text.length < 10 || text.length > 500) { setMsg(msg, '⛔ Отзыв: от 10 до 500 символов', 'err'); return; }
     const links = (text.match(/https?:\/\//g) || []).length;
     if (links > 1) { setMsg(msg, '⛔ Слишком много ссылок', 'err'); return; }
+
     const last = localStorage.getItem('lastReviewTime');
     const now = Date.now();
     if (last && now - parseInt(last) < 30000) {
@@ -1840,14 +1520,24 @@ async function submitReview() {
         setMsg(msg, `⛔ Подождите ${wait} сек. перед следующим отзывом`, 'err');
         return;
     }
+
     btn.disabled = true;
     setMsg(msg, 'Отправка...');
-    const { error } = await sb.from('reviews').insert({ name, rating: selectedRating, content: text, approved: false });
+
+    const { error } = await sb.from('reviews').insert({
+        name, rating: selectedRating, content: text, approved: false
+    });
+
     btn.disabled = false;
-    if (error) { setMsg(msg, '⛔ Ошибка: ' + error.message, 'err'); return; }
+
+    if (error) {
+        console.error(error);
+        setMsg(msg, '⛔ Ошибка отправки: ' + error.message, 'err');
+        return;
+    }
+
     localStorage.setItem('lastReviewTime', String(now));
     setMsg(msg, '✅ Спасибо! Отзыв отправлен на модерацию.', 'ok');
-    toast('Отзыв отправлен', 'Спасибо! Появится после модерации.', 'ok');
     document.getElementById('reviewName').value = '';
     document.getElementById('reviewText').value = '';
     selectedRating = 0;
@@ -1856,100 +1546,104 @@ async function submitReview() {
     playBeep(900);
 }
 
-/* ======================= РЕАКЦИИ ======================= */
-async function loadReactionsFor(newsIds) {
-    if (!newsIds.length) return {};
-    const { data, error } = await sb.from('news_reactions').select('news_id, emoji').in('news_id', newsIds);
-    if (error || !data) return {};
-    const map = {};
-    data.forEach(r => {
-        if (!map[r.news_id]) map[r.news_id] = {};
-        map[r.news_id][r.emoji] = (map[r.news_id][r.emoji] || 0) + 1;
-    });
-    return map;
-}
-
-function renderReactions(newsId, counts) {
-    const mine = getMyReactions()[newsId] || {};
-    return `<div class="reactions" data-news-id="${newsId}">
-        ${REACTION_EMOJIS.map(emoji => {
-            const c = (counts && counts[emoji]) || 0;
-            const active = mine[emoji] ? ' active' : '';
-            return `<button class="reaction-btn${active}" data-emoji="${emoji}" onclick="toggleReaction(${newsId}, '${emoji}', this)">
-                <span class="emoji">${emoji}</span>
-                <span class="count">${c}</span>
-            </button>`;
-        }).join('')}
-    </div>`;
-}
-
-async function toggleReaction(newsId, emoji, btn) {
-    const mine = getMyReactions();
-    const already = mine[newsId] && mine[newsId][emoji];
-
-    // Оптимистичное обновление
-    const countEl = btn.querySelector('.count');
-    const current = parseInt(countEl.textContent) || 0;
-
-    if (already) {
-        // Убираем
-        const { error } = await sb.from('news_reactions').delete()
-            .eq('news_id', newsId).eq('emoji', emoji).eq('fingerprint', userFingerprint);
-        if (error) { toast('Ошибка', error.message, 'err'); return; }
-        if (mine[newsId]) delete mine[newsId][emoji];
-        countEl.textContent = Math.max(0, current - 1);
-        btn.classList.remove('active');
-        playBeep(300);
-    } else {
-        // Добавляем
-        const { error } = await sb.from('news_reactions').insert({
-            news_id: newsId, emoji, fingerprint: userFingerprint
-        });
-        if (error) {
-            // Может быть уникальный конфликт — считаем, что уже есть
-            if (!error.message.includes('duplicate')) { toast('Ошибка', error.message, 'err'); return; }
-        }
-        if (!mine[newsId]) mine[newsId] = {};
-        mine[newsId][emoji] = true;
-        countEl.textContent = current + 1;
-        btn.classList.add('active', 'pop');
-        setTimeout(() => btn.classList.remove('pop'), 500);
-        // burst
-        const burst = document.createElement('div');
-        burst.className = 'burst';
-        btn.appendChild(burst);
-        setTimeout(() => burst.remove(), 700);
-        playBeep(700);
-    }
-    saveMyReactions(mine);
-}
-
-/* ======================= ЗАГРУЗКА НОВОСТЕЙ ======================= */
+/* ======================= НОВОСТИ НА ГЛАВНОЙ ======================= */
 async function loadNews() {
     const list = document.getElementById('newsList');
-    const { data, error } = await sb.from('news').select('*').eq('published', true).order('created_at', { ascending: false }).limit(5);
+    const { data, error } = await sb.from('news').select('*').eq('published', true).order('created_at', { ascending: false }).limit(NEWS_ON_MAIN);
     if (error) { list.innerHTML = '<div class="news-empty">Ошибка загрузки новостей</div>'; return; }
     if (!data || data.length === 0) { list.innerHTML = '<div class="news-empty">Пока нет новостей</div>'; return; }
-
-    const ids = data.map(n => n.id);
-    const reactionMap = await loadReactionsFor(ids);
-
     list.innerHTML = data.map(n => `
-        <div class="news-item" data-news-id="${n.id}">
+        <div class="news-item">
             <div class="news-meta">
                 <span class="news-tag">НОВОСТЬ</span>
                 <span>${fmtDate(n.created_at)}</span>
             </div>
             <div class="news-title">${escapeHtml(n.title)}</div>
             <div class="news-text">${escapeHtml(n.content)}</div>
-            ${renderReactions(n.id, reactionMap[n.id])}
         </div>
     `).join('');
-
-    list.querySelectorAll('.news-item').forEach(el => attachTilt(el, 2));
 }
 
-/* ======================= ЗАГРУЗКА ОТЗЫВОВ ======================= */
+/* ======================= АРХИВ ======================= */
+async function loadArchiveData() {
+    const { data, error } = await sb.from('news').select('*').eq('published', true).order('created_at', { ascending: false });
+    if (error) {
+        document.getElementById('archiveList').innerHTML = '<div class="news-empty">Ошибка загрузки архива</div>';
+        document.getElementById('archiveCount').textContent = '—';
+        return;
+    }
+    allArchiveNews = data || [];
+    archiveTotalPages = Math.max(1, Math.ceil(allArchiveNews.length / ARCHIVE_PER_PAGE));
+    if (archivePage > archiveTotalPages) archivePage = archiveTotalPages;
+    document.getElementById('archiveCount').textContent = `Всего: ${allArchiveNews.length} объявлений`;
+    renderArchive();
+}
+
+function renderArchive() {
+    const list = document.getElementById('archiveList');
+    const pager = document.getElementById('archivePager');
+
+    if (!allArchiveNews.length) {
+        list.innerHTML = '<div class="news-empty">В архиве пока пусто</div>';
+        pager.innerHTML = '';
+        return;
+    }
+
+    const start = (archivePage - 1) * ARCHIVE_PER_PAGE;
+    const end = start + ARCHIVE_PER_PAGE;
+    const pageItems = allArchiveNews.slice(start, end);
+    const totalNum = allArchiveNews.length;
+
+    list.innerHTML = pageItems.map((n, idx) => {
+        const globalNum = totalNum - (start + idx);
+        return `
+            <div class="archive-item">
+                <div class="archive-num">#${String(globalNum).padStart(3, '0')}</div>
+                <div class="archive-body">
+                    <div class="archive-item-date">${fmtDate(n.created_at)}</div>
+                    <div class="archive-item-title">${escapeHtml(n.title)}</div>
+                    <div class="archive-item-text">${escapeHtml(n.content)}</div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Пагинация
+    let pagerHtml = '';
+    pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(${archivePage - 1})" ${archivePage === 1 ? 'disabled' : ''}>← Назад</button>`;
+
+    // Номера страниц (компактно)
+    const maxButtons = 7;
+    let startPage = Math.max(1, archivePage - Math.floor(maxButtons / 2));
+    let endPage = Math.min(archiveTotalPages, startPage + maxButtons - 1);
+    if (endPage - startPage + 1 < maxButtons) startPage = Math.max(1, endPage - maxButtons + 1);
+
+    if (startPage > 1) {
+        pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(1)">1</button>`;
+        if (startPage > 2) pagerHtml += `<span style="color:#4a80c0;padding:0 6px;">…</span>`;
+    }
+    for (let i = startPage; i <= endPage; i++) {
+        pagerHtml += `<button class="pager-btn ${i === archivePage ? 'active' : ''}" onclick="goToArchivePage(${i})">${i}</button>`;
+    }
+    if (endPage < archiveTotalPages) {
+        if (endPage < archiveTotalPages - 1) pagerHtml += `<span style="color:#4a80c0;padding:0 6px;">…</span>`;
+        pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(${archiveTotalPages})">${archiveTotalPages}</button>`;
+    }
+
+    pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(${archivePage + 1})" ${archivePage === archiveTotalPages ? 'disabled' : ''}>Вперёд →</button>`;
+    pager.innerHTML = pagerHtml;
+}
+
+function goToArchivePage(page) {
+    if (page < 1 || page > archiveTotalPages) return;
+    archivePage = page;
+    renderArchive();
+    // Прокрутка к началу архива
+    document.querySelector('.archive-head').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    playBeep(500);
+}
+
+/* ======================= ОТЗЫВЫ — загрузка ======================= */
 async function loadReviews() {
     const list = document.getElementById('reviewsList');
     const { data, error } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(30);
@@ -1967,242 +1661,6 @@ async function loadReviews() {
     `).join('');
 }
 
-/* ======================= ГАЛЕРЕЯ ======================= */
-let galleryItems = [];
-let currentLightboxIndex = 0;
-
-async function loadGallery() {
-    const grid = document.getElementById('galleryGrid');
-    const { data, error } = await sb.from('gallery').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(60);
-    if (error) { grid.innerHTML = '<div class="news-empty" style="grid-column:1/-1;">Ошибка загрузки галереи</div>'; return; }
-    galleryItems = data || [];
-    if (!galleryItems.length) {
-        grid.innerHTML = '<div class="news-empty" style="grid-column:1/-1;">Пока нет фотографий — загрузите первую!</div>';
-        return;
-    }
-    grid.innerHTML = galleryItems.map((g, i) => `
-        <div class="gallery-card" data-index="${i}" onclick="openLightbox(${i})">
-            <img src="${escapeHtml(g.image_url)}" alt="${escapeHtml(g.title || 'Скриншот')}" loading="lazy">
-            <div class="gallery-badge">📷 ${g.likes || 0}</div>
-            <div class="gallery-card-overlay">
-                <div class="gallery-title">${escapeHtml(g.title || 'Без названия')}</div>
-                <div class="gallery-author">by ${escapeHtml(g.author_name || 'Аноним')}</div>
-            </div>
-        </div>
-    `).join('');
-    grid.querySelectorAll('.gallery-card').forEach(el => attachTilt(el, 6));
-}
-
-function openLightbox(index) {
-    if (!galleryItems[index]) return;
-    currentLightboxIndex = index;
-    const g = galleryItems[index];
-    document.getElementById('lightboxImg').src = g.image_url;
-    document.getElementById('lightboxTitle').textContent = g.title || 'Без названия';
-    document.getElementById('lightboxAuthor').textContent = 'by ' + (g.author_name || 'Аноним');
-    document.getElementById('lightboxDesc').textContent = g.description || '';
-    document.getElementById('lightbox').classList.add('active');
-    document.body.classList.add('modal-open');
-}
-function closeLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
-    document.body.classList.remove('modal-open');
-}
-function lightboxNav(dir) {
-    if (!galleryItems.length) return;
-    currentLightboxIndex = (currentLightboxIndex + dir + galleryItems.length) % galleryItems.length;
-    openLightbox(currentLightboxIndex);
-}
-document.addEventListener('keydown', e => {
-    if (!document.getElementById('lightbox').classList.contains('active')) return;
-    if (e.key === 'Escape') closeLightbox();
-    if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'ArrowRight') lightboxNav(1);
-});
-
-/* ======================= ЗАГРУЗКА ФОТО ======================= */
-let pendingFile = null;
-
-function openUploadModal() {
-    document.getElementById('uploadModal').classList.add('active');
-    document.body.classList.add('modal-open');
-    resetUploadForm();
-}
-function closeUploadModal() {
-    document.getElementById('uploadModal').classList.remove('active');
-    document.body.classList.remove('modal-open');
-    resetUploadForm();
-}
-function resetUploadForm() {
-    pendingFile = null;
-    document.getElementById('fileInput').value = '';
-    document.getElementById('previewWrap').innerHTML = '';
-    document.getElementById('uploadMsg').textContent = '';
-    document.getElementById('uploadProgress').classList.remove('active');
-    document.getElementById('uploadProgressFill').style.width = '0%';
-}
-
-(function setupDropzone() {
-    const dz = document.getElementById('dropzone');
-    const fi = document.getElementById('fileInput');
-    dz.addEventListener('click', () => fi.click());
-    fi.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
-    ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
-    ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
-    dz.addEventListener('drop', e => {
-        const f = e.dataTransfer.files[0];
-        if (f) handleFile(f);
-    });
-})();
-
-function handleFile(file) {
-    const msg = document.getElementById('uploadMsg');
-    if (!file.type.startsWith('image/')) { setMsg(msg, '⛔ Только изображения', 'err'); return; }
-    if (file.size > 5 * 1024 * 1024) { setMsg(msg, '⛔ Максимум 5 МБ', 'err'); return; }
-    pendingFile = file;
-    const wrap = document.getElementById('previewWrap');
-    wrap.innerHTML = '';
-    const prev = document.createElement('div');
-    prev.className = 'dropzone-preview';
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    const rm = document.createElement('button');
-    rm.className = 'remove';
-    rm.textContent = '✕';
-    rm.onclick = () => { pendingFile = null; wrap.innerHTML = ''; document.getElementById('fileInput').value = ''; };
-    prev.appendChild(img);
-    prev.appendChild(rm);
-    wrap.appendChild(prev);
-    setMsg(msg, '');
-}
-
-async function uploadPhoto() {
-    const msg = document.getElementById('uploadMsg');
-    const btn = document.getElementById('uploadSubmit');
-    const author = document.getElementById('uploadAuthor').value.trim();
-    const title = document.getElementById('uploadTitle').value.trim();
-    const desc = document.getElementById('uploadDesc').value.trim();
-
-    if (!pendingFile) { setMsg(msg, '⛔ Выберите файл', 'err'); return; }
-    if (author.length < 2 || author.length > 30) { setMsg(msg, '⛔ Имя: от 2 до 30 символов', 'err'); return; }
-
-    const last = localStorage.getItem('lastUploadTime');
-    const now = Date.now();
-    if (last && now - parseInt(last) < 60000) {
-        const wait = Math.ceil((60000 - (now - parseInt(last))) / 1000);
-        setMsg(msg, `⛔ Подождите ${wait} сек.`, 'err');
-        return;
-    }
-
-    btn.disabled = true;
-    const prog = document.getElementById('uploadProgress');
-    const fill = document.getElementById('uploadProgressFill');
-    prog.classList.add('active');
-    fill.style.width = '30%';
-    setMsg(msg, 'Загрузка...');
-
-    const ext = pendingFile.name.split('.').pop().toLowerCase() || 'jpg';
-    const path = `uploads/${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
-
-    const { error: upErr } = await sb.storage.from('gallery').upload(path, pendingFile, {
-        cacheControl: '3600', upsert: false, contentType: pendingFile.type
-    });
-    if (upErr) {
-        btn.disabled = false;
-        prog.classList.remove('active');
-        setMsg(msg, '⛔ Ошибка загрузки: ' + upErr.message, 'err');
-        return;
-    }
-    fill.style.width = '70%';
-
-    const { data: { publicUrl } } = sb.storage.from('gallery').getPublicUrl(path);
-
-    const { error: insErr } = await sb.from('gallery').insert({
-        title: title || null,
-        description: desc || null,
-        image_url: publicUrl,
-        storage_path: path,
-        author_name: author,
-        author_id: currentUser ? currentUser.id : null,
-        approved: false
-    });
-
-    btn.disabled = false;
-    prog.classList.remove('active');
-
-    if (insErr) {
-        setMsg(msg, '⛔ Ошибка БД: ' + insErr.message, 'err');
-        // Откатим файл
-        await sb.storage.from('gallery').remove([path]);
-        return;
-    }
-
-    fill.style.width = '100%';
-    localStorage.setItem('lastUploadTime', String(now));
-    setMsg(msg, '✅ Фото отправлено на модерацию!', 'ok');
-    toast('Фото загружено', 'Спасибо! Появится после модерации.', 'ok');
-    playBeep(900);
-    setTimeout(closeUploadModal, 1800);
-}
-
-/* ======================= МОДАЛКА ВСЕХ НОВОСТЕЙ ======================= */
-let allNewsData = [];
-let allNewsPage = 1;
-const ALL_NEWS_PER_PAGE = 10;
-
-async function openAllNews() {
-    document.getElementById('allNewsModal').classList.add('active');
-    document.body.classList.add('modal-open');
-    document.getElementById('allNewsList').innerHTML = '<div class="empty-state">Загрузка...</div>';
-    document.getElementById('allNewsSearch').value = '';
-    allNewsPage = 1;
-    const { data, error } = await sb.from('news').select('*').eq('published', true).order('created_at', { ascending: false });
-    if (error) { document.getElementById('allNewsList').innerHTML = '<div class="empty-state">Ошибка загрузки</div>'; return; }
-    allNewsData = data || [];
-    renderAllNews();
-}
-function closeAllNews() {
-    document.getElementById('allNewsModal').classList.remove('active');
-    document.body.classList.remove('modal-open');
-}
-function renderAllNews() {
-    const query = document.getElementById('allNewsSearch').value.trim().toLowerCase();
-    const filtered = query
-        ? allNewsData.filter(n => (n.title || '').toLowerCase().includes(query) || (n.content || '').toLowerCase().includes(query))
-        : allNewsData;
-    const total = filtered.length;
-    const totalPages = Math.max(1, Math.ceil(total / ALL_NEWS_PER_PAGE));
-    if (allNewsPage > totalPages) allNewsPage = totalPages;
-    if (allNewsPage < 1) allNewsPage = 1;
-    const start = (allNewsPage - 1) * ALL_NEWS_PER_PAGE;
-    const pageItems = filtered.slice(start, start + ALL_NEWS_PER_PAGE);
-    document.getElementById('allNewsCount').textContent = `Всего: ${total}`;
-    const list = document.getElementById('allNewsList');
-    if (!pageItems.length) {
-        list.innerHTML = '<div class="empty-state">Новостей не найдено</div>';
-    } else {
-        list.innerHTML = pageItems.map(n => `
-            <div class="news-item" style="margin-bottom:16px;">
-                <div class="news-meta">
-                    <span class="news-tag">НОВОСТЬ</span>
-                    <span>${fmtDate(n.created_at)}</span>
-                </div>
-                <div class="news-title">${escapeHtml(n.title)}</div>
-                <div class="news-text">${escapeHtml(n.content)}</div>
-            </div>
-        `).join('');
-    }
-    const pager = document.getElementById('allNewsPager');
-    if (totalPages <= 1) pager.innerHTML = '';
-    else pager.innerHTML = `
-        <button onclick="allNewsPage=1;renderAllNews()" ${allNewsPage===1?'disabled':''}>«</button>
-        <button onclick="allNewsPage--;renderAllNews()" ${allNewsPage===1?'disabled':''}>‹ Назад</button>
-        <span class="all-news-page-info">${allNewsPage} / ${totalPages}</span>
-        <button onclick="allNewsPage++;renderAllNews()" ${allNewsPage===totalPages?'disabled':''}>Вперёд ›</button>
-        <button onclick="allNewsPage=${totalPages};renderAllNews()" ${allNewsPage===totalPages?'disabled':''}>»</button>
-    `;
-}
-
 /* ======================= АВТОРИЗАЦИЯ ======================= */
 async function checkAuth() {
     const { data: { session } } = await sb.auth.getSession();
@@ -2212,6 +1670,7 @@ async function checkAuth() {
     currentProfile = profile;
     updateAuthUI();
 }
+
 function updateAuthUI() {
     const btn = document.getElementById('authBtn');
     if (currentUser && currentProfile && currentProfile.role === 'admin') {
@@ -2222,10 +1681,15 @@ function updateAuthUI() {
         btn.classList.remove('admin');
     }
 }
+
 function handleAuthClick() {
-    if (currentUser && currentProfile && currentProfile.role === 'admin') openAdminModal();
-    else openLoginModal();
+    if (currentUser && currentProfile && currentProfile.role === 'admin') {
+        openAdminModal();
+    } else {
+        openLoginModal();
+    }
 }
+
 function openLoginModal() {
     document.getElementById('loginModal').classList.add('active');
     document.getElementById('loginMsg').textContent = '';
@@ -2235,6 +1699,7 @@ function closeLoginModal() {
     document.getElementById('loginModal').classList.remove('active');
     document.body.classList.remove('modal-open');
 }
+
 async function doLogin() {
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
@@ -2246,9 +1711,13 @@ async function doLogin() {
     await checkAuth();
     closeLoginModal();
     playBeep(900);
-    if (currentProfile && currentProfile.role === 'admin') openAdminModal();
-    else alert('Вы вошли, но у вас нет прав администратора.');
+    if (currentProfile && currentProfile.role === 'admin') {
+        openAdminModal();
+    } else {
+        alert('Вы вошли, но у вас нет прав администратора.');
+    }
 }
+
 async function doLogout() {
     await sb.auth.signOut();
     currentUser = null; currentProfile = null;
@@ -2264,7 +1733,6 @@ function openAdminModal() {
     document.getElementById('accountEmail').textContent = currentUser.email;
     document.getElementById('accountRole').textContent = currentProfile.role.toUpperCase();
     loadAdminNews();
-    loadAdminGallery();
     loadAdminReviews();
     switchAdminTab('news');
 }
@@ -2272,12 +1740,14 @@ function closeAdminModal() {
     document.getElementById('adminModal').classList.remove('active');
     document.body.classList.remove('modal-open');
 }
+
 function switchAdminTab(tab) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
     document.querySelector(`.admin-tab[data-tab="${tab}"]`).classList.add('active');
     document.getElementById('panel-' + tab).classList.add('active');
 }
+
 async function publishNews() {
     const title = document.getElementById('newsTitle').value.trim();
     const content = document.getElementById('newsContent').value.trim();
@@ -2290,10 +1760,10 @@ async function publishNews() {
     setMsg(msg, '✅ Новость опубликована', 'ok');
     document.getElementById('newsTitle').value = '';
     document.getElementById('newsContent').value = '';
-    loadAdminNews(); loadNews();
+    loadAdminNews(); loadNews(); loadArchiveData();
     playBeep(900);
-    toast('Новость опубликована', title, 'ok');
 }
+
 async function loadAdminNews() {
     const list = document.getElementById('adminNewsList');
     const { data, error } = await sb.from('news').select('*').order('created_at', { ascending: false }).limit(30);
@@ -2310,60 +1780,25 @@ async function loadAdminNews() {
         </div>
     `).join('');
 }
+
 async function deleteNews(id) {
     if (!confirm('Удалить новость?')) return;
     const { error } = await sb.from('news').delete().eq('id', id);
     if (error) { alert('Ошибка: ' + error.message); return; }
-    loadAdminNews(); loadNews();
-}
-
-async function loadAdminGallery() {
-    const pending = document.getElementById('adminGalleryPending');
-    const approved = document.getElementById('adminGalleryApproved');
-    const { data: p } = await sb.from('gallery').select('*').eq('approved', false).order('created_at', { ascending: false });
-    const { data: a } = await sb.from('gallery').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(50);
-    pending.innerHTML = (p && p.length) ? p.map(g => renderAdminGalleryItem(g, false)).join('') : '<div class="empty-state">Нет фото на модерации</div>';
-    approved.innerHTML = (a && a.length) ? a.map(g => renderAdminGalleryItem(g, true)).join('') : '<div class="empty-state">Одобренных фото пока нет</div>';
-}
-function renderAdminGalleryItem(g, isApproved) {
-    return `
-        <div class="admin-gallery-item ${isApproved ? 'approved' : ''}">
-            <img class="admin-gallery-thumb" src="${escapeHtml(g.image_url)}" alt="">
-            <div class="admin-gallery-info">
-                <div class="admin-news-title">${escapeHtml(g.title || 'Без названия')}</div>
-                <div class="admin-news-date">by ${escapeHtml(g.author_name || 'Аноним')} · ${fmtDate(g.created_at)}</div>
-                ${g.description ? `<div class="admin-review-text" style="margin-top:6px;">${escapeHtml(g.description)}</div>` : ''}
-            </div>
-            <div class="admin-actions">
-                ${!isApproved ? `<button class="admin-btn approve" onclick="approveGallery(${g.id})">Одобрить</button>` : ''}
-                <button class="admin-btn reject" onclick="deleteGallery(${g.id}, '${escapeHtml(g.storage_path || '')}')">Удалить</button>
-            </div>
-        </div>
-    `;
-}
-async function approveGallery(id) {
-    const { error } = await sb.from('gallery').update({ approved: true }).eq('id', id);
-    if (error) { alert('Ошибка: ' + error.message); return; }
-    loadAdminGallery(); loadGallery();
-    playBeep(900);
-    toast('Фото одобрено', '', 'ok');
-}
-async function deleteGallery(id, path) {
-    if (!confirm('Удалить фото?')) return;
-    const { error } = await sb.from('gallery').delete().eq('id', id);
-    if (error) { alert('Ошибка: ' + error.message); return; }
-    if (path) { try { await sb.storage.from('gallery').remove([path]); } catch (e) {} }
-    loadAdminGallery(); loadGallery();
+    loadAdminNews(); loadNews(); loadArchiveData();
 }
 
 async function loadAdminReviews() {
     const pending = document.getElementById('adminPendingList');
     const approved = document.getElementById('adminApprovedList');
+
     const { data: p } = await sb.from('reviews').select('*').eq('approved', false).order('created_at', { ascending: false });
     const { data: a } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(50);
+
     pending.innerHTML = (p && p.length) ? p.map(r => renderAdminReview(r, false)).join('') : '<div class="empty-state">Нет отзывов на модерации</div>';
     approved.innerHTML = (a && a.length) ? a.map(r => renderAdminReview(r, true)).join('') : '<div class="empty-state">Одобренных отзывов пока нет</div>';
 }
+
 function renderAdminReview(r, isApproved) {
     return `
         <div class="admin-review-item ${isApproved ? 'approved' : ''}">
@@ -2380,12 +1815,14 @@ function renderAdminReview(r, isApproved) {
         </div>
     `;
 }
+
 async function approveReview(id) {
     const { error } = await sb.from('reviews').update({ approved: true }).eq('id', id);
     if (error) { alert('Ошибка: ' + error.message); return; }
     loadAdminReviews(); loadReviews();
     playBeep(900);
 }
+
 async function deleteReview(id) {
     if (!confirm('Удалить отзыв?')) return;
     const { error } = await sb.from('reviews').delete().eq('id', id);
@@ -2396,35 +1833,12 @@ async function deleteReview(id) {
 /* ======================= ЗАКРЫТИЕ МОДАЛОК ======================= */
 document.getElementById('loginModal').addEventListener('click', e => { if (e.target.id === 'loginModal') closeLoginModal(); });
 document.getElementById('adminModal').addEventListener('click', e => { if (e.target.id === 'adminModal') closeAdminModal(); });
-document.getElementById('allNewsModal').addEventListener('click', e => { if (e.target.id === 'allNewsModal') closeAllNews(); });
-document.getElementById('uploadModal').addEventListener('click', e => { if (e.target.id === 'uploadModal') closeUploadModal(); });
-document.getElementById('lightbox').addEventListener('click', e => { if (e.target.id === 'lightbox') closeLightbox(); });
-
-/* ======================= REALTIME ======================= */
-function setupRealtime() {
-    sb.channel('nova_news')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'news' }, payload => {
-            if (payload.new && payload.new.published) {
-                toast('Новая новость!', payload.new.title);
-                addLog('Получена новая новость');
-                loadNews();
-            }
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'news_reactions' }, () => {
-            loadNews();
-        })
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => {
-            loadGallery();
-        })
-        .subscribe();
-}
-setupRealtime();
 
 /* ======================= СТАРТ ======================= */
 checkAuth();
 loadNews();
 loadReviews();
-loadGallery();
+loadArchiveData();
 </script>
 </body>
 </html>
