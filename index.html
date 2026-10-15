@@ -14,33 +14,21 @@
         background: #000308; color: #cfe6ff;
         overflow-x: hidden; cursor: none; min-height: 100vh;
         transition: filter 0.4s;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
+        -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         -webkit-tap-highlight-color: transparent;
     }
-    /* Разрешаем выделение только в полях ввода */
     input, textarea {
-        -webkit-user-select: text !important;
-        -moz-user-select: text !important;
-        -ms-user-select: text !important;
-        user-select: text !important;
+        -webkit-user-select: text !important; -moz-user-select: text !important;
+        -ms-user-select: text !important; user-select: text !important;
     }
     body.inverted { filter: invert(1) hue-rotate(180deg); }
     @media (max-width: 900px) { body { cursor: auto; } }
-
-    input, textarea, select,
-    .modal-input, .review-input, .review-textarea {
-        cursor: text !important;
-    }
+    input, textarea, select, .modal-input, .review-input, .review-textarea { cursor: text !important; }
     body.modal-open { cursor: auto !important; }
-    body.modal-open .cursor-dot,
-    body.modal-open .cursor-ring {
-        display: none !important;
-    }
+    body.modal-open .cursor-dot, body.modal-open .cursor-ring { display: none !important; }
     button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn,
-    .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn {
+    .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn,
+    .reaction-btn, .gallery-item, .lightbox-close, .upload-drop, .file-btn {
         cursor: pointer;
     }
 
@@ -161,7 +149,6 @@
     .topbar .live::before { content: ''; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 8px #4ade80; animation: pulseDot 1.5s infinite; }
     @keyframes pulseDot { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
 
-    /* ===== НАВИГАЦИЯ В ХЕДЕРЕ ===== */
     .nav-tabs {
         display: flex;
         gap: 4px;
@@ -197,7 +184,6 @@
 
     .wrap { position: relative; z-index: 10; max-width: 1080px; margin: 0 auto; padding: 0 clamp(16px, 3vw, 30px) 100px; }
 
-    /* ===== ВКЛАДКИ СТРАНИЦ ===== */
     .tab-page { display: none; }
     .tab-page.active { display: block; animation: pageFade 0.5s ease; }
     @keyframes pageFade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -238,179 +224,256 @@
     .data-cell:hover { background: #051222; } .data-cell:hover::after { height: 100%; }
     .data-label { font-size: 0.68rem; letter-spacing: 2.5px; color: #4a80c0; text-transform: uppercase; margin-bottom: 12px; }
     .data-value { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2vw, 1.35rem); color: #e6f4ff; letter-spacing: 1px; }
+    .classified { color: #ff6b6b; letter-spacing: 3px; font-size: clamp(0.75rem, 1.5vw, 0.9rem); text-shadow: 0 0 12px rgba(255,107,107,0.6); animation: classifiedPulse 1.5s infinite; }
+    @keyframes classifiedPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-    .classified {
-        color: #ff6b6b;
-        letter-spacing: 3px;
-        font-size: clamp(0.75rem, 1.5vw, 0.9rem);
-        text-shadow: 0 0 12px rgba(255,107,107,0.6);
-        animation: classifiedPulse 1.5s infinite;
-    }
-    @keyframes classifiedPulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.4; }
-    }
-
-    .news-list { display: flex; flex-direction: column; gap: 16px; }
+    /* ===== НОВОСТИ + РЕАКЦИИ ===== */
+    .news-list { display: flex; flex-direction: column; gap: 20px; }
     .news-item { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.2); border-left: 3px solid var(--c2); padding: clamp(18px, 2.5vw, 24px) clamp(18px, 2.5vw, 28px); transition: all 0.35s; position: relative; overflow: hidden; }
-    .news-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); transform: translateX(6px); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
+    .news-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
     .news-meta { display: flex; gap: 16px; align-items: center; font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; flex-wrap: wrap; }
     .news-tag { padding: 3px 10px; border: 1px solid rgba(110,196,255,0.4); color: var(--c2); background: rgba(110,196,255,0.08); }
     .news-title { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2.2vw, 1.3rem); color: #e6f4ff; letter-spacing: 1px; margin-bottom: 12px; }
-    .news-text { color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.92rem); line-height: 1.8; white-space: pre-wrap; }
+    .news-text { color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.92rem); line-height: 1.8; white-space: pre-wrap; margin-bottom: 16px; }
     .news-empty { text-align: center; padding: 60px 20px; color: #4a80c0; font-size: 0.85rem; letter-spacing: 2px; }
 
-    /* ===== АРХИВ ===== */
-    .archive-head {
-        text-align: center;
-        margin-bottom: 50px;
-        padding-bottom: 30px;
-        border-bottom: 1px solid rgba(110,196,255,0.15);
-    }
-    .archive-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: clamp(2rem, 6vw, 3.5rem);
-        color: #e6f4ff;
-        letter-spacing: clamp(4px, 1.5vw, 10px);
-        text-transform: uppercase;
-        text-shadow: 0 0 30px rgba(110,196,255,0.5);
-        margin-bottom: 12px;
-    }
-    .archive-sub {
-        font-size: clamp(0.7rem, 1.3vw, 0.85rem);
-        color: #4a80c0;
-        letter-spacing: 4px;
-        text-transform: uppercase;
-    }
-    .archive-count {
-        font-family: 'Oswald', sans-serif;
-        color: var(--c2);
-        letter-spacing: 2px;
-        font-size: 1rem;
-    }
-    .archive-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
-    .archive-item {
-        display: flex;
-        gap: 20px;
-        background: rgba(3, 8, 15, 0.85);
-        border: 1px solid rgba(110, 196, 255, 0.2);
-        border-left: 3px solid var(--c2);
-        padding: clamp(16px, 2.5vw, 22px) clamp(18px, 2.5vw, 26px);
-        transition: all 0.35s;
-        align-items: flex-start;
-        flex-wrap: wrap;
-    }
-    .archive-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); transform: translateX(6px); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
-    .archive-num {
-        font-family: 'Oswald', sans-serif;
-        font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-        color: var(--c2);
-        min-width: 60px;
-        text-align: center;
-        text-shadow: 0 0 15px rgba(110,196,255,0.6);
-        padding-top: 4px;
-    }
-    .archive-body { flex: 1; min-width: 200px; }
-    .archive-item-date {
-        font-size: 0.68rem;
-        color: #4a80c0;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        margin-bottom: 8px;
-    }
-    .archive-item-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: clamp(1rem, 2vw, 1.2rem);
-        color: #e6f4ff;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-    }
-    .archive-item-text {
-        color: #9ec3e6;
-        font-size: clamp(0.82rem, 1.4vw, 0.9rem);
-        line-height: 1.8;
-        white-space: pre-wrap;
-    }
-    .pager {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-    .pager-btn {
-        min-width: 40px;
-        height: 40px;
-        padding: 0 14px;
-        background: rgba(3,8,15,0.85);
-        border: 1px solid rgba(110,196,255,0.3);
-        color: var(--c2);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.8rem;
-        letter-spacing: 1px;
-        transition: all 0.3s;
+    .reactions { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(110,196,255,0.1); }
+    .reaction-btn {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
+        gap: 6px;
+        padding: 6px 12px;
+        background: rgba(110,196,255,0.04);
+        border: 1px solid rgba(110,196,255,0.15);
+        border-radius: 20px;
+        color: #9ec3e6;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.82rem;
+        transition: all 0.25s;
+        user-select: none;
     }
-    .pager-btn:hover:not(:disabled) {
-        background: rgba(110,196,255,0.15);
-        border-color: var(--c3);
-        color: #fff;
-        box-shadow: 0 0 20px rgba(110,196,255,0.4);
+    .reaction-btn:hover {
+        background: rgba(110,196,255,0.12);
+        border-color: var(--c2);
+        transform: translateY(-2px);
     }
-    .pager-btn.active {
+    .reaction-btn.voted {
         background: rgba(110,196,255,0.2);
         border-color: var(--c3);
         color: #fff;
-        box-shadow: 0 0 20px rgba(110,196,255,0.5);
+        box-shadow: 0 0 15px rgba(110,196,255,0.4);
     }
+    .reaction-btn .emoji { font-size: 1rem; }
+    .reaction-btn .count { font-weight: 700; min-width: 14px; text-align: center; }
+    .reaction-btn.bump { animation: reactionBump 0.4s ease; }
+    @keyframes reactionBump { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+    /* ===== АРХИВ ===== */
+    .archive-head { text-align: center; margin-bottom: 50px; padding-bottom: 30px; border-bottom: 1px solid rgba(110,196,255,0.15); }
+    .archive-title { font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); color: #e6f4ff; letter-spacing: clamp(4px, 1.5vw, 10px); text-transform: uppercase; text-shadow: 0 0 30px rgba(110,196,255,0.5); margin-bottom: 12px; }
+    .archive-sub { font-size: clamp(0.7rem, 1.3vw, 0.85rem); color: #4a80c0; letter-spacing: 4px; text-transform: uppercase; }
+    .archive-count { font-family: 'Oswald', sans-serif; color: var(--c2); letter-spacing: 2px; font-size: 1rem; }
+    .archive-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+    .archive-item { display: flex; gap: 20px; background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.2); border-left: 3px solid var(--c2); padding: clamp(16px, 2.5vw, 22px) clamp(18px, 2.5vw, 26px); transition: all 0.35s; align-items: flex-start; flex-wrap: wrap; }
+    .archive-item:hover { background: rgba(5, 15, 30, 0.9); border-left-color: var(--c3); transform: translateX(6px); box-shadow: 0 10px 30px rgba(110,196,255,0.15); }
+    .archive-num { font-family: 'Oswald', sans-serif; font-size: clamp(1.2rem, 2.5vw, 1.8rem); color: var(--c2); min-width: 60px; text-align: center; text-shadow: 0 0 15px rgba(110,196,255,0.6); padding-top: 4px; }
+    .archive-body { flex: 1; min-width: 200px; }
+    .archive-item-date { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+    .archive-item-title { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); color: #e6f4ff; letter-spacing: 1px; margin-bottom: 10px; }
+    .archive-item-text { color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.9rem); line-height: 1.8; white-space: pre-wrap; }
+    .pager { display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+    .pager-btn { min-width: 40px; height: 40px; padding: 0 14px; background: rgba(3,8,15,0.85); border: 1px solid rgba(110,196,255,0.3); color: var(--c2); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; letter-spacing: 1px; transition: all 0.3s; display: inline-flex; align-items: center; justify-content: center; }
+    .pager-btn:hover:not(:disabled) { background: rgba(110,196,255,0.15); border-color: var(--c3); color: #fff; box-shadow: 0 0 20px rgba(110,196,255,0.4); }
+    .pager-btn.active { background: rgba(110,196,255,0.2); border-color: var(--c3); color: #fff; box-shadow: 0 0 20px rgba(110,196,255,0.5); }
     .pager-btn:disabled { opacity: 0.3; }
 
+    /* ===== ГАЛЕРЕЯ ===== */
+    .gallery-head { text-align: center; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1px solid rgba(110,196,255,0.15); }
+    .gallery-title { font-family: 'Oswald', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); color: #e6f4ff; letter-spacing: clamp(4px, 1.5vw, 10px); text-transform: uppercase; text-shadow: 0 0 30px rgba(110,196,255,0.5); margin-bottom: 12px; }
+    .gallery-sub { font-size: clamp(0.7rem, 1.3vw, 0.85rem); color: #4a80c0; letter-spacing: 4px; text-transform: uppercase; }
+    .gallery-count { font-family: 'Oswald', sans-serif; color: var(--c2); letter-spacing: 2px; font-size: 1rem; }
+
+    .upload-zone {
+        background: rgba(3, 8, 15, 0.7);
+        border: 2px dashed rgba(110,196,255,0.3);
+        border-radius: 14px;
+        padding: clamp(24px, 4vw, 40px) clamp(20px, 3vw, 30px);
+        text-align: center;
+        margin-bottom: 40px;
+        transition: all 0.3s;
+        position: relative;
+    }
+    .upload-zone.dragover {
+        border-color: var(--c3);
+        background: rgba(110,196,255,0.08);
+        box-shadow: 0 0 40px rgba(110,196,255,0.3);
+    }
+    .upload-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.7; }
+    .upload-title { font-family: 'Oswald', sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); color: #e6f4ff; letter-spacing: 2px; margin-bottom: 8px; text-transform: uppercase; }
+    .upload-hint { font-size: 0.78rem; color: #4a80c0; letter-spacing: 1px; margin-bottom: 20px; }
+    .upload-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; max-width: 700px; margin: 0 auto 20px; }
+    .upload-input {
+        width: 100%;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(110,196,255,0.25);
+        color: #e6f4ff;
+        padding: 10px 14px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.85rem;
+        outline: none;
+        transition: border 0.3s;
+    }
+    .upload-input:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
+    .file-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 28px;
+        background: rgba(110,196,255,0.1);
+        border: 1px solid var(--c2);
+        color: var(--c3);
+        font-family: 'Oswald', sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        transition: all 0.3s;
+    }
+    .file-btn:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); }
+    #fileInput { display: none; }
+    .upload-msg { margin-top: 16px; font-size: 0.82rem; min-height: 20px; letter-spacing: 1px; }
+    .upload-msg.ok { color: #4ade80; }
+    .upload-msg.err { color: #ff6b6b; }
+    .upload-preview {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 16px;
+        justify-content: center;
+    }
+    .upload-preview .preview-item {
+        position: relative;
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid rgba(110,196,255,0.3);
+    }
+    .upload-preview img { width: 100%; height: 100%; object-fit: cover; }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+        gap: 14px;
+    }
+    .gallery-item {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border-radius: 12px;
+        background: #03080f;
+        border: 1px solid rgba(110,196,255,0.2);
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .gallery-item:hover {
+        border-color: var(--c2);
+        transform: translateY(-6px);
+        box-shadow: 0 20px 50px rgba(110,196,255,0.25);
+    }
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s;
+    }
+    .gallery-item:hover img { transform: scale(1.08); }
+    .gallery-item-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0,3,8,0.9), transparent 60%);
+        opacity: 0;
+        transition: opacity 0.3s;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 14px;
+        pointer-events: none;
+    }
+    .gallery-item:hover .gallery-item-overlay { opacity: 1; }
+    .gallery-item-title { font-family: 'Oswald', sans-serif; color: #fff; font-size: 0.95rem; letter-spacing: 1px; margin-bottom: 4px; }
+    .gallery-item-author { font-size: 0.7rem; color: var(--c2); letter-spacing: 1px; }
+    .gallery-item-status {
+        position: absolute;
+        top: 10px; left: 10px;
+        padding: 3px 8px;
+        background: rgba(255,179,71,0.9);
+        color: #000;
+        font-size: 0.62rem;
+        letter-spacing: 1px;
+        border-radius: 3px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .lightbox {
+        position: fixed; inset: 0;
+        background: rgba(0, 3, 8, 0.97);
+        backdrop-filter: blur(14px);
+        z-index: 20000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        padding: 30px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .lightbox.active { display: flex; opacity: 1; }
+    .lightbox-img { max-width: 100%; max-height: 90vh; object-fit: contain; box-shadow: 0 20px 80px rgba(0,0,0,0.9), 0 0 60px rgba(110,196,255,0.3); }
+    .lightbox-close {
+        position: absolute;
+        top: 20px; right: 30px;
+        font-size: 2rem;
+        color: #fff;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid rgba(110,196,255,0.3);
+        border-radius: 50%;
+        width: 50px; height: 50px;
+        display: flex; align-items: center; justify-content: center;
+        transition: all 0.3s;
+    }
+    .lightbox-close:hover { background: rgba(255,107,107,0.3); border-color: #ff6b6b; color: #ff6b6b; transform: rotate(90deg); }
+    .lightbox-caption {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.7);
+        padding: 12px 24px;
+        border: 1px solid rgba(110,196,255,0.3);
+        color: #fff;
+        font-family: 'Oswald', sans-serif;
+        letter-spacing: 2px;
+        max-width: 90vw;
+        text-align: center;
+    }
+    .lightbox-caption .author { color: var(--c2); font-size: 0.8rem; margin-top: 4px; letter-spacing: 1px; }
+
+    /* ===== ОТЗЫВЫ ===== */
     .review-form { background: rgba(3, 8, 15, 0.85); border: 1px solid rgba(110, 196, 255, 0.25); padding: clamp(20px, 3vw, 30px) clamp(20px, 3vw, 32px); margin-bottom: 40px; position: relative; }
     .review-form::before { content: '▌ ОСТАВИТЬ ОТЗЫВ'; display: block; font-size: 0.68rem; color: var(--c2); letter-spacing: 3px; margin-bottom: 20px; }
     .review-field { margin-bottom: 18px; }
     .review-label { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 8px; }
-    .review-input, .review-textarea {
-        width: 100%; background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(110,196,255,0.25);
-        color: #e6f4ff; padding: 12px 16px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9rem; outline: none;
-        transition: border 0.3s;
-        resize: vertical;
-    }
+    .review-input, .review-textarea { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(110,196,255,0.25); color: #e6f4ff; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; outline: none; transition: border 0.3s; resize: vertical; }
     .review-input:focus, .review-textarea:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
     .review-textarea { min-height: 120px; }
-
     .rating-stars { display: flex; gap: 6px; align-items: center; }
-    .rating-star {
-        font-size: clamp(1.6rem, 3.5vw, 2rem);
-        color: #2a4568;
-        transition: color 0.2s, transform 0.2s, text-shadow 0.2s;
-        background: none;
-        border: none;
-        padding: 0 4px;
-        line-height: 1;
-        font-family: 'Oswald', sans-serif;
-    }
-    .rating-star:hover {
-        color: #ffd700;
-        text-shadow: 0 0 20px #ffd700;
-        transform: scale(1.2);
-    }
-    .rating-star.active {
-        color: #ffd700;
-        text-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5);
-    }
-
+    .rating-star { font-size: clamp(1.6rem, 3.5vw, 2rem); color: #2a4568; transition: color 0.2s, transform 0.2s, text-shadow 0.2s; background: none; border: none; padding: 0 4px; line-height: 1; font-family: 'Oswald', sans-serif; }
+    .rating-star:hover { color: #ffd700; text-shadow: 0 0 20px #ffd700; transform: scale(1.2); }
+    .rating-star.active { color: #ffd700; text-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.5); }
     .review-submit { background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: clamp(10px, 2vw, 12px) clamp(22px, 4vw, 32px); font-family: 'Oswald', sans-serif; font-size: clamp(0.8rem, 1.4vw, 0.9rem); letter-spacing: clamp(2px, 0.8vw, 4px); text-transform: uppercase; transition: all 0.3s; }
     .review-submit:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); letter-spacing: clamp(3px, 1vw, 5px); }
     .review-submit:disabled { opacity: 0.4; }
     .review-msg { margin-top: 16px; font-size: 0.85rem; letter-spacing: 1px; min-height: 20px; }
     .review-msg.ok { color: #4ade80; } .review-msg.err { color: #ff6b6b; }
-
     .reviews-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px; }
     .review-card { background: rgba(3, 8, 15, 0.7); border: 1px solid rgba(110, 196, 255, 0.15); border-left: 3px solid var(--c2); padding: 20px 22px; transition: all 0.35s; }
     .review-card:hover { border-left-color: var(--c3); transform: translateY(-3px); }
@@ -420,6 +483,7 @@
     .review-rating { color: #ffd700; font-size: 0.95rem; letter-spacing: 2px; margin-bottom: 10px; }
     .review-content { color: #9ec3e6; font-size: clamp(0.82rem, 1.4vw, 0.88rem); line-height: 1.7; white-space: pre-wrap; }
 
+    /* ===== ПРАВИЛА ===== */
     .rules-progress { margin-bottom: 30px; display: flex; align-items: center; gap: 16px; font-size: 0.72rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; flex-wrap: wrap; }
     .rules-progress-bar { flex: 1; height: 3px; background: rgba(110,196,255,0.1); position: relative; overflow: hidden; min-width: 100px; }
     .rules-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--c1), var(--c3)); box-shadow: 0 0 10px var(--c2); transition: width 0.5s ease; }
@@ -471,57 +535,18 @@
     .channel-handle { font-size: clamp(0.7rem, 1.3vw, 0.78rem); color: var(--c2); letter-spacing: 1px; }
 
     .final { text-align: center; padding: clamp(80px, 12vw, 140px) 0 clamp(60px, 10vw, 100px); position: relative; }
-    .final-text {
-        font-family: 'Oswald', sans-serif;
-        font-size: clamp(1.8rem, 9vw, 7rem);
-        font-weight: 700;
-        letter-spacing: clamp(2px, 1.5vw, 14px);
-        color: transparent;
-        -webkit-text-stroke: 1px rgba(110,196,255,0.4);
-        transition: all 0.6s;
-        line-height: 1.05;
-        margin-bottom: 20px;
-        text-decoration: none;
-        display: inline-block;
-        position: relative;
-    }
-    .final-text::after {
-        content: '';
-        position: absolute;
-        left: 50%; bottom: -8px;
-        transform: translateX(-50%);
-        width: 0; height: 2px;
-        background: var(--c3);
-        box-shadow: 0 0 20px var(--c2);
-        transition: width 0.5s;
-    }
-    .final-text:hover {
-        color: var(--c3);
-        -webkit-text-stroke: 1px var(--c3);
-        text-shadow: 0 0 40px rgba(110,196,255,0.7);
-    }
+    .final-text { font-family: 'Oswald', sans-serif; font-size: clamp(1.8rem, 9vw, 7rem); font-weight: 700; letter-spacing: clamp(2px, 1.5vw, 14px); color: transparent; -webkit-text-stroke: 1px rgba(110,196,255,0.4); transition: all 0.6s; line-height: 1.05; margin-bottom: 20px; text-decoration: none; display: inline-block; position: relative; }
+    .final-text::after { content: ''; position: absolute; left: 50%; bottom: -8px; transform: translateX(-50%); width: 0; height: 2px; background: var(--c3); box-shadow: 0 0 20px var(--c2); transition: width 0.5s; }
+    .final-text:hover { color: var(--c3); -webkit-text-stroke: 1px var(--c3); text-shadow: 0 0 40px rgba(110,196,255,0.7); }
     .final-text:hover::after { width: 80%; }
     .final-sub { font-size: clamp(0.65rem, 1.2vw, 0.75rem); letter-spacing: clamp(3px, 1vw, 6px); color: #4a80c0; text-transform: uppercase; }
-    .final-hint { font-size: clamp(0.62rem, 1.1vw, 0.7rem); color: var(--c2); letter-spacing: 3px; margin-top: 16px; opacity: 0.7; }
 
     footer { position: relative; z-index: 10; border-top: 1px solid rgba(110, 196, 255, 0.1); padding: 40px clamp(16px, 3vw, 30px); text-align: center; font-size: clamp(0.62rem, 1.1vw, 0.7rem); color: #4a80c0; letter-spacing: clamp(2px, 0.8vw, 3px); }
     footer .foot-logo { font-family: 'Oswald', sans-serif; font-size: clamp(0.95rem, 2vw, 1.1rem); color: var(--c3); letter-spacing: clamp(5px, 2vw, 10px); margin-bottom: 12px; text-shadow: 0 0 15px rgba(110, 196, 255, 0.5); }
-    footer .hint { margin-top: 16px; font-size: clamp(0.55rem, 1vw, 0.62rem); color: #4a80c0; opacity: 0.7; }
-    footer .hint kbd { background: rgba(110,196,255,0.1); border: 1px solid rgba(110,196,255,0.3); padding: 2px 6px; border-radius: 3px; color: var(--c3); font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; }
 
-    .modal {
-        position: fixed; inset: 0; background: rgba(0, 5, 15, 0.92);
-        backdrop-filter: blur(14px); z-index: 10002;
-        display: none; justify-content: center; align-items: center;
-        padding: 30px 20px; opacity: 0; transition: opacity 0.4s ease;
-    }
+    .modal { position: fixed; inset: 0; background: rgba(0, 5, 15, 0.92); backdrop-filter: blur(14px); z-index: 10002; display: none; justify-content: center; align-items: center; padding: 30px 20px; opacity: 0; transition: opacity 0.4s ease; }
     .modal.active { display: flex; opacity: 1; }
-    .modal-inner {
-        background: rgba(5, 15, 30, 0.98); border: 1px solid rgba(110, 196, 255, 0.4);
-        max-width: 480px; width: 100%; padding: clamp(24px, 4vw, 40px) clamp(22px, 4vw, 44px);
-        position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(110,196,255,0.2);
-        transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+    .modal-inner { background: rgba(5, 15, 30, 0.98); border: 1px solid rgba(110, 196, 255, 0.4); max-width: 480px; width: 100%; padding: clamp(24px, 4vw, 40px) clamp(22px, 4vw, 44px); position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.9), 0 0 60px rgba(110,196,255,0.2); transform: scale(0.9); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
     .modal.active .modal-inner { transform: scale(1); }
     .modal-wide { max-width: 900px; max-height: 85vh; overflow-y: auto; }
     .modal-wide::-webkit-scrollbar { width: 6px; }
@@ -532,66 +557,38 @@
     .modal-sub { font-size: 0.7rem; color: #4a80c0; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; }
     .modal-field { margin-bottom: 18px; }
     .modal-label { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; text-transform: uppercase; display: block; margin-bottom: 8px; }
-    .modal-input {
-        width: 100%; background: rgba(0,0,0,0.5);
-        border: 1px solid rgba(110,196,255,0.25); color: #e6f4ff;
-        padding: 12px 16px; font-family: 'JetBrains Mono', monospace;
-        font-size: 0.9rem; outline: none; transition: border 0.3s;
-    }
+    .modal-input { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(110,196,255,0.25); color: #e6f4ff; padding: 12px 16px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; outline: none; transition: border 0.3s; }
     .modal-input:focus { border-color: var(--c2); box-shadow: 0 0 15px rgba(110,196,255,0.2); }
-    .modal-btn {
-        width: 100%; background: rgba(110,196,255,0.1); border: 1px solid var(--c2);
-        color: var(--c3); padding: 14px; font-family: 'Oswald', sans-serif;
-        font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase;
-        transition: all 0.3s; margin-top: 10px;
-    }
+    .modal-btn { width: 100%; background: rgba(110,196,255,0.1); border: 1px solid var(--c2); color: var(--c3); padding: 14px; font-family: 'Oswald', sans-serif; font-size: 0.9rem; letter-spacing: 4px; text-transform: uppercase; transition: all 0.3s; margin-top: 10px; }
     .modal-btn:hover { background: rgba(110,196,255,0.25); box-shadow: 0 0 25px rgba(110,196,255,0.5); }
     .modal-msg { margin-top: 14px; font-size: 0.82rem; min-height: 18px; letter-spacing: 1px; }
     .modal-msg.ok { color: #4ade80; } .modal-msg.err { color: #ff6b6b; }
 
     .admin-tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; border-bottom: 1px solid rgba(110,196,255,0.15); }
-    .admin-tab {
-        padding: 12px 20px; background: none; border: none;
-        color: #4a80c0; font-family: 'Oswald', sans-serif;
-        font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase;
-        transition: all 0.3s;
-        border-bottom: 2px solid transparent; margin-bottom: -1px;
-    }
+    .admin-tab { padding: 12px 20px; background: none; border: none; color: #4a80c0; font-family: 'Oswald', sans-serif; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; transition: all 0.3s; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .admin-tab:hover { color: var(--c3); }
     .admin-tab.active { color: #fff; border-bottom-color: var(--c2); }
     .admin-panel { display: none; }
     .admin-panel.active { display: block; }
 
-    .admin-news-item {
-        display: flex; justify-content: space-between; gap: 16px;
-        background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15);
-        padding: 16px 20px; margin-bottom: 12px; align-items: center; flex-wrap: wrap;
-    }
+    .admin-news-item { display: flex; justify-content: space-between; gap: 16px; background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15); padding: 16px 20px; margin-bottom: 12px; align-items: center; flex-wrap: wrap; }
     .admin-news-info { flex: 1; min-width: 0; }
     .admin-news-title { font-family: 'Oswald', sans-serif; color: #e6f4ff; letter-spacing: 1px; font-size: 1rem; margin-bottom: 4px; word-break: break-word; }
     .admin-news-date { font-size: 0.68rem; color: #4a80c0; letter-spacing: 2px; }
-    .admin-actions { display: flex; gap: 8px; flex-shrink: 0; }
-    .admin-btn {
-        padding: 6px 12px; font-family: 'JetBrains Mono', monospace;
-        font-size: 0.68rem; letter-spacing: 1px;
-        background: transparent; border: 1px solid;
-        transition: all 0.3s; text-transform: uppercase;
-    }
+    .admin-actions { display: flex; gap: 8px; flex-shrink: 0; flex-wrap: wrap; }
+    .admin-btn { padding: 6px 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; letter-spacing: 1px; background: transparent; border: 1px solid; transition: all 0.3s; text-transform: uppercase; }
     .admin-btn.approve { color: #4ade80; border-color: rgba(74,222,128,0.4); }
     .admin-btn.approve:hover { background: rgba(74,222,128,0.15); }
     .admin-btn.reject { color: #ff6b6b; border-color: rgba(255,107,107,0.4); }
     .admin-btn.reject:hover { background: rgba(255,107,107,0.15); }
 
-    .admin-review-item {
-        background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15);
-        border-left: 3px solid #ffb347;
-        padding: 18px 22px; margin-bottom: 12px;
-    }
-    .admin-review-item.approved { border-left-color: #4ade80; }
+    .admin-review-item, .admin-gallery-item { background: rgba(3,8,15,0.7); border: 1px solid rgba(110,196,255,0.15); border-left: 3px solid #ffb347; padding: 18px 22px; margin-bottom: 12px; }
+    .admin-review-item.approved, .admin-gallery-item.approved { border-left-color: #4ade80; }
     .admin-review-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
     .admin-review-author { font-family: 'Oswald', sans-serif; color: #e6f4ff; letter-spacing: 1px; }
     .admin-review-stars { color: #ffd700; letter-spacing: 2px; }
     .admin-review-text { color: #9ec3e6; font-size: 0.88rem; line-height: 1.7; margin-bottom: 12px; white-space: pre-wrap; }
+    .admin-gallery-preview { width: 100%; max-width: 200px; height: auto; border-radius: 6px; margin-bottom: 12px; border: 1px solid rgba(110,196,255,0.2); }
 
     .empty-state { text-align: center; padding: 40px 20px; color: #4a80c0; font-size: 0.8rem; letter-spacing: 2px; }
 
@@ -609,6 +606,7 @@
         #galaxy { width: 500px; height: 500px; }
         .modal-inner { padding: 30px 24px; }
         .reviews-list { grid-template-columns: 1fr; }
+        .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); }
         .hero { padding-top: 160px; }
     }
     @media (max-width: 500px) {
@@ -671,6 +669,7 @@
     <div class="nav-tabs">
         <button class="nav-tab active" data-page="main" onclick="switchPage('main')">Главная</button>
         <button class="nav-tab" data-page="archive" onclick="switchPage('archive')">Архив</button>
+        <button class="nav-tab" data-page="gallery" onclick="switchPage('gallery')">Галерея</button>
     </div>
     <div class="status">
         <div class="live"><span>SIGNAL</span></div>
@@ -901,7 +900,6 @@
         <section class="final">
             <a href="https://discord.gg/hxXegjhTgq" target="_blank" class="final-text">ПРИСОЕДИНЯЙСЯ</a>
             <div class="final-sub">Код доступа: NOVA-2026</div>
-            <div class="final-hint">▲ Клик ведёт на Discord-сервер</div>
         </section>
     </div>
 
@@ -914,12 +912,45 @@
                 <span class="archive-count" id="archiveCount">Загрузка...</span>
             </div>
         </div>
-
         <div class="archive-list" id="archiveList">
             <div class="news-empty">Загрузка архива...</div>
         </div>
-
         <div class="pager" id="archivePager"></div>
+    </div>
+
+    <!-- ====================== ГАЛЕРЕЯ ====================== -->
+    <div class="tab-page" id="page-gallery" style="padding-top: 120px;">
+        <div class="gallery-head">
+            <h1 class="gallery-title">ГАЛЕРЕЯ</h1>
+            <div class="gallery-sub">Постройки и скриншоты игроков</div>
+            <div style="margin-top: 20px;">
+                <span class="gallery-count" id="galleryCount">Загрузка...</span>
+            </div>
+        </div>
+
+        <!-- Форма загрузки для всех -->
+        <div class="upload-zone" id="uploadZone">
+            <div class="upload-icon">📸</div>
+            <div class="upload-title">Загрузить свой скриншот</div>
+            <div class="upload-hint">Перетащи фото сюда или нажми кнопку. JPG/PNG до 10 МБ. После проверки админом фото появится в галерее.</div>
+
+            <div class="upload-fields">
+                <input type="text" class="upload-input" id="uploadAuthor" placeholder="Твой ник" maxlength="30">
+                <input type="text" class="upload-input" id="uploadTitle" placeholder="Название (необязательно)" maxlength="60">
+            </div>
+
+            <label for="fileInput" class="file-btn">
+                <span>📁 Выбрать файлы</span>
+            </label>
+            <input type="file" id="fileInput" accept="image/*" multiple>
+
+            <div class="upload-preview" id="uploadPreview"></div>
+            <div class="upload-msg" id="uploadMsg"></div>
+        </div>
+
+        <div class="gallery-grid" id="galleryGrid">
+            <div class="news-empty">Загрузка галереи...</div>
+        </div>
     </div>
 
 </div>
@@ -927,8 +958,14 @@
 <footer>
     <div class="foot-logo">NOVA</div>
     <div>© 2026 · ВСЕ ПРАВА ЗАЩИЩЕНЫ</div>
-    <div class="hint"><kbd>↑↑↓↓←→←→BA</kbd> — секрет</div>
 </footer>
+
+<!-- Лайтбокс -->
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
 
 <div class="modal" id="loginModal">
     <div class="modal-inner">
@@ -957,6 +994,7 @@
         <div class="admin-tabs">
             <button class="admin-tab active" data-tab="news" onclick="switchAdminTab('news')">Новости</button>
             <button class="admin-tab" data-tab="reviews" onclick="switchAdminTab('reviews')">Отзывы</button>
+            <button class="admin-tab" data-tab="gallery" onclick="switchAdminTab('gallery')">Галерея</button>
             <button class="admin-tab" data-tab="account" onclick="switchAdminTab('account')">Аккаунт</button>
         </div>
 
@@ -985,6 +1023,13 @@
             <div id="adminApprovedList"><div class="empty-state">Загрузка...</div></div>
         </div>
 
+        <div class="admin-panel" id="panel-gallery">
+            <div class="modal-label" style="margin-bottom:16px;">Фото на модерации</div>
+            <div id="adminGalleryPending"><div class="empty-state">Загрузка...</div></div>
+            <div class="modal-label" style="margin:32px 0 16px;">Одобренные</div>
+            <div id="adminGalleryApproved"><div class="empty-state">Загрузка...</div></div>
+        </div>
+
         <div class="admin-panel" id="panel-account">
             <div class="modal-field">
                 <label class="modal-label">Email</label>
@@ -1001,11 +1046,16 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ======================= НАСТРОЙКИ SUPABASE ======================= */
+/* ======================= НАСТРОЙКИ ======================= */
 const SUPABASE_URL = 'https://jzudvypmsdsjgksiczuq.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6dWR2eXBtc2Rzamdrc2ljenVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5ODg1OTYsImV4cCI6MjEwNzU2NDU5Nn0.dOdNify2IUavXdPnozngILOZXBIlJOjNjuiEfoRQlfg';
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const REACTION_EMOJIS = ['👍','🔥','❤️','😂','😮'];
+const NEWS_ON_MAIN = 3;
+const ARCHIVE_PER_PAGE = 5;
+const GALLERY_PER_PAGE = 30;
 
 let currentUser = null;
 let currentProfile = null;
@@ -1013,8 +1063,8 @@ let selectedRating = 0;
 let archivePage = 1;
 let archiveTotalPages = 1;
 let allArchiveNews = [];
-const ARCHIVE_PER_PAGE = 5;
-const NEWS_ON_MAIN = 3;
+let allGallery = [];
+let selectedFiles = [];
 
 /* ======================= УТИЛИТЫ ======================= */
 function escapeHtml(s) {
@@ -1030,6 +1080,41 @@ function setMsg(el, text, type = '') {
     el.textContent = text;
 }
 
+/* ======================= КОМПРЕССИЯ ФОТО ======================= */
+async function compressImage(file, maxSide = 1920, quality = 0.82) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+            const img = new Image();
+            img.onload = () => {
+                let { width, height } = img;
+                if (width > maxSide || height > maxSide) {
+                    if (width > height) {
+                        height = Math.round(height * maxSide / width);
+                        width = maxSide;
+                    } else {
+                        width = Math.round(width * maxSide / height);
+                        height = maxSide;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob(blob => {
+                    if (blob) resolve(blob);
+                    else reject(new Error('Ошибка сжатия'));
+                }, 'image/jpeg', quality);
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
 /* ======================= ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ ======================= */
 function switchPage(page) {
     document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
@@ -1038,6 +1123,7 @@ function switchPage(page) {
     document.querySelector(`.nav-tab[data-page="${page}"]`).classList.add('active');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     if (page === 'archive') renderArchive();
+    if (page === 'gallery') renderGallery();
     playBeep(600);
 }
 
@@ -1216,17 +1302,17 @@ function switchPage(page) {
         requestAnimationFrame(anim);
     })();
     document.addEventListener('mouseover', e => {
-        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn');
+        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn');
         if (t) ring.classList.add('hover');
     });
     document.addEventListener('mouseout', e => {
-        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn'))
+        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn'))
             ring.classList.remove('hover');
     });
 })();
 
 (function magnetic() {
-    document.querySelectorAll('.hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text, .pager-btn').forEach(item => {
+    document.querySelectorAll('.hero-cta, .protocol-head, .channel, .review-submit, .modal-btn, .final-text, .pager-btn, .reaction-btn').forEach(item => {
         item.addEventListener('mousemove', e => {
             const r = item.getBoundingClientRect();
             const x = (e.clientX - r.left - r.width/2) * 0.15;
@@ -1323,13 +1409,12 @@ setInterval(() => {
     setTimeout(() => { t.style.transform = ''; t.style.color = ''; }, 90);
 }, 1800);
 
-/* ======================= ЗВУК С ЗАТУХАНИЕМ ======================= */
+/* ======================= ЗВУК ======================= */
 let audioCtx = null, soundOn = true, ambient = null;
 let ambientFadeTimer = null;
-const AMBIENT_TIMEOUT = 15000; // 15 секунд тишины → плавно затухает
+const AMBIENT_TIMEOUT = 15000;
 
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-
 function playBeep(freq = 500) {
     if (!soundOn) return;
     try {
@@ -1342,7 +1427,6 @@ function playBeep(freq = 500) {
         o.stop(audioCtx.currentTime + 0.1);
     } catch (e) {}
 }
-
 function startAmbient() {
     if (!soundOn || ambient) return;
     try {
@@ -1357,11 +1441,9 @@ function startAmbient() {
         scheduleAmbientFade();
     } catch (e) {}
 }
-
 function scheduleAmbientFade() {
     if (ambientFadeTimer) clearTimeout(ambientFadeTimer);
     ambientFadeTimer = setTimeout(() => {
-        // Плавное затухание гула
         if (ambient) {
             try {
                 ambient.g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 2);
@@ -1376,18 +1458,15 @@ function scheduleAmbientFade() {
         }
     }, AMBIENT_TIMEOUT);
 }
-
 function bumpAmbient() {
     if (!soundOn) return;
     if (!ambient) { startAmbient(); return; }
-    // Восстанавливаем громкость, если был фейд
     try {
         ambient.g.gain.cancelScheduledValues(audioCtx.currentTime);
         ambient.g.gain.setValueAtTime(Math.max(ambient.g.gain.value, 0.012), audioCtx.currentTime);
     } catch(e) {}
     scheduleAmbientFade();
 }
-
 function stopAmbient() {
     if (ambientFadeTimer) clearTimeout(ambientFadeTimer);
     if (!ambient) return;
@@ -1401,7 +1480,6 @@ function stopAmbient() {
         }, 350);
     } catch (e) { ambient = null; }
 }
-
 function toggleSound() {
     soundOn = !soundOn;
     const btn = document.getElementById('soundBtn');
@@ -1409,12 +1487,8 @@ function toggleSound() {
     btn.textContent = soundOn ? '🔊' : '🔇';
     if (soundOn) { startAmbient(); playBeep(600); } else stopAmbient();
 }
-
-// Любое действие пользователя продлевает звук
 ['click', 'keydown', 'scroll', 'mousemove'].forEach(evt => {
-    document.addEventListener(evt, () => {
-        if (soundOn) bumpAmbient();
-    }, { passive: true });
+    document.addEventListener(evt, () => { if (soundOn) bumpAmbient(); }, { passive: true });
 });
 document.addEventListener('click', () => { if (soundOn && !ambient) startAmbient(); }, { once: true });
 
@@ -1472,7 +1546,7 @@ document.getElementById('palette').addEventListener('click', e => {
     document.addEventListener('mouseup', e => { if (e.button === 2) dragging = false; });
 })();
 
-/* ======================= ОТЗЫВЫ — звёзды ======================= */
+/* ======================= ОТЗЫВЫ ======================= */
 document.getElementById('ratingStars').addEventListener('click', e => {
     const star = e.target.closest('.rating-star');
     if (!star) return;
@@ -1484,7 +1558,6 @@ document.getElementById('ratingStars').addEventListener('click', e => {
     document.getElementById('ratingValue').textContent = labels[selectedRating];
     playBeep(400 + selectedRating * 100);
 });
-
 document.getElementById('ratingStars').addEventListener('mouseover', e => {
     const star = e.target.closest('.rating-star');
     if (!star) return;
@@ -1500,7 +1573,6 @@ document.getElementById('ratingStars').addEventListener('mouseleave', () => {
     });
 });
 
-/* ======================= ОТЗЫВЫ — отправка ======================= */
 async function submitReview() {
     const name = document.getElementById('reviewName').value.trim();
     const text = document.getElementById('reviewText').value.trim();
@@ -1523,19 +1595,10 @@ async function submitReview() {
 
     btn.disabled = true;
     setMsg(msg, 'Отправка...');
-
-    const { error } = await sb.from('reviews').insert({
-        name, rating: selectedRating, content: text, approved: false
-    });
-
+    const { error } = await sb.from('reviews').insert({ name, rating: selectedRating, content: text, approved: false });
     btn.disabled = false;
 
-    if (error) {
-        console.error(error);
-        setMsg(msg, '⛔ Ошибка отправки: ' + error.message, 'err');
-        return;
-    }
-
+    if (error) { setMsg(msg, '⛔ Ошибка: ' + error.message, 'err'); return; }
     localStorage.setItem('lastReviewTime', String(now));
     setMsg(msg, '✅ Спасибо! Отзыв отправлен на модерацию.', 'ok');
     document.getElementById('reviewName').value = '';
@@ -1546,22 +1609,113 @@ async function submitReview() {
     playBeep(900);
 }
 
-/* ======================= НОВОСТИ НА ГЛАВНОЙ ======================= */
+async function loadReviews() {
+    const list = document.getElementById('reviewsList');
+    const { data, error } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(30);
+    if (error) { list.innerHTML = '<div class="news-empty">Ошибка загрузки отзывов</div>'; return; }
+    if (!data || data.length === 0) { list.innerHTML = '<div class="news-empty">Пока нет отзывов — будьте первым!</div>'; return; }
+    list.innerHTML = data.map(r => `
+        <div class="review-card">
+            <div class="review-head">
+                <span class="review-author">${escapeHtml(r.name)}</span>
+                <span class="review-date">${fmtDate(r.created_at)}</span>
+            </div>
+            <div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+            <div class="review-content">${escapeHtml(r.content)}</div>
+        </div>
+    `).join('');
+}
+
+/* ======================= РЕАКЦИИ ======================= */
+const myVotes = JSON.parse(localStorage.getItem('nova_my_votes') || '{}');
+
+function saveMyVotes() {
+    localStorage.setItem('nova_my_votes', JSON.stringify(myVotes));
+}
+
+async function loadReactionsFor(newsId) {
+    const { data } = await sb.from('reactions').select('emoji, count').eq('news_id', newsId);
+    const map = {};
+    REACTION_EMOJIS.forEach(e => map[e] = 0);
+    (data || []).forEach(r => { map[r.emoji] = r.count; });
+    return map;
+}
+
+async function ensureReactionRow(newsId, emoji) {
+    const { data } = await sb.from('reactions').select('id').eq('news_id', newsId).eq('emoji', emoji).maybeSingle();
+    if (data) return data.id;
+    const { data: created } = await sb.from('reactions').insert({ news_id: newsId, emoji, count: 0 }).select('id').single();
+    return created?.id;
+}
+
+async function reactTo(newsId, emoji) {
+    const key = `${newsId}_${emoji}`;
+    if (myVotes[key]) {
+        addLog('Уже голосовал за эту реакцию');
+        playBeep(250);
+        return;
+    }
+
+    const rowId = await ensureReactionRow(newsId, emoji);
+    if (!rowId) return;
+
+    const { data: current } = await sb.from('reactions').select('count').eq('id', rowId).single();
+    const newCount = (current?.count || 0) + 1;
+    const { error } = await sb.from('reactions').update({ count: newCount }).eq('id', rowId);
+
+    if (!error) {
+        myVotes[key] = true;
+        saveMyVotes();
+        playBeep(700);
+        addLog(`Реакция ${emoji}`);
+        bumpReactionUI(newsId, emoji);
+    }
+}
+
+function bumpReactionUI(newsId, emoji) {
+    const btn = document.querySelector(`.reaction-btn[data-news="${newsId}"][data-emoji="${emoji}"]`);
+    if (btn) {
+        btn.classList.add('voted');
+        btn.classList.add('bump');
+        setTimeout(() => btn.classList.remove('bump'), 400);
+    }
+}
+
+function renderReactions(newsId, map) {
+    return `
+        <div class="reactions" data-news="${newsId}">
+            ${REACTION_EMOJIS.map(e => {
+                const voted = myVotes[`${newsId}_${e}`] ? 'voted' : '';
+                return `<button class="reaction-btn ${voted}" data-news="${newsId}" data-emoji="${e}" onclick="reactTo(${newsId}, '${e}')">
+                    <span class="emoji">${e}</span><span class="count">${map[e] || 0}</span>
+                </button>`;
+            }).join('')}
+        </div>
+    `;
+}
+
+/* ======================= НОВОСТИ ======================= */
 async function loadNews() {
     const list = document.getElementById('newsList');
     const { data, error } = await sb.from('news').select('*').eq('published', true).order('created_at', { ascending: false }).limit(NEWS_ON_MAIN);
     if (error) { list.innerHTML = '<div class="news-empty">Ошибка загрузки новостей</div>'; return; }
     if (!data || data.length === 0) { list.innerHTML = '<div class="news-empty">Пока нет новостей</div>'; return; }
-    list.innerHTML = data.map(n => `
-        <div class="news-item">
-            <div class="news-meta">
-                <span class="news-tag">НОВОСТЬ</span>
-                <span>${fmtDate(n.created_at)}</span>
+
+    const html = await Promise.all(data.map(async n => {
+        const map = await loadReactionsFor(n.id);
+        return `
+            <div class="news-item">
+                <div class="news-meta">
+                    <span class="news-tag">НОВОСТЬ</span>
+                    <span>${fmtDate(n.created_at)}</span>
+                </div>
+                <div class="news-title">${escapeHtml(n.title)}</div>
+                <div class="news-text">${escapeHtml(n.content)}</div>
+                ${renderReactions(n.id, map)}
             </div>
-            <div class="news-title">${escapeHtml(n.title)}</div>
-            <div class="news-text">${escapeHtml(n.content)}</div>
-        </div>
-    `).join('');
+        `;
+    }));
+    list.innerHTML = html.join('');
 }
 
 /* ======================= АРХИВ ======================= */
@@ -1582,13 +1736,11 @@ async function loadArchiveData() {
 function renderArchive() {
     const list = document.getElementById('archiveList');
     const pager = document.getElementById('archivePager');
-
     if (!allArchiveNews.length) {
         list.innerHTML = '<div class="news-empty">В архиве пока пусто</div>';
         pager.innerHTML = '';
         return;
     }
-
     const start = (archivePage - 1) * ARCHIVE_PER_PAGE;
     const end = start + ARCHIVE_PER_PAGE;
     const pageItems = allArchiveNews.slice(start, end);
@@ -1608,16 +1760,12 @@ function renderArchive() {
         `;
     }).join('');
 
-    // Пагинация
     let pagerHtml = '';
     pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(${archivePage - 1})" ${archivePage === 1 ? 'disabled' : ''}>← Назад</button>`;
-
-    // Номера страниц (компактно)
     const maxButtons = 7;
     let startPage = Math.max(1, archivePage - Math.floor(maxButtons / 2));
     let endPage = Math.min(archiveTotalPages, startPage + maxButtons - 1);
     if (endPage - startPage + 1 < maxButtons) startPage = Math.max(1, endPage - maxButtons + 1);
-
     if (startPage > 1) {
         pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(1)">1</button>`;
         if (startPage > 2) pagerHtml += `<span style="color:#4a80c0;padding:0 6px;">…</span>`;
@@ -1629,7 +1777,6 @@ function renderArchive() {
         if (endPage < archiveTotalPages - 1) pagerHtml += `<span style="color:#4a80c0;padding:0 6px;">…</span>`;
         pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(${archiveTotalPages})">${archiveTotalPages}</button>`;
     }
-
     pagerHtml += `<button class="pager-btn" onclick="goToArchivePage(${archivePage + 1})" ${archivePage === archiveTotalPages ? 'disabled' : ''}>Вперёд →</button>`;
     pager.innerHTML = pagerHtml;
 }
@@ -1638,27 +1785,176 @@ function goToArchivePage(page) {
     if (page < 1 || page > archiveTotalPages) return;
     archivePage = page;
     renderArchive();
-    // Прокрутка к началу архива
     document.querySelector('.archive-head').scrollIntoView({ behavior: 'smooth', block: 'start' });
     playBeep(500);
 }
 
-/* ======================= ОТЗЫВЫ — загрузка ======================= */
-async function loadReviews() {
-    const list = document.getElementById('reviewsList');
-    const { data, error } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(30);
-    if (error) { list.innerHTML = '<div class="news-empty">Ошибка загрузки отзывов</div>'; return; }
-    if (!data || data.length === 0) { list.innerHTML = '<div class="news-empty">Пока нет отзывов — будьте первым!</div>'; return; }
-    list.innerHTML = data.map(r => `
-        <div class="review-card">
-            <div class="review-head">
-                <span class="review-author">${escapeHtml(r.name)}</span>
-                <span class="review-date">${fmtDate(r.created_at)}</span>
+/* ======================= ГАЛЕРЕЯ ======================= */
+async function loadGalleryData() {
+    const { data, error } = await sb.from('gallery').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(GALLERY_PER_PAGE);
+    if (error) {
+        document.getElementById('galleryGrid').innerHTML = '<div class="news-empty">Ошибка загрузки галереи</div>';
+        document.getElementById('galleryCount').textContent = '—';
+        return;
+    }
+    allGallery = data || [];
+    document.getElementById('galleryCount').textContent = `Всего: ${allGallery.length} фото`;
+    renderGallery();
+}
+
+function renderGallery() {
+    const grid = document.getElementById('galleryGrid');
+    if (!allGallery.length) {
+        grid.innerHTML = '<div class="news-empty">Пока нет фото — будь первым!</div>';
+        return;
+    }
+    grid.innerHTML = allGallery.map(g => `
+        <div class="gallery-item" onclick="openLightbox('${g.image_url}', '${escapeHtml(g.title || 'Без названия')}', '${escapeHtml(g.author || 'Неизвестный')}')">
+            <img src="${g.image_url}" alt="${escapeHtml(g.title || '')}" loading="lazy">
+            <div class="gallery-item-overlay">
+                <div class="gallery-item-title">${escapeHtml(g.title || 'Без названия')}</div>
+                <div class="gallery-item-author">by ${escapeHtml(g.author || 'Неизвестный')}</div>
             </div>
-            <div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-            <div class="review-content">${escapeHtml(r.content)}</div>
         </div>
     `).join('');
+}
+
+function openLightbox(url, title, author) {
+    document.getElementById('lightboxImg').src = url;
+    document.getElementById('lightboxCaption').innerHTML = `${title}<div class="author">by ${author}</div>`;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    playBeep(800);
+}
+
+function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+    playBeep(300);
+}
+
+document.getElementById('lightbox').addEventListener('click', e => {
+    if (e.target.id === 'lightbox') closeLightbox();
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+});
+
+/* ======================= ЗАГРУЗКА ФОТО ======================= */
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const uploadPreview = document.getElementById('uploadPreview');
+
+fileInput.addEventListener('change', e => {
+    handleFiles(Array.from(e.target.files));
+});
+
+['dragenter', 'dragover'].forEach(evt => {
+    uploadZone.addEventListener(evt, e => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+});
+['dragleave', 'drop'].forEach(evt => {
+    uploadZone.addEventListener(evt, e => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
+});
+uploadZone.addEventListener('drop', e => {
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    handleFiles(files);
+});
+
+function handleFiles(files) {
+    if (!files.length) return;
+    if (files.length > 10) {
+        setMsg(document.getElementById('uploadMsg'), '⛔ Максимум 10 файлов за раз', 'err');
+        return;
+    }
+    selectedFiles = files;
+    uploadPreview.innerHTML = files.map(f => {
+        const url = URL.createObjectURL(f);
+        return `<div class="preview-item"><img src="${url}" alt=""></div>`;
+    }).join('');
+    setMsg(document.getElementById('uploadMsg'), `Выбрано: ${files.length} фото. Нажми "Отправить"`, '');
+    // Кнопка отправки
+    if (!document.getElementById('uploadSubmitBtn')) {
+        const btn = document.createElement('button');
+        btn.className = 'file-btn';
+        btn.id = 'uploadSubmitBtn';
+        btn.style.marginTop = '16px';
+        btn.innerHTML = '<span>📤 Отправить на модерацию</span>';
+        btn.onclick = submitGallery;
+        uploadZone.appendChild(btn);
+    }
+    playBeep(600);
+}
+
+async function submitGallery() {
+    const author = document.getElementById('uploadAuthor').value.trim();
+    const title = document.getElementById('uploadTitle').value.trim();
+    const msg = document.getElementById('uploadMsg');
+
+    if (author.length < 2) { setMsg(msg, '⛔ Укажи ник (мин. 2 символа)', 'err'); return; }
+    if (!selectedFiles.length) { setMsg(msg, '⛔ Выбери хотя бы одно фото', 'err'); return; }
+
+    // Антиспам: 1 загрузка в 60 сек
+    const last = localStorage.getItem('lastGalleryUpload');
+    const now = Date.now();
+    if (last && now - parseInt(last) < 60000) {
+        const wait = Math.ceil((60000 - (now - parseInt(last))) / 1000);
+        setMsg(msg, `⛔ Подожди ${wait} сек.`, 'err');
+        return;
+    }
+
+    const btn = document.getElementById('uploadSubmitBtn');
+    btn.disabled = true;
+
+    let uploaded = 0;
+    for (let i = 0; i < selectedFiles.length; i++) {
+        const file = selectedFiles[i];
+        setMsg(msg, `📤 Сжатие и загрузка ${i+1}/${selectedFiles.length}...`);
+
+        try {
+            const compressed = await compressImage(file);
+            const ext = 'jpg';
+            const fileName = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+
+            const { error: upErr } = await sb.storage.from('gallery').upload(fileName, compressed, {
+                contentType: 'image/jpeg',
+                cacheControl: '3600'
+            });
+            if (upErr) throw upErr;
+
+            const { data: urlData } = sb.storage.from('gallery').getPublicUrl(fileName);
+
+            const { error: dbErr } = await sb.from('gallery').insert({
+                title: title || 'Без названия',
+                image_url: urlData.publicUrl,
+                author,
+                approved: false
+            });
+            if (dbErr) throw dbErr;
+
+            uploaded++;
+        } catch (err) {
+            console.error('Ошибка загрузки:', err);
+        }
+    }
+
+    btn.disabled = false;
+    if (uploaded > 0) {
+        setMsg(msg, `✅ Загружено: ${uploaded}. Отправлено на модерацию.`, 'ok');
+        localStorage.setItem('lastGalleryUpload', String(now));
+        selectedFiles = [];
+        uploadPreview.innerHTML = '';
+        fileInput.value = '';
+        btn.remove();
+        playBeep(900);
+    } else {
+        setMsg(msg, '⛔ Ошибка загрузки', 'err');
+    }
 }
 
 /* ======================= АВТОРИЗАЦИЯ ======================= */
@@ -1711,11 +2007,8 @@ async function doLogin() {
     await checkAuth();
     closeLoginModal();
     playBeep(900);
-    if (currentProfile && currentProfile.role === 'admin') {
-        openAdminModal();
-    } else {
-        alert('Вы вошли, но у вас нет прав администратора.');
-    }
+    if (currentProfile && currentProfile.role === 'admin') openAdminModal();
+    else alert('Вы вошли, но у вас нет прав администратора.');
 }
 
 async function doLogout() {
@@ -1726,7 +2019,7 @@ async function doLogout() {
     playBeep(300);
 }
 
-/* ======================= АДМИН-ПАНЕЛЬ ======================= */
+/* ======================= АДМИНКА ======================= */
 function openAdminModal() {
     document.getElementById('adminModal').classList.add('active');
     document.body.classList.add('modal-open');
@@ -1734,6 +2027,7 @@ function openAdminModal() {
     document.getElementById('accountRole').textContent = currentProfile.role.toUpperCase();
     loadAdminNews();
     loadAdminReviews();
+    loadAdminGallery();
     switchAdminTab('news');
 }
 function closeAdminModal() {
@@ -1791,10 +2085,8 @@ async function deleteNews(id) {
 async function loadAdminReviews() {
     const pending = document.getElementById('adminPendingList');
     const approved = document.getElementById('adminApprovedList');
-
     const { data: p } = await sb.from('reviews').select('*').eq('approved', false).order('created_at', { ascending: false });
     const { data: a } = await sb.from('reviews').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(50);
-
     pending.innerHTML = (p && p.length) ? p.map(r => renderAdminReview(r, false)).join('') : '<div class="empty-state">Нет отзывов на модерации</div>';
     approved.innerHTML = (a && a.length) ? a.map(r => renderAdminReview(r, true)).join('') : '<div class="empty-state">Одобренных отзывов пока нет</div>';
 }
@@ -1830,15 +2122,89 @@ async function deleteReview(id) {
     loadAdminReviews(); loadReviews();
 }
 
+/* ======================= АДМИН — ГАЛЕРЕЯ ======================= */
+async function loadAdminGallery() {
+    const pending = document.getElementById('adminGalleryPending');
+    const approved = document.getElementById('adminGalleryApproved');
+    const { data: p } = await sb.from('gallery').select('*').eq('approved', false).order('created_at', { ascending: false });
+    const { data: a } = await sb.from('gallery').select('*').eq('approved', true).order('created_at', { ascending: false }).limit(50);
+    pending.innerHTML = (p && p.length) ? p.map(g => renderAdminGallery(g, false)).join('') : '<div class="empty-state">Нет фото на модерации</div>';
+    approved.innerHTML = (a && a.length) ? a.map(g => renderAdminGallery(g, true)).join('') : '<div class="empty-state">Одобренных фото пока нет</div>';
+}
+
+function renderAdminGallery(g, isApproved) {
+    return `
+        <div class="admin-gallery-item ${isApproved ? 'approved' : ''}">
+            <img class="admin-gallery-preview" src="${g.image_url}" alt="" loading="lazy">
+            <div class="admin-review-head">
+                <span class="admin-review-author">${escapeHtml(g.title || 'Без названия')}</span>
+                <span class="admin-news-date">${escapeHtml(g.author || '')}</span>
+            </div>
+            <div class="admin-news-date" style="margin-bottom:12px;">${fmtDate(g.created_at)}</div>
+            <div class="admin-actions">
+                ${!isApproved ? `<button class="admin-btn approve" onclick="approveGallery(${g.id})">Одобрить</button>` : ''}
+                <button class="admin-btn reject" onclick="deleteGallery(${g.id})">Удалить</button>
+            </div>
+        </div>
+    `;
+}
+
+async function approveGallery(id) {
+    const { error } = await sb.from('gallery').update({ approved: true }).eq('id', id);
+    if (error) { alert('Ошибка: ' + error.message); return; }
+    loadAdminGallery(); loadGalleryData();
+    playBeep(900);
+}
+
+async function deleteGallery(id) {
+    if (!confirm('Удалить фото?')) return;
+    const { data: item } = await sb.from('gallery').select('image_url').eq('id', id).single();
+    const { error } = await sb.from('gallery').delete().eq('id', id);
+    if (error) { alert('Ошибка: ' + error.message); return; }
+    // Пытаемся удалить файл из Storage
+    if (item?.image_url) {
+        const fileName = item.image_url.split('/').pop();
+        if (fileName) await sb.storage.from('gallery').remove([fileName]);
+    }
+    loadAdminGallery(); loadGalleryData();
+}
+
 /* ======================= ЗАКРЫТИЕ МОДАЛОК ======================= */
 document.getElementById('loginModal').addEventListener('click', e => { if (e.target.id === 'loginModal') closeLoginModal(); });
 document.getElementById('adminModal').addEventListener('click', e => { if (e.target.id === 'adminModal') closeAdminModal(); });
+
+/* ======================= REALTIME ======================= */
+sb.channel('nova-realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'news' }, () => {
+        addLog('Realtime: обновление новостей');
+        loadNews(); loadArchiveData();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'reactions' }, payload => {
+        const r = payload.new;
+        if (!r) return;
+        const btn = document.querySelector(`.reaction-btn[data-news="${r.news_id}"][data-emoji="${r.emoji}"]`);
+        if (btn) {
+            btn.querySelector('.count').textContent = r.count;
+            btn.classList.add('bump');
+            setTimeout(() => btn.classList.remove('bump'), 400);
+        }
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, () => {
+        addLog('Realtime: обновление отзывов');
+        loadReviews();
+    })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'gallery' }, () => {
+        addLog('Realtime: обновление галереи');
+        loadGalleryData();
+    })
+    .subscribe();
 
 /* ======================= СТАРТ ======================= */
 checkAuth();
 loadNews();
 loadReviews();
 loadArchiveData();
+loadGalleryData();
 </script>
 </body>
 </html>
