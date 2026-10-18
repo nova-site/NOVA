@@ -32,7 +32,7 @@
     input, textarea, select, .modal-input, .review-input, .review-textarea, .upload-input, .player-input { cursor: text !important; }
     body.modal-open { cursor: auto !important; }
     body.modal-open .cursor-dot, body.modal-open .cursor-ring { display: none !important; }
-    button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn, .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .lightbox-close, .upload-drop, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell { cursor: pointer; }
+    button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn, .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .lightbox-close, .upload-drop, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell, .arrow-btn { cursor: pointer; }
     .lightbox { cursor: auto; } .lightbox * { cursor: auto; } .lightbox-close { cursor: pointer !important; }
 
     .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: linear-gradient(90deg, var(--c1), var(--c3), var(--c4)); box-shadow: 0 0 15px var(--c2); z-index: 10001; }
@@ -346,6 +346,13 @@
     .saper-cell.revealed { background: rgba(255,255,255,0.05); cursor: default; border-color: var(--c1); }
     .saper-cell.mine { background: #ff2020; color: #fff; }
 
+    /* Экранные стрелки для игр */
+    .control-pad { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 14px; }
+    .control-pad-middle { display: flex; gap: 6px; }
+    .arrow-btn { width: 50px; height: 50px; background: rgba(255,255,255,0.05); border: 1px solid var(--c1); border-radius: 8px; color: var(--c2); font-size: 1.2rem; transition: all 0.2s; display: flex; align-items: center; justify-content: center; user-select: none; }
+    .arrow-btn:hover { background: rgba(255,255,255,0.15); border-color: var(--c3); box-shadow: 0 0 15px var(--shadow-color); transform: scale(1.05); }
+    .arrow-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.25); }
+
     /* ===== ОТЗЫВЫ ===== */
     .review-form { background: rgba(0,0,0,0.7); border: 1px solid var(--c1); padding: clamp(20px, 3vw, 30px) clamp(20px, 3vw, 32px); margin-bottom: 40px; position: relative; }
     .review-form::before { content: '▌ ОСТАВИТЬ ОТЗЫВ'; display: block; font-size: 0.68rem; color: var(--c2); letter-spacing: 3px; margin-bottom: 20px; }
@@ -562,7 +569,6 @@
 <button class="sound-btn" id="soundBtn" onclick="toggleSound()" title="Звук">🔊</button>
 
 <div class="palette" id="palette">
-    <!-- Темы: полные цвета -->
     <div class="palette-dot active" data-c1="#4a80c0" data-c2="#6ec4ff" data-c3="#a8e0ff" data-c4="#ffffff" data-bg="#000308" data-rad="#0a2a4f" data-grid="rgba(110, 196, 255, 0.04)" data-shadow="rgba(110, 196, 255, 0.5)" style="background:#6ec4ff;" title="Космос"></div>
     <div class="palette-dot" data-c1="#aa2222" data-c2="#ff4444" data-c3="#ff9999" data-c4="#ffffff" data-bg="#0f0000" data-rad="#3a0000" data-grid="rgba(255, 50, 50, 0.04)" data-shadow="rgba(255, 50, 50, 0.5)" style="background:#ff4444;" title="Багровый"></div>
     <div class="palette-dot" data-c1="#1a8c4a" data-c2="#33ff88" data-c3="#99ffcc" data-c4="#ffffff" data-bg="#000a04" data-rad="#002a14" data-grid="rgba(50, 255, 100, 0.04)" data-shadow="rgba(50, 255, 100, 0.5)" style="background:#33ff88;" title="Изумруд"></div>
@@ -591,7 +597,6 @@
 
 <div class="wrap">
 
-    <!-- ====================== ГЛАВНАЯ ====================== -->
     <div class="tab-page active" id="page-main">
         <section class="hero">
             <div class="hero-meta">
@@ -811,7 +816,6 @@
         </section>
     </div>
 
-    <!-- ====================== ИГРОКИ ====================== -->
     <div class="tab-page" id="page-players" style="padding-top: 120px;">
         <div class="players-head">
             <h1 class="players-title">ИГРОКИ</h1>
@@ -834,7 +838,6 @@
         </div>
     </div>
 
-    <!-- ====================== АРХИВ ====================== -->
     <div class="tab-page" id="page-archive" style="padding-top: 120px;">
         <div class="archive-head">
             <h1 class="archive-title">АРХИВ</h1>
@@ -849,7 +852,6 @@
         <div class="pager" id="archivePager"></div>
     </div>
 
-    <!-- ====================== ГАЛЕРЕЯ ====================== -->
     <div class="tab-page" id="page-gallery" style="padding-top: 120px;">
         <div class="gallery-head">
             <h1 class="gallery-title">ГАЛЕРЕЯ</h1>
@@ -876,7 +878,6 @@
         </div>
     </div>
 
-    <!-- ====================== МИНИ-ИГРЫ ====================== -->
     <div class="tab-page" id="page-games" style="padding-top: 120px;">
         <div class="games-head">
             <h1 class="games-title">МИНИ-ИГРЫ</h1>
@@ -996,9 +997,17 @@
             <!-- 10. 2048 -->
             <div class="game-block">
                 <h3>🔢 2048</h3>
-                <div class="sub">Стрелки для движения. Собери 2048!</div>
+                <div class="sub">Используй кнопки для движения. Собери 2048!</div>
                 <div class="game-2048" id="g10Board" style="display:grid;grid-template-columns:repeat(4,60px);gap:6px;justify-content:center;margin-bottom:14px;background:rgba(0,0,0,0.3);padding:6px;border-radius:8px;"></div>
-                <div class="game-msg info" id="g10Msg">Свайпай или жми стрелки</div>
+                <div class="control-pad">
+                    <button class="arrow-btn" onclick="g10Move('up')">▲</button>
+                    <div class="control-pad-middle">
+                        <button class="arrow-btn" onclick="g10Move('left')">◀</button>
+                        <button class="arrow-btn" onclick="g10Move('down')">▼</button>
+                        <button class="arrow-btn" onclick="g10Move('right')">▶</button>
+                    </div>
+                </div>
+                <div class="game-msg info" id="g10Msg">Жми стрелки</div>
                 <div class="game-stats"><div>Счёт: <span id="g10Score">0</span></div></div>
                 <button class="game-reset" onclick="g10Reset()">🔄 Новая</button>
             </div>
@@ -1449,11 +1458,11 @@ function switchPage(page) {
         requestAnimationFrame(anim);
     })();
     document.addEventListener('mouseover', e => {
-        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell');
+        const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell, .arrow-btn');
         if (t) ring.classList.add('hover');
     });
     document.addEventListener('mouseout', e => {
-        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell'))
+        if (e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell, .arrow-btn'))
             ring.classList.remove('hover');
     });
 })();
@@ -1594,7 +1603,6 @@ document.getElementById('palette').addEventListener('click', e => {
     if (!dot) return;
     document.querySelectorAll('.palette-dot').forEach(d => d.classList.remove('active'));
     dot.classList.add('active');
-    // Обновляем CSS переменные
     document.documentElement.style.setProperty('--c1', dot.dataset.c1);
     document.documentElement.style.setProperty('--c2', dot.dataset.c2);
     document.documentElement.style.setProperty('--c3', dot.dataset.c3);
@@ -2231,14 +2239,12 @@ function g7Click(idx) {
 let g8Grid = [], g8Moves = 0, g8Solved = false;
 function g8Reset() {
     g8Grid = [1,2,3,4,5,6,7,8,0];
-    // Перемешиваем
     for (let i = 0; i < 100; i++) {
         const empty = g8Grid.indexOf(0);
         const moves = g8ValidMoves(empty);
         const m = moves[Math.floor(Math.random() * moves.length)];
         [g8Grid[empty], g8Grid[m]] = [g8Grid[m], g8Grid[empty]];
     }
-    // Гарантируем решаемость (доп. перемешивание через ходы)
     while (g8IsSolved() && g8Moves < 10) {
         const empty = g8Grid.indexOf(0);
         const moves = g8ValidMoves(empty);
@@ -2302,23 +2308,15 @@ const g9Base = [
 function g9Reset() {
     if (g9Timer) clearInterval(g9Timer);
     g9Seconds = 0; document.getElementById('g9Timer').innerText = '0';
-    // Генерируем случайное решение через перестановки
     const map = [1,2,3,4];
     for (let i = map.length-1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [map[i], map[j]] = [map[j], map[i]]; }
     g9Solution = g9Base.map(row => row.map(v => map[v-1]));
-    // Случайно транспонируем
     if (Math.random() < 0.5) g9Solution = g9Solution[0].map((_,i) => g9Solution.map(r => r[i]));
-    // Случайно переставляем строки/столбцы внутри групп
-    // ... пропустим для простоты
-    // Делаем маску
     g9Board = g9Solution.map(row => row.map(v => Math.random() < 0.5 ? 0 : v));
     document.getElementById('g9Msg').className = 'game-msg info';
     document.getElementById('g9Msg').innerText = 'Выбери пустую клетку и введи цифру';
     g9Render();
-    g9Timer = setInterval(() => {
-        g9Seconds++;
-        document.getElementById('g9Timer').innerText = g9Seconds;
-    }, 1000);
+    g9Timer = setInterval(() => { g9Seconds++; document.getElementById('g9Timer').innerText = g9Seconds; }, 1000);
 }
 function g9Render() {
     const board = document.getElementById('g9Board'); board.innerHTML = '';
@@ -2361,7 +2359,7 @@ function g10Reset() {
     g10Score = 0; document.getElementById('g10Score').innerText = '0';
     g10AddTile(); g10AddTile();
     document.getElementById('g10Msg').className = 'game-msg info';
-    document.getElementById('g10Msg').innerText = 'Свайпай или жми стрелки';
+    document.getElementById('g10Msg').innerText = 'Жми стрелки';
     g10Render();
 }
 function g10AddTile() {
@@ -2385,10 +2383,9 @@ function g10Render() {
 }
 document.addEventListener('keydown', e => {
     if (!document.getElementById('page-games').classList.contains('active')) return;
+    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
     if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
-        // Находим, если фокус в поле ввода, не двигаем 2048
-        if (document.activeElement.tagName === 'INPUT') return;
-        e.preventDefault();
+        e.preventDefault(); 
         g10Move(e.key.replace('Arrow','').toLowerCase());
     }
 });
@@ -2420,9 +2417,7 @@ function g10Move(dir) {
         }
     }
     if (moved) {
-        g10AddTile();
-        g10Render();
-        document.getElementById('g10Score').innerText = g10Score;
+        g10AddTile(); g10Render(); document.getElementById('g10Score').innerText = g10Score;
         if (g10Board.flat().includes(2048)) { document.getElementById('g10Msg').className='game-msg win'; document.getElementById('g10Msg').innerText='🎉 Победа!'; }
     }
 }
@@ -2438,7 +2433,6 @@ function g11Reset() {
     document.getElementById('g11Msg').className = 'game-msg info';
     document.getElementById('g11Msg').innerText = 'Приготовься';
     document.getElementById('g11Time').innerText = '—';
-    // Запускаем через 1-3 секунды
     g11Timeout = setTimeout(() => {
         zone.style.background = '#4ade80';
         zone.innerText = 'ЖМИ!';
