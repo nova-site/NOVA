@@ -6,7 +6,7 @@
 <title>NOVA // SIGNAL</title>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
     html { scroll-behavior: smooth; }
     :root {
         --c1: #4a80c0;
@@ -26,7 +26,6 @@
         -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
         -webkit-tap-highlight-color: transparent;
     }
-    input, textarea { -webkit-user-select: text !important; user-select: text !important; }
     body.inverted { filter: invert(1) hue-rotate(180deg); }
     @media (max-width: 900px) { body { cursor: auto; } }
     input, textarea, select, .modal-input, .review-input, .review-textarea, .upload-input, .player-input { cursor: text !important; }
@@ -34,6 +33,9 @@
     body.modal-open .cursor-dot, body.modal-open .cursor-ring { display: none !important; }
     button, a, .modal-close, .modal-btn, .admin-tab, .admin-btn, .review-submit, .hero-cta, .palette-dot, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .lightbox-close, .upload-drop, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell, .arrow-btn { cursor: pointer; }
     .lightbox { cursor: auto; } .lightbox * { cursor: auto; } .lightbox-close { cursor: pointer !important; }
+
+    /* Оптимизация рендера */
+    body { will-change: scroll-position; }
 
     .scroll-progress { position: fixed; top: 0; left: 0; height: 2px; width: 0%; background: linear-gradient(90deg, var(--c1), var(--c3), var(--c4)); box-shadow: 0 0 15px var(--c2); z-index: 10001; }
     #preloader { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 24px; transition: opacity 0.8s ease, visibility 0.8s; }
@@ -163,8 +165,13 @@
     .classified { color: #ff6b6b; letter-spacing: 3px; font-size: clamp(0.75rem, 1.5vw, 0.9rem); text-shadow: 0 0 12px rgba(255,107,107,0.6); animation: classifiedPulse 1.5s infinite; }
     @keyframes classifiedPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     
-    /* Таймер */
-    .season-timer-card { grid-column: span 2; background: rgba(10, 42, 79, 0.2); border: 1px solid var(--c2) !important; }
+    /* Тёмный фон таймера */
+    .season-timer-card { 
+        grid-column: span 2; 
+        background: rgba(0, 0, 0, 0.4) !important; 
+        border: 1px solid var(--c1) !important; 
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
     @media (max-width: 600px) { .season-timer-card { grid-column: span 1; } }
     .timer-display { display: flex; gap: 16px; align-items: baseline; margin-top: 8px; font-family: 'Oswald', sans-serif; }
     .timer-item { text-align: center; }
@@ -514,13 +521,19 @@
         .palette-dot { width: 18px; height: 18px; }
         .nav-tabs { margin: 0; padding: 3px; gap: 2px; }
         .nav-tab { padding: 5px 8px; font-size: 0.6rem; letter-spacing: 1px; }
+        
+        /* Отключаем тяжелые эффекты на мобильных */
+        .grid-bg { animation: none; }
+        #galaxy { display: none; }
+        #noise { display: none; }
+        .comet { display: none; }
+        .scanlines { display: none; }
     }
     @media (max-width: 700px) {
         .topbar { padding: 12px 16px; }
         .topbar .status { width: 100%; justify-content: space-between; }
         .nav-tabs { order: 3; width: 100%; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
         .log-terminal { display: none; }
-        #galaxy { width: 500px; height: 500px; }
         .modal-inner { padding: 30px 24px; }
         .reviews-list { grid-template-columns: 1fr; }
         .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 160px), 1fr)); }
@@ -565,12 +578,12 @@
 </div>
 
 <div class="comet-layer">
-    <img src="images/comet1.png" class="comet comet-1" alt="" onerror="this.style.display='none'">
-    <img src="images/comet2.png" class="comet comet-2" alt="" onerror="this.style.display='none'">
-    <img src="images/comet3.png" class="comet comet-3" alt="" onerror="this.style.display='none'">
-    <img src="images/comet4.png" class="comet comet-4" alt="" onerror="this.style.display='none'">
-    <img src="images/comet5.png" class="comet comet-5" alt="" onerror="this.style.display='none'">
-    <img src="images/comet6.png" class="comet comet-6" alt="" onerror="this.style.display='none'">
+    <img src="images/comet1.png" class="comet comet-1" alt="" loading="lazy" onerror="this.style.display='none'">
+    <img src="images/comet2.png" class="comet comet-2" alt="" loading="lazy" onerror="this.style.display='none'">
+    <img src="images/comet3.png" class="comet comet-3" alt="" loading="lazy" onerror="this.style.display='none'">
+    <img src="images/comet4.png" class="comet comet-4" alt="" loading="lazy" onerror="this.style.display='none'">
+    <img src="images/comet5.png" class="comet comet-5" alt="" loading="lazy" onerror="this.style.display='none'">
+    <img src="images/comet6.png" class="comet comet-6" alt="" loading="lazy" onerror="this.style.display='none'">
 </div>
 
 <div class="cursor-dot" id="cDot"></div>
@@ -631,7 +644,7 @@
                 <div class="data-cell"><div class="data-label">Ядро сервера</div><div class="data-value">Paper</div></div>
                 <div class="data-cell"><div class="data-label">Лицензия</div><div class="data-value">Не требуется</div></div>
                 
-                <!-- ТАЙМЕР СТАРТА -->
+                <!-- ТАЙМЕР СТАРТА (тёмный фон) -->
                 <div class="data-cell season-timer-card">
                     <div class="data-label" style="color: var(--c2);">Старт сезона · 24 октября, 16:00 МСК</div>
                     <div id="seasonTimer" class="timer-display">
@@ -911,7 +924,6 @@
         </div>
         <div class="games-grid">
             
-            <!-- 1. Угадай число -->
             <div class="game-block">
                 <h3>🎲 Угадай число</h3>
                 <div class="sub">Загадано от 1 до 100</div>
@@ -924,7 +936,6 @@
                 <button class="game-reset" onclick="g1Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 2. Камень-ножницы-бумага -->
             <div class="game-block">
                 <h3>✊ КНБ</h3>
                 <div class="sub">Сразись с ИИ</div>
@@ -939,7 +950,6 @@
                 <button class="game-reset" onclick="g2Reset()">🔄 Сброс</button>
             </div>
 
-            <!-- 3. Угадай цвет -->
             <div class="game-block">
                 <h3>🎯 Струп-тест</h3>
                 <div class="sub">Угадай цвет текста, а не слово</div>
@@ -955,7 +965,6 @@
                 <button class="game-reset" onclick="g3Reset()">🔄 Заново</button>
             </div>
 
-            <!-- 4. Найди пару -->
             <div class="game-block">
                 <h3>🧠 Найди пару</h3>
                 <div class="sub">Переверни две одинаковые карточки</div>
@@ -965,7 +974,6 @@
                 <button class="game-reset" onclick="g4Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 5. Крестики-нолики -->
             <div class="game-block">
                 <h3>✍️ Крестики-нолики</h3>
                 <div class="sub">Ты — X, ИИ — O</div>
@@ -974,7 +982,6 @@
                 <button class="game-reset" onclick="g5Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 6. Кости -->
             <div class="game-block">
                 <h3>🎲 Кости</h3>
                 <div class="sub">Угадай результат двух кубиков</div>
@@ -990,7 +997,6 @@
                 <button class="game-reset" onclick="g6Reset()">🔄 Сброс</button>
             </div>
 
-            <!-- 7. Сапёр -->
             <div class="game-block">
                 <h3>💣 Сапёр 5x5</h3>
                 <div class="sub">Открой все клетки без мин</div>
@@ -1000,7 +1006,6 @@
                 <button class="game-reset" onclick="g7Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 8. Пятнашки 3x3 -->
             <div class="game-block">
                 <h3>🧩 Пятнашки</h3>
                 <div class="sub">Расставь цифры по порядку</div>
@@ -1010,7 +1015,6 @@
                 <button class="game-reset" onclick="g8Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 9. Судоку 4x4 -->
             <div class="game-block">
                 <h3>⭕ Судоку 4×4</h3>
                 <div class="sub">Заполни поле цифрами 1-4</div>
@@ -1020,7 +1024,6 @@
                 <button class="game-reset" onclick="g9Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 10. 2048 -->
             <div class="game-block">
                 <h3>🔢 2048</h3>
                 <div class="sub">Используй кнопки для движения. Собери 2048!</div>
@@ -1038,7 +1041,6 @@
                 <button class="game-reset" onclick="g10Reset()">🔄 Новая</button>
             </div>
 
-            <!-- 11. Реакция -->
             <div class="game-block">
                 <h3>⚡ Реакция</h3>
                 <div class="sub">Нажми как можно быстрее, когда экран станет зелёным</div>
@@ -1048,7 +1050,6 @@
                 <button class="game-reset" onclick="g11Reset()">🔄 Заново</button>
             </div>
 
-            <!-- 12. Математика -->
             <div class="game-block">
                 <h3>🧮 Математика</h3>
                 <div class="sub">Реши пример как можно быстрее</div>
@@ -1369,83 +1370,116 @@ function switchPage(page) {
 (function parallax() {
     const layers = document.querySelectorAll('.star-layer');
     let mx = innerWidth/2, my = innerHeight/2, tx = mx, ty = my;
-    document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
-    (function anim() {
-        mx += (tx - mx) * 0.05; my += (ty - my) * 0.05;
-        const cx = mx - innerWidth/2, cy = my - innerHeight/2;
-        layers.forEach(l => {
-            const s = parseFloat(l.dataset.speed) || 0.03;
-            l.style.transform = `translate(${-cx*s}px, ${-cy*s}px)`;
-        });
-        requestAnimationFrame(anim);
-    })();
+    let ticking = false;
+    
+    document.addEventListener('mousemove', e => { 
+        tx = e.clientX; ty = e.clientY; 
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                mx += (tx - mx) * 0.1; 
+                my += (ty - my) * 0.1;
+                const cx = mx - innerWidth/2, cy = my - innerHeight/2;
+                layers.forEach(l => {
+                    const s = parseFloat(l.dataset.speed) || 0.03;
+                    l.style.transform = `translate(${-cx*s}px, ${-cy*s}px)`;
+                });
+                ticking = false;
+            });
+            ticking = true;
+        }
+    }, { passive: true });
 })();
 
 (function noise() {
     const canvas = document.getElementById('noise'), ctx = canvas.getContext('2d');
-    let w, h;
+    let w, h, frame = 0;
     const resize = () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; };
     resize(); addEventListener('resize', resize);
+    
     (function draw() {
-        const img = ctx.createImageData(w, h), d = img.data;
-        for (let i = 0; i < d.length; i += 4) { const v = Math.random()*255; d[i]=d[i+1]=d[i+2]=v; d[i+3]=32; }
-        ctx.putImageData(img, 0, 0);
+        if (document.hidden) { requestAnimationFrame(draw); return; } 
+        frame++;
+        if (frame % 6 === 0) { 
+            const img = ctx.createImageData(w, h), d = img.data;
+            for (let i = 0; i < d.length; i += 4) { 
+                const v = Math.random() * 255; 
+                d[i] = d[i+1] = d[i+2] = v; 
+                d[i+3] = 32; 
+            }
+            ctx.putImageData(img, 0, 0);
+        }
         requestAnimationFrame(draw);
     })();
 })();
 
 (function particles() {
     const canvas = document.getElementById('particles'), ctx = canvas.getContext('2d');
-    let w, h;
+    let w, h, frame = 0;
     const resize = () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; };
     resize(); addEventListener('resize', resize);
     const p = [];
-    const count = innerWidth < 700 ? 30 : 60;
+    const count = innerWidth < 700 ? 20 : 40;
     for (let i = 0; i < count; i++) p.push({ x: Math.random()*w, y: Math.random()*h, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, r: 0.8+Math.random()*1.6 });
+    
     (function draw() {
-        ctx.clearRect(0, 0, w, h);
-        const c2 = getComputedStyle(document.documentElement).getPropertyValue('--c2').trim() || '#6ec4ff';
-        p.forEach(a => {
-            a.x += a.vx; a.y += a.vy;
-            if (a.x < 0) a.x = w; if (a.x > w) a.x = 0;
-            if (a.y < 0) a.y = h; if (a.y > h) a.y = 0;
-            ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI*2);
-            ctx.fillStyle = c2; ctx.shadowBlur = 8; ctx.shadowColor = c2; ctx.fill();
-        });
-        for (let i = 0; i < p.length; i++) for (let j = i+1; j < p.length; j++) {
-            const a = p[i], b = p[j], dx = a.x-b.x, dy = a.y-b.y, d = Math.sqrt(dx*dx+dy*dy);
-            if (d < 130) { ctx.beginPath(); ctx.strokeStyle = c2.replace(')', ', 0.15)').replace('rgb', 'rgba'); ctx.lineWidth = 0.5; ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+        if (document.hidden) { requestAnimationFrame(draw); return; }
+        frame++;
+        if (frame % 2 === 0) {
+            ctx.clearRect(0, 0, w, h);
+            const c2 = getComputedStyle(document.documentElement).getPropertyValue('--c2').trim() || '#6ec4ff';
+            p.forEach(a => {
+                a.x += a.vx; a.y += a.vy;
+                if (a.x < 0) a.x = w; if (a.x > w) a.x = 0;
+                if (a.y < 0) a.y = h; if (a.y > h) a.y = 0;
+                ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI*2);
+                ctx.fillStyle = c2; ctx.fill();
+            });
+            for (let i = 0; i < p.length; i++) for (let j = i+1; j < p.length; j++) {
+                const a = p[i], b = p[j], dx = a.x-b.x, dy = a.y-b.y;
+                if (dx*dx + dy*dy < 10000) {
+                    ctx.beginPath(); 
+                    ctx.strokeStyle = 'rgba(110,196,255,0.1)'; 
+                    ctx.lineWidth = 0.5; 
+                    ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); 
+                    ctx.stroke();
+                }
+            }
         }
-        ctx.shadowBlur = 0;
         requestAnimationFrame(draw);
     })();
 })();
 
 (function galaxy() {
     const canvas = document.getElementById('galaxy'), ctx = canvas.getContext('2d');
-    let w, h;
+    let w, h, rot = 0, lastTime = 0;
     const resize = () => { w = canvas.width = canvas.offsetWidth; h = canvas.height = canvas.offsetHeight; };
     resize(); addEventListener('resize', resize);
     const stars = [];
-    for (let i = 0; i < 400; i++) {
+    for (let i = 0; i < 250; i++) {
         const angle = Math.random()*Math.PI*2;
         const radius = Math.pow(Math.random(), 0.5) * (Math.min(w,h)/2);
         const armOffset = Math.floor(Math.random()*2)*Math.PI;
         stars.push({ angle: angle + armOffset, radius, size: 0.5+Math.random()*1.5, color: Math.random()<0.7? 'var(--c2)' : '#fff' });
     }
-    let rot = 0;
-    (function draw() {
+    (function draw(time) {
+        if (document.hidden) { requestAnimationFrame(draw); return; }
+        if (time - lastTime < 33) { requestAnimationFrame(draw); return; }
+        lastTime = time;
+        
         ctx.clearRect(0, 0, w, h);
         ctx.save(); ctx.translate(w/2, h/2); ctx.rotate(rot);
         stars.forEach(s => {
             const x = Math.cos(s.angle)*s.radius, y = Math.sin(s.angle)*s.radius*0.5;
             ctx.beginPath(); ctx.arc(x, y, s.size, 0, Math.PI*2);
-            ctx.fillStyle = s.color; ctx.shadowBlur = 8; ctx.shadowColor = s.color; ctx.fill();
+            ctx.fillStyle = s.color; 
+            ctx.shadowBlur = 4; 
+            ctx.shadowColor = s.color; 
+            ctx.fill();
         });
         ctx.restore();
         rot += 0.0008;
         requestAnimationFrame(draw);
-    })();
+    })(0);
 })();
 
 /* ======================= ЧАСЫ ======================= */
@@ -1488,12 +1522,14 @@ function switchPage(page) {
 /* ======================= КУРСОР ======================= */
 (function cursor() {
     const dot = document.getElementById('cDot'), ring = document.getElementById('cRing');
-    let mx = 0, my = 0, rx = 0, ry = 0, lastTrail = 0;
+    let mx = 0, my = 0, rx = 0, ry = 0, lastTrail = 0, ticking = false;
+    
     addEventListener('mousemove', e => {
         mx = e.clientX; my = e.clientY;
         dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+        
         const now = Date.now();
-        if (now - lastTrail > 40) {
+        if (now - lastTrail > 50) {
             lastTrail = now;
             const p = document.createElement('div');
             p.className = 'trail-particle';
@@ -1501,12 +1537,17 @@ function switchPage(page) {
             document.body.appendChild(p);
             setTimeout(() => p.remove(), 800);
         }
+        
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                rx += (mx - rx) * 0.6; ry += (my - ry) * 0.6;
+                ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+                ticking = false;
+            });
+            ticking = true;
+        }
     }, { passive: true });
-    (function anim() {
-        rx += (mx - rx) * 0.7; ry += (my - ry) * 0.7;
-        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-        requestAnimationFrame(anim);
-    })();
+    
     document.addEventListener('mouseover', e => {
         const t = e.target.closest('a, button, .protocol-head, .channel, .data-cell, .final-text, .palette-dot, input, textarea, .nav-tab, .pager-btn, .reaction-btn, .gallery-item, .upload-zone, .file-btn, .player-card, .filter-chip, .player-link-btn, .link-remove, .game-btn, .ttt-cell, .saper-cell, .arrow-btn');
         if (t) ring.classList.add('hover');
