@@ -646,7 +646,7 @@
                     <div id="seasonStatus" class="season-status">🔥 СЕЗОН ОТКРЫТ 🔥</div>
                 </div>
 
-                <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
+                <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value" style="color:#ff6b6b; text-shadow:0 0 15px rgba(255,107,107,0.5);">7 ноября, 15:00 МСК</div></div>
                 <div class="data-cell"><div class="data-label">Открытие энда</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
             </div>
         </section>
@@ -1595,9 +1595,10 @@ setInterval(() => {
 }, 1800);
 
 /* ======================= ЗВУК ======================= */
-let audioCtx = null, soundOn = true, ambient = null, ambientFadeTimer = null;
-const AMBIENT_TIMEOUT = 15000;
+let audioCtx = null, soundOn = true;
+
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
 function playBeep(freq = 500) {
     if (!soundOn) return;
     try {
@@ -1610,37 +1611,14 @@ function playBeep(freq = 500) {
         o.stop(audioCtx.currentTime + 0.1);
     } catch (e) {}
 }
-function startAmbient() {
-    if (!soundOn || ambient) return;
-    try {
-        initAudio();
-        const o1 = audioCtx.createOscillator(), o2 = audioCtx.createOscillator(), g = audioCtx.createGain();
-        o1.type = 'sine'; o2.type = 'sine'; o1.frequency.value = 55; o2.frequency.value = 82; g.gain.value = 0.012;
-        o1.connect(g); o2.connect(g); g.connect(audioCtx.destination);
-        o1.start(); o2.start(); ambient = { o1, o2, g }; scheduleAmbientFade();
-    } catch (e) {}
+
+function toggleSound() {
+    soundOn = !soundOn;
+    const btn = document.getElementById('soundBtn');
+    btn.classList.toggle('off', !soundOn);
+    btn.textContent = soundOn ? '🔊' : '🔇';
+    if (soundOn) playBeep(600);
 }
-function scheduleAmbientFade() {
-    if (ambientFadeTimer) clearTimeout(ambientFadeTimer);
-    ambientFadeTimer = setTimeout(() => {
-        if (ambient) {
-            try {
-                ambient.g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 2);
-                setTimeout(() => {
-                    if (ambient) {
-                        try { ambient.o1.stop(); ambient.o2.stop(); } catch(e) {}
-                        ambient = null; addLog('Аудио: затухание');
-                    }
-                }, 2100);
-            } catch (e) { ambient = null; }
-        }
-    }, AMBIENT_TIMEOUT);
-}
-function bumpAmbient() { if (!soundOn) return; if (!ambient) { startAmbient(); return; } try { ambient.g.gain.cancelScheduledValues(audioCtx.currentTime); ambient.g.gain.setValueAtTime(Math.max(ambient.g.gain.value, 0.012), audioCtx.currentTime); } catch(e) {} scheduleAmbientFade(); }
-function stopAmbient() { if (ambientFadeTimer) clearTimeout(ambientFadeTimer); if (!ambient) return; try { ambient.g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.3); setTimeout(() => { if (ambient) { try { ambient.o1.stop(); ambient.o2.stop(); } catch(e) {} ambient = null; } }, 350); } catch (e) { ambient = null; } }
-function toggleSound() { soundOn = !soundOn; const btn = document.getElementById('soundBtn'); btn.classList.toggle('off', !soundOn); btn.textContent = soundOn ? '🔊' : '🔇'; if (soundOn) { startAmbient(); playBeep(600); } else stopAmbient(); }
-['click', 'keydown', 'scroll', 'mousemove'].forEach(evt => document.addEventListener(evt, () => { if (soundOn) bumpAmbient(); }, { passive: true }));
-document.addEventListener('click', () => { if (soundOn && !ambient) startAmbient(); }, { once: true });
 
 /* ======================= ПРОКРУТКА + ПАЛИТРА ======================= */
 addEventListener('scroll', () => {
