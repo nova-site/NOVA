@@ -163,15 +163,15 @@
     .classified { color: #ff6b6b; letter-spacing: 3px; font-size: clamp(0.75rem, 1.5vw, 0.9rem); text-shadow: 0 0 12px rgba(255,107,107,0.6); animation: classifiedPulse 1.5s infinite; }
     @keyframes classifiedPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     
-    /* Таймер */
-    .season-timer-card { grid-column: span 2; background: rgba(10, 42, 79, 0.2); border: 1px solid var(--c2) !important; }
+    /* Таймеры */
+    .season-timer-card { grid-column: span 2; background: rgba(10, 42, 79, 0.2); }
     @media (max-width: 600px) { .season-timer-card { grid-column: span 1; } }
     .timer-display { display: flex; gap: 16px; align-items: baseline; margin-top: 8px; font-family: 'Oswald', sans-serif; }
     .timer-item { text-align: center; }
     .timer-num { font-size: 2.2rem; color: #fff; text-shadow: 0 0 15px var(--shadow-color); }
     .timer-label { font-size: 0.65rem; color: var(--c1); letter-spacing: 2px; }
     .timer-sep { color: var(--c1); font-size: 2rem; }
-    .season-status { margin-top: 12px; font-size: 0.85rem; color: var(--c2); letter-spacing: 2px; font-weight: 700; display: none; }
+    .season-status { margin-top: 12px; font-size: 0.85rem; letter-spacing: 2px; font-weight: 700; display: none; }
 
     /* ===== НОВОСТИ + РЕАКЦИИ ===== */
     .news-list { display: flex; flex-direction: column; gap: 20px; }
@@ -630,23 +630,37 @@
                 <div class="data-cell"><div class="data-label">Версия клиента</div><div class="data-value">Fabric 26.2</div></div>
                 <div class="data-cell"><div class="data-label">Ядро сервера</div><div class="data-value">Paper</div></div>
                 <div class="data-cell"><div class="data-label">Лицензия</div><div class="data-value">Не требуется</div></div>
-                
-                <!-- ТАЙМЕР СТАРТА -->
-                <div class="data-cell season-timer-card">
+
+                <!-- ТАЙМЕР 1: СТАРТ СЕЗОНА -->
+                <div class="data-cell season-timer-card" style="border-color: var(--c2) !important;">
                     <div class="data-label" style="color: var(--c2);">Старт сезона · 24 октября, 16:00 МСК</div>
-                    <div id="seasonTimer" class="timer-display">
-                        <div class="timer-item"><span id="tDays" class="timer-num">00</span><br><span class="timer-label">ДНЕЙ</span></div>
+                    <div id="seasonTimer1" class="timer-display">
+                        <div class="timer-item"><span id="s1Days" class="timer-num">00</span><br><span class="timer-label">ДНЕЙ</span></div>
                         <div class="timer-sep">:</div>
-                        <div class="timer-item"><span id="tHours" class="timer-num">00</span><br><span class="timer-label">ЧАСОВ</span></div>
+                        <div class="timer-item"><span id="s1Hours" class="timer-num">00</span><br><span class="timer-label">ЧАСОВ</span></div>
                         <div class="timer-sep">:</div>
-                        <div class="timer-item"><span id="tMins" class="timer-num">00</span><br><span class="timer-label">МИНУТ</span></div>
+                        <div class="timer-item"><span id="s1Mins" class="timer-num">00</span><br><span class="timer-label">МИНУТ</span></div>
                         <div class="timer-sep">:</div>
-                        <div class="timer-item"><span id="tSecs" class="timer-num">00</span><br><span class="timer-label">СЕКУНД</span></div>
+                        <div class="timer-item"><span id="s1Secs" class="timer-num">00</span><br><span class="timer-label">СЕКУНД</span></div>
                     </div>
-                    <div id="seasonStatus" class="season-status">🔥 СЕЗОН ОТКРЫТ 🔥</div>
+                    <div id="seasonStatus1" class="season-status" style="color: #4ade80;">✅ СЕЗОН ОТКРЫТ</div>
                 </div>
 
-                <div class="data-cell"><div class="data-label">Открытие ада</div><div class="data-value" style="color:#ff6b6b; text-shadow:0 0 15px rgba(255,107,107,0.5);">7 ноября, 15:00 МСК</div></div>
+                <!-- ТАЙМЕР 2: ОТКРЫТИЕ АДА -->
+                <div class="data-cell season-timer-card" style="border-color: #ff6b6b !important;">
+                    <div class="data-label" style="color: #ff6b6b;">Открытие ада · 7 ноября, 15:00 МСК</div>
+                    <div id="seasonTimer2" class="timer-display">
+                        <div class="timer-item"><span id="s2Days" class="timer-num">00</span><br><span class="timer-label">ДНЕЙ</span></div>
+                        <div class="timer-sep">:</div>
+                        <div class="timer-item"><span id="s2Hours" class="timer-num">00</span><br><span class="timer-label">ЧАСОВ</span></div>
+                        <div class="timer-sep">:</div>
+                        <div class="timer-item"><span id="s2Mins" class="timer-num">00</span><br><span class="timer-label">МИНУТ</span></div>
+                        <div class="timer-sep">:</div>
+                        <div class="timer-item"><span id="s2Secs" class="timer-num">00</span><br><span class="timer-label">СЕКУНД</span></div>
+                    </div>
+                    <div id="seasonStatus2" class="season-status" style="color: #ff6b6b;">🔥 АД ОТКРЫТ</div>
+                </div>
+
                 <div class="data-cell"><div class="data-label">Открытие энда</div><div class="data-value classified">[ CLASSIFIED ]</div></div>
             </div>
         </section>
@@ -1329,29 +1343,40 @@ function switchPage(page) {
     }, 90);
 })();
 
-/* ======================= ТАЙМЕР ======================= */
-(function seasonTimer() {
-    const targetDate = new Date('2026-10-24T16:00:00+03:00').getTime();
-    function updateTimer() {
-        const now = new Date().getTime();
-        const diff = targetDate - now;
+/* ======================= ТАЙМЕРЫ ======================= */
+function initTimer(targetDateStr, ids, statusId) {
+    const targetDate = new Date(targetDateStr).getTime();
+    function update() {
+        const diff = targetDate - Date.now();
+        const timerEl = document.getElementById(ids.timer);
+        const statusEl = document.getElementById(statusId);
         if (diff <= 0) {
-            document.getElementById('seasonTimer').style.display = 'none';
-            document.getElementById('seasonStatus').style.display = 'block';
+            if (timerEl) timerEl.style.display = 'none';
+            if (statusEl) statusEl.style.display = 'block';
             return;
         }
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
-        document.getElementById('tDays').textContent = String(days).padStart(2, '0');
-        document.getElementById('tHours').textContent = String(hours).padStart(2, '0');
-        document.getElementById('tMins').textContent = String(mins).padStart(2, '0');
-        document.getElementById('tSecs').textContent = String(secs).padStart(2, '0');
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff % 86400000) / 3600000);
+        const mins = Math.floor((diff % 3600000) / 60000);
+        const secs = Math.floor((diff % 60000) / 1000);
+        document.getElementById(ids.days).textContent = String(days).padStart(2, '0');
+        document.getElementById(ids.hours).textContent = String(hours).padStart(2, '0');
+        document.getElementById(ids.mins).textContent = String(mins).padStart(2, '0');
+        document.getElementById(ids.secs).textContent = String(secs).padStart(2, '0');
     }
-    updateTimer();
-    setInterval(updateTimer, 1000);
-})();
+    update();
+    setInterval(update, 1000);
+}
+
+// Таймер 1: Старт сезона (24 октября, 16:00 МСК)
+initTimer('2026-10-24T16:00:00+03:00', 
+    { timer: 'seasonTimer1', days: 's1Days', hours: 's1Hours', mins: 's1Mins', secs: 's1Secs' }, 
+    'seasonStatus1');
+
+// Таймер 2: Открытие ада (7 ноября, 15:00 МСК)
+initTimer('2026-11-07T15:00:00+03:00', 
+    { timer: 'seasonTimer2', days: 's2Days', hours: 's2Hours', mins: 's2Mins', secs: 's2Secs' }, 
+    'seasonStatus2');
 
 /* ======================= ФОН ======================= */
 (function stars() {
@@ -1596,9 +1621,7 @@ setInterval(() => {
 
 /* ======================= ЗВУК ======================= */
 let audioCtx = null, soundOn = true;
-
 function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
-
 function playBeep(freq = 500) {
     if (!soundOn) return;
     try {
@@ -1611,7 +1634,6 @@ function playBeep(freq = 500) {
         o.stop(audioCtx.currentTime + 0.1);
     } catch (e) {}
 }
-
 function toggleSound() {
     soundOn = !soundOn;
     const btn = document.getElementById('soundBtn');
